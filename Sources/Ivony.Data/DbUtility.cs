@@ -10,6 +10,9 @@ using Ivony.Data.Expressions;
 
 namespace Ivony.Data
 {
+  /// <summary>
+  /// 所有数据库访问帮助器的基类
+  /// </summary>
   public abstract class DbUtility
   {
 
@@ -264,6 +267,22 @@ namespace Ivony.Data
 
         return table;
       }
+    }
+
+    public static DataSet Fill( IDataAdapter adapter )
+    {
+      return Fill( adapter, null );
+    }
+    public static DataSet Fill( IDataAdapter adapter, DataSet dataSet )
+    {
+
+      if ( dataSet == null )
+        dataSet = new DataSet();
+
+      adapter.Fill( dataSet );
+
+      return dataSet;
+
     }
 
 
