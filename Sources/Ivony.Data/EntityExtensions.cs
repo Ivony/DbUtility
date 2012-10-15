@@ -8,6 +8,9 @@ using System.Text;
 
 namespace Ivony.Data
 {
+  /// <summary>
+  /// 提供面向 Entity 的扩展方法
+  /// </summary>
   public static class EntityExtensions
   {
 

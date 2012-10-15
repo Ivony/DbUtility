@@ -358,7 +358,10 @@ namespace Ivony.Data
       }
     }
 
-
+    /// <summary>
+    /// 创建事务管理器
+    /// </summary>
+    /// <returns>事务管理器</returns>
     public virtual ITransactionUtility CreateTransaction()
     {
       throw new NotSupportedException();

@@ -61,6 +61,7 @@
     <Compile Include="Expressions\TemplateExpression.cs" />
     <Compile Include="IDbExpressionParser.cs" />
     <Compile Include="ITransactionUtility.cs" />
+    <Compile Include="LegacyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlDbUtility.cs" />
     <Compile Include="SqlServerExpressionParser.cs" />
