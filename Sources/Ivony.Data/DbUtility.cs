@@ -54,7 +54,7 @@ namespace Ivony.Data
     /// <param name="template">查询字符串模板</param>
     /// <param name="parameters">查询字符串参数</param>
     /// <returns></returns>
-    public virtual DataTable Data( IDbExpression expression )
+    public DataTable Data( IDbExpression expression )
     {
       return Data( null, null, expression );
     }
