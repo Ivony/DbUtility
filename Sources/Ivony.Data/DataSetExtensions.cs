@@ -23,6 +23,5 @@ namespace Ivony.Data
       return table.DefaultView.Cast<DataRowView>();
     }
 
-
   }
 }
