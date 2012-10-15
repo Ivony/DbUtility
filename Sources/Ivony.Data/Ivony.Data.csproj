@@ -52,6 +52,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessDbUtility.cs" />
     <Compile Include="DbUtility.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="Expressions\StoredProcedureExpression.cs" />

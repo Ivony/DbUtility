@@ -15,22 +15,7 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 由派生类实现，创建IDataAdapter对象
-    /// </summary>
-    /// <param name="selectCommand">查询命令</param>
-    protected abstract IDataAdapter CreateDataAdapter( IDbCommand selectCommand );
-
-    /// <summary>
-    /// 由派生类实现，创建IDataParameter对象
-    /// </summary>
-    /// <param name="name">参数名</param>
-    /// <param name="value">参数值</param>
-    protected abstract IDataParameter CreateParameter( string name, object value );
-
-
-
-    /// <summary>
-    /// 获取DbExpressionParser实例，用于分析Sql表达式
+    /// 获取DbExpressionParser实例，用于分析数据查询表达式
     /// </summary>
     /// <returns>DbExpressionParser实例</returns>
     protected abstract IDbExpressionParser GetExpressionParser();
@@ -38,7 +23,7 @@ namespace Ivony.Data
     /// <summary>
     /// 创建 DbCommand 对象
     /// </summary>
-    /// <param name="expression">命令表达式</param>
+    /// <param name="expression">查询表达式</param>
     /// <returns>DbCommand 对象</returns>
     protected virtual IDbCommand CreateCommand( IDbExpression expression )
     {
@@ -49,49 +34,20 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 填充DataSet，并将填充的最后一个表返回
-    /// </summary>
-    /// <param name="template">查询字符串模板</param>
-    /// <param name="parameters">查询字符串参数</param>
-    /// <returns></returns>
-    public DataTable Data( IDbExpression expression )
-    {
-      return Data( null, null, expression );
-    }
-
-    /// <summary>
-    /// 填充DataSet，并将填充的最后一个表返回
-    /// </summary>
-    /// <param name="dataSet">需要被填充的数据集</param>
-    /// <param name="tableName">将最后一个表设置为什么名字</param>
-    /// <param name="expression">查询表达式</param>
-    /// <returns></returns>
-    public virtual DataTable Data( DataSet dataSet, string tableName, IDbExpression expression )
-    {
-
-      IDbCommand command = CreateCommand( expression );
-      try
-      {
-        return Data( CreateDataAdapter( command ), dataSet, tableName );
-      }
-      catch ( DbException e )
-      {
-        OnError( this, e, command );
-        throw;
-      }
-    }
-
-    /// <summary>
     /// 执行无结果的查询
     /// </summary>
     /// <param name="expression">查询表达式</param>
     /// <returns>影响的行数</returns>
-    public virtual int NonQuery( IDbExpression expression )
+    public virtual int ExecuteNonQuery( IDbExpression expression )
     {
       IDbCommand command = CreateCommand( expression );
       try
       {
-        return NonQuery( command );
+        OnCommandExecuting( this, command );
+        var result = ExecuteNonQuery( command );
+        OnCommandExecuted( this, command );
+
+        return result;
       }
       catch ( DbException e )
       {
@@ -105,12 +61,16 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="expression">查询表达式</param>
     /// <returns>查询结果的首行首列</returns>
-    public virtual object Scalar( IDbExpression expression )
+    public virtual object ExecuteScalar( IDbExpression expression )
     {
       IDbCommand command = CreateCommand( expression );
       try
       {
-        return Scalar( command );
+        OnCommandExecuting( this, command );
+        var result = ExecuteScalar( command );
+        OnCommandExecuted( this, command );
+
+        return result;
       }
       catch ( DbException e )
       {
@@ -123,15 +83,43 @@ namespace Ivony.Data
     /// 执行查询，并返回首行
     /// </summary>
     /// <param name="expression">查询表达式</param>
-    /// <returns></returns>
-    public virtual DataRow FirstRow( IDbExpression expression )
+    /// <returns>查询结果的首行</returns>
+    public virtual DataRow ExecuteFirstRow( IDbExpression expression )
     {
 
       IDbCommand command = CreateCommand( expression );
 
       try
       {
-        return FirstRow( command );
+        OnCommandExecuting( this, command );
+        var result = ExecuteFirstRow( command );
+        OnCommandExecuted( this, command );
+
+        return result;
+      }
+      catch ( DbException e )
+      {
+        OnError( this, e, command );
+        throw;
+      }
+    }
+
+    /// <summary>
+    /// 执行查询，并返回第一个结果集
+    /// </summary>
+    /// <param name="expression">查询表达式</param>
+    /// <returns>第一个结果集</returns>
+    public virtual DataTable ExecuteData( IDbExpression expression )
+    {
+
+      var command = CreateCommand( expression );
+      try
+      {
+        OnCommandExecuting( this, command );
+        var result = ExecuteData( command );
+        OnCommandExecuted( this, command );
+
+        return result;
       }
       catch ( DbException e )
       {
@@ -142,35 +130,15 @@ namespace Ivony.Data
 
 
 
-    /// <summary>
-    /// 协助填充DataSet，并将填充的最后一个表返回
-    /// </summary>
-    /// <param name="adapter">用来填充数据的适配器</param>
-    /// <param name="dataSet">需要被填充的数据集</param>
-    /// <param name="tableName">将最后一个表设置为什么名字</param>
-    /// <returns></returns>
-    public static DataTable Data( IDataAdapter adapter, DataSet dataSet, string tableName )
-    {
-      if ( dataSet == null )
-        dataSet = new DataSet();
-
-      adapter.Fill( dataSet );
-
-      DataTable dataTable = dataSet.Tables[dataSet.Tables.Count - 1];
 
 
-      if ( tableName != null )
-        dataTable.TableName = tableName;
-
-      return dataTable;
-    }
 
     /// <summary>
-    /// 协助执行无结果的查询
+    /// 执行无结果的查询
     /// </summary>
     /// <param name="command">查询命令</param>
     /// <returns>受影响的行数。</returns>
-    public static int NonQuery( IDbCommand command )
+    public static int ExecuteNonQuery( IDbCommand command )
     {
       if ( command.Connection == null )
         throw new InvalidOperationException( "数据库连接尚未初始化" );
@@ -196,7 +164,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="command">查询命令</param>
     /// <returns></returns>
-    public static object Scalar( IDbCommand command )
+    public static object ExecuteScalar( IDbCommand command )
     {
       if ( command.Connection == null )
         throw new InvalidOperationException( "数据库连接尚未初始化" );
@@ -222,7 +190,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="command">查询命令</param>
     /// <returns></returns>
-    public static DataRow FirstRow( IDbCommand command )
+    public static DataRow ExecuteFirstRow( IDbCommand command )
     {
       if ( command.Connection == null )
         throw new InvalidOperationException( "数据库连接尚未初始化" );
@@ -232,7 +200,7 @@ namespace Ivony.Data
         try
         {
           command.Connection.Open();
-          return ExecuteSingleRowPrivate( command );
+          return ExecuteFirstRowPrivate( command );
         }
         finally
         {
@@ -241,11 +209,11 @@ namespace Ivony.Data
       }
       else
       {
-        return ExecuteSingleRowPrivate( command );
+        return ExecuteFirstRowPrivate( command );
       }
     }
 
-    private static DataRow ExecuteSingleRowPrivate( IDbCommand command )
+    private static DataRow ExecuteFirstRowPrivate( IDbCommand command )
     {
       using ( IDataReader reader = command.ExecuteReader( CommandBehavior.SingleRow | CommandBehavior.SingleResult ) )
       {
@@ -257,6 +225,44 @@ namespace Ivony.Data
           return null;
         else
           return table.Rows[0];
+      }
+    }
+
+    /// <summary>
+    /// 执行查询，并返回第一个结果集
+    /// </summary>
+    /// <param name="command">查询命令</param>
+    /// <returns>第一个结果集</returns>
+    public static DataTable ExecuteData( IDbCommand command )
+    {
+      if ( command.Connection == null )
+        throw new InvalidOperationException( "数据库连接尚未初始化" );
+
+      if ( command.Connection.State == ConnectionState.Closed )
+      {
+        try
+        {
+          command.Connection.Open();
+          return ExecuteDataPrivate( command );
+        }
+        finally
+        {
+          command.Connection.Close();
+        }
+      }
+      else
+        return ExecuteDataPrivate( command );
+    }
+
+    private static DataTable ExecuteDataPrivate( IDbCommand command )
+    {
+      using ( IDataReader reader = command.ExecuteReader( CommandBehavior.SingleRow | CommandBehavior.SingleResult ) )
+      {
+        DataTable table = new DataTable();
+
+        table.Load( reader );
+
+        return table;
       }
     }
 
@@ -304,7 +310,7 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 当发生错误时
+    /// 当发生错误时引发此事件
     /// </summary>
     public event EventHandler<DbErrorEventArgs> Error;
 
@@ -321,6 +327,57 @@ namespace Ivony.Data
       {
         handler( sender, new DbErrorEventArgs( exception, command ) );
       }
+    }
+
+
+    /// <summary>
+    /// 当执行某个命令前引发此事件
+    /// </summary>
+    public event EventHandler<DbCommandEventArgs> CommandExecuting;
+
+    protected void OnCommandExecuting( object sender, IDbCommand command )
+    {
+      if ( CommandExecuting != null )
+        CommandExecuting( sender, new DbCommandEventArgs( command ) );
+    }
+
+    /// <summary>
+    /// 当成功执行某个命令后引发此事件
+    /// </summary>
+    public event EventHandler<DbCommandEventArgs> CommandExecuted;
+
+    protected void OnCommandExecuted( object sender, IDbCommand command )
+    {
+      if ( CommandExecuted != null )
+        CommandExecuted( sender, new DbCommandEventArgs( command ) );
+    }
+
+
+
+
+    /// <summary>
+    /// 为数据库操作事件提供事件参数
+    /// </summary>
+    public class DbCommandEventArgs : EventArgs
+    {
+      /// <summary>
+      /// 创建 DbCommandEventArgs 对象
+      /// </summary>
+      /// <param name="command">执行的查询命令</param>
+      public DbCommandEventArgs( IDbCommand command )
+      {
+        Command = command;
+      }
+
+      /// <summary>
+      /// 获取执行的查询命令对象
+      /// </summary>
+      public IDbCommand Command
+      {
+        get;
+        private set;
+      }
+
     }
 
 

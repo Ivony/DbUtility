@@ -73,13 +73,6 @@ namespace Ivony.Data
       return new SqlDataAdapter( (SqlCommand) selectCommand );
     }
 
-    protected override IDataParameter CreateParameter( string name, object value )
-    {
-      return new SqlParameter( name, value ?? DBNull.Value );
-    }
-
-
-
     /// <summary>
     /// 创建一个事务
     /// </summary>

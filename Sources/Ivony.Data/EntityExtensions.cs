@@ -25,7 +25,7 @@ namespace Ivony.Data
     /// <returns>实体集</returns>
     public static T[] Entities<T>( this DbUtility dbUtility, IDbExpression expression ) where T : new()
     {
-      var data = dbUtility.Data( expression );
+      var data = dbUtility.ExecuteData( expression );
       return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
     }
 
@@ -39,7 +39,7 @@ namespace Ivony.Data
     /// <returns>实体</returns>
     public static T Entity<T>( this DbUtility dbUtility, IDbExpression expression ) where T : new()
     {
-      var dataItem = dbUtility.FirstRow( expression );
+      var dataItem = dbUtility.ExecuteFirstRow( expression );
       return dataItem.ToEntity<T>();
     }
 

@@ -23,7 +23,7 @@ namespace Ivony.Data
     /// <returns></returns>
     public static DataTable Data( this DbUtility dbUtility, string template, params object[] parameters )
     {
-      return dbUtility.Data( Template( template, parameters ) );
+      return dbUtility.ExecuteData( Template( template, parameters ) );
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ namespace Ivony.Data
     /// <returns></returns>
     public static int NonQuery( this DbUtility dbUtility, string commandText, params object[] parameters )
     {
-      return dbUtility.NonQuery( Template( commandText, parameters ) );
+      return dbUtility.ExecuteNonQuery( Template( commandText, parameters ) );
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ namespace Ivony.Data
     /// <returns></returns>
     public static object Scalar( this DbUtility dbUtility, string commandText, params object[] parameters )
     {
-      return dbUtility.Scalar( Template( commandText, parameters ) );
+      return dbUtility.ExecuteScalar( Template( commandText, parameters ) );
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ namespace Ivony.Data
     /// <returns></returns>
     public static DataRow FirstRow( this DbUtility dbUtility, string commandText, params object[] parameters )
     {
-      return dbUtility.FirstRow( Template( commandText, parameters ) );
+      return dbUtility.ExecuteFirstRow( Template( commandText, parameters ) );
     }
 
     /// <summary>
