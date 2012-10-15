@@ -269,10 +269,22 @@ namespace Ivony.Data
       }
     }
 
+    /// <summary>
+    /// 利用 DataAdapter 填充 DataSet
+    /// </summary>
+    /// <param name="adapter">用于填充 DataSet 的 Adapter 对象</param>
+    /// <returns>填充后的 DataSet 对象</returns>
     public static DataSet Fill( IDataAdapter adapter )
     {
       return Fill( adapter, null );
     }
+
+    /// <summary>
+    /// 利用 DataAdapter 填充 DataSet
+    /// </summary>
+    /// <param name="adapter">用于填充 DataSet 的 Adapter 对象</param>
+    /// <param name="dataSet">要被填充的 DataSet 对象</param>
+    /// <returns>填充后的 DataSet 对象</returns>
     public static DataSet Fill( IDataAdapter adapter, DataSet dataSet )
     {
 
