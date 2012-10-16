@@ -68,11 +68,6 @@ namespace Ivony.Data
     }
 
 
-    protected override IDataAdapter CreateDataAdapter( IDbCommand selectCommand )
-    {
-      return new SqlDataAdapter( (SqlCommand) selectCommand );
-    }
-
     /// <summary>
     /// 创建一个事务
     /// </summary>

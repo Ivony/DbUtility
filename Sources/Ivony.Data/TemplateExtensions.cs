@@ -16,7 +16,7 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 填充DataSet，并将填充的最后一个表返回
+    /// 执行查询，并返回第一个结果集
     /// </summary>
     /// <param name="template">查询字符串模板</param>
     /// <param name="parameters">查询字符串参数</param>
@@ -24,20 +24,6 @@ namespace Ivony.Data
     public static DataTable Data( this DbUtility dbUtility, string template, params object[] parameters )
     {
       return dbUtility.ExecuteData( Template( template, parameters ) );
-    }
-
-    /// <summary>
-    /// 填充DataSet，并将填充的最后一个表返回
-    /// </summary>
-    /// <param name="dataSet">需要被填充的数据集</param>
-    /// <param name="tableName">将最后一个表设置为什么名字</param>
-    /// <param name="commandText">查询字符串模板</param>
-    /// <param name="parameters">查询字符串参数</param>
-    /// <returns></returns>
-    public static DataTable Data( this DbUtility dbUtility, DataSet dataSet, string tableName, string template, params object[] parameters )
-    {
-      return dbUtility.Data( dataSet, tableName, Template( template, parameters ) );
-
     }
 
     /// <summary>

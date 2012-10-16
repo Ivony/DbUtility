@@ -8,11 +8,6 @@ namespace Ivony.Data
 {
   public class AccessDbUtility : DbUtility
   {
-    protected override IDataAdapter CreateDataAdapter( System.Data.IDbCommand selectCommand )
-    {
-      throw new NotImplementedException();
-    }
-
     protected override IDbExpressionParser GetExpressionParser()
     {
       throw new NotImplementedException();
