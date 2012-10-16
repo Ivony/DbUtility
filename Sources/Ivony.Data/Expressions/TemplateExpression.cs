@@ -15,6 +15,11 @@ namespace Ivony.Data.Expressions
   public abstract class TemplateParseContext
   {
 
+    /// <summary>
+    /// 创建参数 SQL 表达式
+    /// </summary>
+    /// <param name="parameter">参数表达式</param>
+    /// <returns>该参数在 SQL 语句中引用的形式</returns>
     public abstract string CreateParameterExpression( ParameterExpression parameter );
 
   }
@@ -24,7 +29,11 @@ namespace Ivony.Data.Expressions
   /// </summary>
   public interface ITemplatePartialExpression : IDbExpression
   {
-
+    /// <summary>
+    /// 解析模版并提供嵌入的 SQL 表达式
+    /// </summary>
+    /// <param name="context">模版解析上下文</param>
+    /// <returns></returns>
     string Parse( TemplateParseContext context );
 
   }

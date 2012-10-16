@@ -52,6 +52,15 @@ namespace Ivony.Data
     /// <returns>实体</returns>
     public static T ToEntity<T>( this DataRow dataItem ) where T : new()
     {
+
+      if ( dataItem.Table.Columns.Count == 1 )
+      {
+        var value = dataItem[0];
+
+        if ( value is T )
+          return (T) value;
+      }
+
       var method = CreateEntityConverter<T>();
       var entity = new T();
       method( dataItem, entity );
@@ -138,7 +147,7 @@ namespace Ivony.Data
 
 
     private static object sync = new object();
-    private static Dictionary<PropertyInfo, object[]> _propertyAttributesCache = new Dictionary<PropertyInfo,object[]>();
+    private static Dictionary<PropertyInfo, object[]> _propertyAttributesCache = new Dictionary<PropertyInfo, object[]>();
 
     private static object[] GetAttributes( PropertyInfo p )
     {
@@ -196,5 +205,34 @@ namespace Ivony.Data
   public class NonFieldAttribute : Attribute
   {
   }
+
+
+  /// <summary>
+  /// 指定类型所应使用的实体转换器
+  /// </summary>
+  [AttributeUsage( AttributeTargets.Class, Inherited = false )]
+  public class EntityConvertAttribute : Attribute
+  {
+
+    private Type _convertType;
+
+    public EntityConvertAttribute( Type convertType )
+    {
+      _convertType = convertType;
+    }
+
+    public IEntityConverter<T> CreateConverter<T>()
+    {
+      return (IEntityConverter<T>) Activator.CreateInstance( _convertType );
+    }
+
+  }
+
+  public interface IEntityConverter<T>
+  {
+    T Convert( DataRow dataItem );
+  }
+
+
 
 }

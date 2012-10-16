@@ -56,6 +56,7 @@
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="DbUtility.cs" />
     <Compile Include="EntityExtensions.cs" />
+    <Compile Include="ExcelDbUtility.cs" />
     <Compile Include="Expressions\StoredProcedureExpression.cs" />
     <Compile Include="Expressions\TableExpression.cs" />
     <Compile Include="Expressions\TemplateExpression.cs" />
