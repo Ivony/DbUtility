@@ -259,7 +259,7 @@ namespace Ivony.Data
 
     private static DataTable ExecuteDataPrivate( IDbCommand command )
     {
-      using ( IDataReader reader = command.ExecuteReader( CommandBehavior.SingleRow | CommandBehavior.SingleResult ) )
+      using ( IDataReader reader = command.ExecuteReader( CommandBehavior.SingleResult ) )
       {
         DataTable table = new DataTable();
 
