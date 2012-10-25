@@ -30,9 +30,6 @@ namespace Ivony.Data
     /// <returns>解析后创建的命令对象</returns>
     public IDbCommand Parse( IDbExpression expression )
     {
-
-      var command = _dbUtility.CreateCommand();
-
       var template = expression as TemplateExpression;
       if ( template != null )
         return ParseTemplate( template );

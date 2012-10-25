@@ -52,6 +52,15 @@ namespace Ivony.Data
     /// <returns>实体</returns>
     public static T ToEntity<T>( this DataRow dataItem ) where T : new()
     {
+      if ( dataItem == null )
+      {
+
+        if ( typeof( T ).IsValueType )
+          throw new ArgumentNullException( "dataItem" );
+
+        else
+          return default( T );//等同于return null
+      }
 
       if ( dataItem.Table.Columns.Count == 1 )
       {

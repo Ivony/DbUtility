@@ -6,6 +6,7 @@ using System.Data;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Collections;
+using System.Configuration;
 
 namespace Ivony.Data
 {
@@ -200,6 +201,21 @@ namespace Ivony.Data
         return command;
       }
 
+    }
+
+
+    /// <summary>
+    /// 创建数据库访问工具
+    /// </summary>
+    /// <param name="name">连接字符串名称</param>
+    /// <returns>数据库访问工具</returns>
+    public static SqlDbUtility Create( string name )
+    {
+      var setting = ConfigurationManager.ConnectionStrings[name];
+      if ( setting == null )
+        throw new InvalidOperationException();
+
+      return new SqlDbUtility( setting.ConnectionString );
     }
 
   }
