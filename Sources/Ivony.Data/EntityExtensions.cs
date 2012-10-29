@@ -70,19 +70,55 @@ namespace Ivony.Data
           return (T) value;
       }
 
-      var method = CreateEntityConverter<T>();
+
+      var convertType = ConvertTypeCache<T>.Converter;
+
+      if ( convertType == null )
+      {
+        var type = typeof( T );
+        var attribute = type.GetCustomAttributes( typeof( EntityConvertAttribute ), false ).OfType<EntityConvertAttribute>().FirstOrDefault();
+
+        if ( attribute != null )
+          convertType = attribute.CreateConverter<T>();
+        else
+          convertType = new DefaultEntityConverter<T>();
+
+
+        if ( convertType.IsReusable )
+          ConvertTypeCache<T>.Converter = convertType;
+      }
+
+
       var entity = new T();
-      method( dataItem, entity );
+
+      if ( convertType.NeedPreconversion )
+      {
+        var method = CreateEntityConvertMethod<T>();
+        method( dataItem, entity );
+      }
+
+      convertType.Convert( dataItem, entity );
       return entity;
     }
 
-    private static Action<DataRow, T> CreateEntityConverter<T>()
+
+    private class DefaultEntityConverter<T> : IEntityConverter<T>
+    {
+      public void Convert( DataRow dataItem, T entity ) { return; }
+
+      public bool IsReusable { get { return true; } }
+
+      public bool NeedPreconversion { get { return true; } }
+    }
+
+    private static Action<DataRow, T> CreateEntityConvertMethod<T>()
     {
       var method = ConverterCache<T>.Converter;
       if ( method != null )
         return method;
 
       var type = typeof( T );
+
       var properties = type.GetProperties()
         .Where( p => !GetAttributes( p ).OfType<NonFieldAttribute>().Any() );
 
@@ -140,6 +176,9 @@ namespace Ivony.Data
       il.Emit( OpCodes.Ret );
 
       method = (Action<DataRow, T>) dynamicMethod.CreateDelegate( typeof( Action<DataRow, T> ) );
+
+
+
       ConverterCache<T>.Converter = method;
       return method;
     }
@@ -179,6 +218,12 @@ namespace Ivony.Data
     {
       public static Action<DataRow, T> Converter { get; set; }
     }
+
+    private static class ConvertTypeCache<T>
+    {
+      public static IEntityConverter<T> Converter { get; set; }
+    }
+
   }
 
   /// <summary>
@@ -239,7 +284,22 @@ namespace Ivony.Data
 
   public interface IEntityConverter<T>
   {
-    T Convert( DataRow dataItem );
+    /// <summary>
+    /// 将数据写入实体
+    /// </summary>
+    /// <param name="dataItem"></param>
+    /// <returns></returns>
+    void Convert( DataRow dataItem, T entity );
+
+    /// <summary>
+    /// 是否可重用
+    /// </summary>
+    bool IsReusable { get; }
+
+    /// <summary>
+    /// 是否需要预转换
+    /// </summary>
+    bool NeedPreconversion { get; }
   }
 
 
