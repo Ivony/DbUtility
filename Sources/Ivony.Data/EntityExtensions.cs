@@ -102,6 +102,10 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 提供默认的 EntityConverter 对象，这个对象什么都不做，并且被设置为可重用和需要预转换。
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     private class DefaultEntityConverter<T> : IEntityConverter<T>
     {
       public void Convert( DataRow dataItem, T entity ) { return; }
@@ -111,6 +115,12 @@ namespace Ivony.Data
       public bool NeedPreconversion { get { return true; } }
     }
 
+
+    /// <summary>
+    /// 创建转换方法
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <returns>针对指定实体的转换方法</returns>
     private static Action<DataRow, T> CreateEntityConvertMethod<T>()
     {
       var method = ConverterCache<T>.Converter;
@@ -183,20 +193,31 @@ namespace Ivony.Data
       return method;
     }
 
-    private static string GetFieldname( PropertyInfo p )
+    
+    /// <summary>
+    /// 获取属性所对应的字段名
+    /// </summary>
+    /// <param name="property">要获取字段名的属性</param>
+    /// <returns></returns>
+    private static string GetFieldname( PropertyInfo property )
     {
-      var attribute = GetAttributes( p ).OfType<FieldNameAttribute>().FirstOrDefault();
+      var attribute = GetAttributes( property ).OfType<FieldNameAttribute>().FirstOrDefault();
 
       if ( attribute != null )
         return attribute.FieldName;
 
-      return p.Name;
+      return property.Name;
     }
 
 
     private static object sync = new object();
     private static Dictionary<PropertyInfo, object[]> _propertyAttributesCache = new Dictionary<PropertyInfo, object[]>();
 
+    /// <summary>
+    /// 获取指定属性上的特性
+    /// </summary>
+    /// <param name="p">要获取特性的属性</param>
+    /// <returns>属性上所设置的特性</returns>
     private static object[] GetAttributes( PropertyInfo p )
     {
       lock ( sync )

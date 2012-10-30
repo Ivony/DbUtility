@@ -9,6 +9,11 @@ namespace Ivony.Data
 {
   public class ExcelDbUtility : DbUtility
   {
+
+    /// <summary>
+    /// 获取数据库表达式解析器
+    /// </summary>
+    /// <returns>数据库表达式解析器</returns>
     protected override IDbExpressionParser GetExpressionParser()
     {
       return new ExcelExpressionParser( this );
