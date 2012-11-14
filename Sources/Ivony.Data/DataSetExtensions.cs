@@ -23,5 +23,30 @@ namespace Ivony.Data
       return table.DefaultView.Cast<DataRowView>();
     }
 
+
+    /// <summary>
+    /// 获取第一列数据
+    /// </summary>
+    /// <typeparam name="T">列数据类型</typeparam>
+    /// <param name="table">数据对象</param>
+    /// <returns></returns>
+    public static IEnumerable<T> Column<T>( this DataTable table )
+    {
+      return table.Rows.Cast<DataRow>().Select( item => item.Field<T>( 0 ) );
+    }
+
+    /// <summary>
+    /// 获取指定列数据
+    /// </summary>
+    /// <typeparam name="T">列数据类型</typeparam>
+    /// <param name="table">数据对象</param>
+    /// <param name="columnName">列名</param>
+    /// <returns></returns>
+    public static IEnumerable<T> Column<T>( this DataTable table, string columnName )
+    {
+      return table.Rows.Cast<DataRow>().Select( item => item.Field<T>( columnName ) );
+    }
+
+
   }
 }

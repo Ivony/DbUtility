@@ -24,17 +24,12 @@ namespace Ivony.Data.LegacyAPI
 
     public static int ExecuteNonQuery( this DbUtility dbUtility, string template, params object[] args )
     {
-      return dbUtility.ExecuteNonQuery( template, args );
+      return dbUtility.NonQuery( template, args );
     }
 
     public static DataRow ExecuteSingleRow( this DbUtility dbUtility, string template, params object[] args )
     {
       return dbUtility.FirstRow( template, args );
-    }
-
-    public static DataTable ExecuteData( this DbUtility dbUtility, string template, params object[] args )
-    {
-      return dbUtility.Data( template, args );
     }
 
   }

@@ -49,6 +49,17 @@ namespace Ivony.Data
     }
 
     /// <summary>
+    /// 执行查询，并返回首行首列
+    /// </summary>
+    /// <param name="commandText">查询字符串模板</param>
+    /// <param name="parameters">查询字符串参数</param>
+    /// <returns></returns>
+    public static T Scalar<T>( this DbUtility dbUtility, string commandText, params object[] parameters )
+    {
+      return (T) Scalar( dbUtility, commandText, parameters );
+    }
+
+    /// <summary>
     /// 执行查询，并返回首行
     /// </summary>
     /// <param name="commandText">查询字符串模板</param>
