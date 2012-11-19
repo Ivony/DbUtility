@@ -7,18 +7,26 @@ using System.Text;
 
 namespace Ivony.Data
 {
+
+  /// <summary>
+  /// 提供关于动态对象的扩展方法
+  /// </summary>
   public static class DynamicExtensions
   {
 
+    /// <summary>
+    /// 将 DataRow 转换为动态对象
+    /// </summary>
+    /// <param name="dataItem"></param>
+    /// <returns></returns>
     public static dynamic ToDynamic( this DataRow dataItem )
     {
       return new DynamicDataRow( dataItem );
     }
 
     /// <summary>
-    /// 查询数据库并将最后一个结果集填充实体类型
+    /// 查询数据库并将最后一个结果集填充动态对象列表
     /// </summary>
-    /// <typeparam name="T">实体类型</typeparam>
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="expression">查询表达式</param>
     /// <returns>实体集</returns>
@@ -30,9 +38,8 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 查询数据库并将最后一个结果集填充实体类型
+    /// 查询数据库并将最后一个结果集填充动态对象列表
     /// </summary>
-    /// <typeparam name="T">实体类型</typeparam>
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="template">查询字符串模版</param>
     /// <param name="parameters">模版参数</param>
