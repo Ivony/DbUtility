@@ -21,6 +21,9 @@ namespace Ivony.Data
     /// <returns></returns>
     public static dynamic ToDynamic( this DataRow dataItem )
     {
+      if ( dataItem == null )
+        return null;
+
       return new DynamicDataRow( dataItem );
     }
 
