@@ -32,5 +32,11 @@ namespace Ivony.Data.LegacyAPI
       return dbUtility.FirstRow( template, args );
     }
 
+    public static T[] ExecuteSingleColumn<T>( this DbUtility dbUtility, string template, params object[] args )
+    {
+      return dbUtility.Data( template, args ).Column<T>();
+    }
+
+
   }
 }
