@@ -303,6 +303,10 @@ namespace Ivony.Data
 
   }
 
+  /// <summary>
+  /// 定义实体转换器类型
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
   public interface IEntityConverter<T>
   {
     /// <summary>
