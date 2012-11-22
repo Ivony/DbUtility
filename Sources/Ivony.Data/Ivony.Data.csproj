@@ -66,7 +66,7 @@
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="ExcelDbUtility.cs" />
     <Compile Include="ExecutableExpression.cs" />
-    <Compile Include="Expression.cs" />
+    <Compile Include="DbExpressions.cs" />
     <Compile Include="Expressions\StoredProcedureExpression.cs" />
     <Compile Include="Expressions\TableExpression.cs" />
     <Compile Include="Expressions\TemplateExpression.cs" />
