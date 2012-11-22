@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using Ivony.Data.Expressions;
 
 namespace Ivony.Data
 {
@@ -80,7 +79,7 @@ namespace Ivony.Data
     /// <returns>实体集</returns>
     public static T[] Entities<T>( this DbUtility dbUtility, string template, params object[] parameters ) where T : new()
     {
-      return dbUtility.Entities<T>( TemplateExtensions.Template( template, parameters ) );
+      return dbUtility.Entities<T>( DbExpressions.Template( template, parameters ) );
     }
 
     /// <summary>
@@ -93,7 +92,7 @@ namespace Ivony.Data
     /// <returns>实体</returns>
     public static T Entity<T>( this DbUtility dbUtility, string template, params object[] parameters ) where T : new()
     {
-      return dbUtility.Entity<T>( TemplateExtensions.Template( template, parameters ) );
+      return dbUtility.Entity<T>( DbExpressions.Template( template, parameters ) );
     }
 
 

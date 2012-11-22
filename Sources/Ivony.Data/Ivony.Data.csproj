@@ -65,6 +65,8 @@
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="ExcelDbUtility.cs" />
+    <Compile Include="ExecutableExpression.cs" />
+    <Compile Include="Expression.cs" />
     <Compile Include="Expressions\StoredProcedureExpression.cs" />
     <Compile Include="Expressions\TableExpression.cs" />
     <Compile Include="Expressions\TemplateExpression.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlDbUtility.cs" />
     <Compile Include="SqlServerExpressionParser.cs" />
+    <Compile Include="SqlServerHelper.cs" />
     <Compile Include="TemplateExtensions.cs" />
     <Compile Include="TransactionExtensions.cs" />
   </ItemGroup>

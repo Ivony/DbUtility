@@ -27,6 +27,18 @@ namespace Ivony.Data
       return new DynamicDataRow( dataItem );
     }
 
+
+    /// <summary>
+    /// 将 DataTable 转换为动态对象数组
+    /// </summary>
+    /// <param name="data">DataTable对象</param>
+    /// <returns></returns>
+    public static dynamic[] ToDynamics( this DataTable data )
+    {
+      return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToDynamic() ).ToArray();
+    }
+
+
     /// <summary>
     /// 查询数据库并将最后一个结果集填充动态对象列表
     /// </summary>
@@ -36,7 +48,7 @@ namespace Ivony.Data
     public static dynamic[] Dynamics( this DbUtility dbUtility, IDbExpression expression )
     {
       var data = dbUtility.ExecuteData( expression );
-      return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToDynamic() ).ToArray();
+      return ToDynamics( data );
     }
 
 
@@ -49,7 +61,7 @@ namespace Ivony.Data
     /// <returns>实体集</returns>
     public static dynamic[] Dynamics( this DbUtility dbUtility, string template, params object[] parameters )
     {
-      return dbUtility.Dynamics( TemplateExtensions.Template( template, parameters ) );
+      return dbUtility.Dynamics( DbExpressions.Template( template, parameters ) );
     }
 
 
