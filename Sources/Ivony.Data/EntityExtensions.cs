@@ -50,7 +50,7 @@ namespace Ivony.Data
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="dataItem">包含数据的 DataRow</param>
     /// <returns>实体</returns>
-    public static T ToEntity<T>( this DataRow dataItem ) where T : new()
+    public static T ToEntity<T>( this DataRow dataItem, IEntityConverter<T> converter = null ) where T : new()
     {
       if ( dataItem == null )
       {
@@ -71,7 +71,7 @@ namespace Ivony.Data
       }
 
 
-      var convertType = ConvertTypeCache<T>.Converter;
+      var convertType = converter ?? ConvertTypeCache<T>.Converter;
 
       if ( convertType == null )
       {
