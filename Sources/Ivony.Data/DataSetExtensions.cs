@@ -48,5 +48,29 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 将 DataRow 转换为等效的 Dictionary
+    /// </summary>
+    /// <param name="dataItem">要转换的 DataRow</param>
+    /// <returns>等效的 Dictionary</returns>
+    public static IDictionary<string, object> ToDictionary( this DataRow dataItem )
+    {
+
+      IDictionary<string,object> result;
+
+      var table = dataItem.Table;
+      if ( table.CaseSensitive )
+        result = new Dictionary<string, object>( StringComparer.Ordinal );
+      else
+        result = new Dictionary<string, object>( StringComparer.OrdinalIgnoreCase );
+
+      foreach ( DataColumn column in table.Columns )
+        result.Add( column.ColumnName, dataItem[column] );
+
+      return result;
+    }
+
+
+
   }
 }
