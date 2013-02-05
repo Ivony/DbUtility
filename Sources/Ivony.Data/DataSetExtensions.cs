@@ -14,14 +14,36 @@ namespace Ivony.Data
   {
 
     /// <summary>
-    /// 获取指定 DataTable 的默认视图
+    /// 将 DataTable 转换为易于数据绑定的 DataRowView 对象列表
     /// </summary>
-    /// <param name="table">要获取默认视图的 DataTable</param>
-    /// <returns>默认数据视图</returns>
-    public static IEnumerable<DataRowView> View( this DataTable table )
+    /// <param name="table">要转换的 DataTable</param>
+    /// <returns>易于数据绑定的形式</returns>
+    public static IEnumerable<DataRowView> AsView( this DataTable table )
     {
       return table.DefaultView.Cast<DataRowView>();
     }
+
+
+    /// <summary>
+    /// 将 DataTable 转换为易于数据绑定的 IDictionary&lt;string, object&gt; 对象列表
+    /// </summary>
+    /// <param name="table">要转换的 DataTable</param>
+    /// <returns>易于数据绑定的形式</returns>
+    public static IEnumerable<IDictionary<string, object>> AsDictionaries( this DataTable table )
+    {
+      return AsView( table ).Select( item => CreateDictionary( item, table ) );
+    }
+
+    private static IDictionary<string, object> CreateDictionary( DataRowView item, DataTable table )
+    {
+      var result = new Dictionary<string, object>( table.CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase );
+      foreach ( DataColumn column in table.Columns )
+        result.Add( column.ColumnName, item[column.ColumnName] );
+
+      return result;
+    }
+
+
 
 
     /// <summary>
