@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using Ivony.Fluent;
 
 namespace Ivony.Data
 {
@@ -55,7 +56,7 @@ namespace Ivony.Data
     /// <returns></returns>
     public static T Scalar<T>( this DbUtility dbUtility, string commandText, params object[] parameters )
     {
-      return (T) Scalar( dbUtility, commandText, parameters );
+      return Scalar( dbUtility, commandText, parameters ).ConvertTo<T>();
     }
 
     /// <summary>

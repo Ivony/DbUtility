@@ -79,6 +79,12 @@
     <Compile Include="TemplateExtensions.cs" />
     <Compile Include="TransactionExtensions.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ivony.Core\Ivony.Core.csproj">
+      <Project>{bf0b37e7-2d93-4a3d-ad6d-0b51b66f5b21}</Project>
+      <Name>Ivony.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>DEL "$(TargetDir)Code.RAR"
