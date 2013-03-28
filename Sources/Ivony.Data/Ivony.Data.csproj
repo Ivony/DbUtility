@@ -47,6 +47,9 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ivony.Core">
+      <HintPath>..\packages\Ivony.Core.1.0.0\lib\Ivony.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -80,10 +83,7 @@
     <Compile Include="TransactionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ivony.Core\Ivony.Core.csproj">
-      <Project>{bf0b37e7-2d93-4a3d-ad6d-0b51b66f5b21}</Project>
-      <Name>Ivony.Core</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
