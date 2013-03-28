@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
@@ -147,6 +148,35 @@ namespace Ivony.Data
         }
 
         return base.TrySetIndex( binder, indexes, value );
+      }
+
+
+      public override IEnumerable<string> GetDynamicMemberNames()
+      {
+        return _columns.Cast<DataColumn>().Select( c => c.ColumnName );
+      }
+
+      public override bool TryConvert( ConvertBinder binder, out object result )
+      {
+
+        if ( binder.ReturnType == typeof( DataRow ) )
+          result = _dataRow;
+
+        else if ( binder.ReturnType == typeof( IDictionary<string, object> ) )
+          result = _dataRow.ToDictionary();
+
+        else if ( _columns.Count == 1 && _columns[0].DataType.IsSubclassOf( binder.ReturnType ) )
+          result = _dataRow[0];
+
+        else
+          return base.TryConvert( binder, out result );
+
+        return true;
+      }
+
+      public override DynamicMetaObject GetMetaObject( System.Linq.Expressions.Expression parameter )
+      {
+        return base.GetMetaObject( parameter );
       }
     }
   }
