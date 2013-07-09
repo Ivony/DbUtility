@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -53,13 +54,17 @@ namespace Ivony.Data
 
       Template = template.Replace( "{...}", ParseParameterListSymbol( parameters.Length ) );
 
-      Parameters = parameters.Select( item => 
+      Parameters = parameters.Select( item =>
       {
         var partial = item as ITemplatePartialExpression;
         if ( partial == null )
           partial = new ParameterExpression( item );
         return partial;
-      }).ToArray();
+      } ).ToArray();
+
+      var maxIndex = FormatRegexNum.Matches( Template ).Cast<Match>().Select( m => int.Parse( m.Groups["index"].Value ) ).Max();
+      if ( maxIndex >= Parameters.Length )
+        throw new IndexOutOfRangeException();
     }
 
     /// <summary>
@@ -89,7 +94,6 @@ namespace Ivony.Data
     {
       return FormatRegexNum.Replace( Template, delegate( Match match )
       {
-        string format = match.Groups["format"].ToString();
         int index = int.Parse( match.Groups["index"].ToString() );
 
         if ( index >= Parameters.Length )
@@ -104,7 +108,7 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 处理参数列表表达式“{...}”
+    /// 解析参数列表表达式“{...}”
     /// </summary>
     /// <param name="amount">参数个数</param>
     /// <returns></returns>
@@ -125,7 +129,71 @@ namespace Ivony.Data
     }
 
 
-    internal static readonly Regex FormatRegexNum = new Regex( @"\{(?<index>[0-9]*)(,(?<alignment>[0-9]+[a-zA-Z]*))?(\:(?<format>[^{}]*))?\}", RegexOptions.Compiled );
+
+    /// <summary>
+    /// 将多个 TemplateExpression 拼接在一起
+    /// </summary>
+    /// <param name="expressions">要拼接的 Expression</param>
+    /// <returns>拼接后的 Expression</returns>
+    public static TemplateExpression Concat( params TemplateExpression[] expressions )
+    {
+
+      var parameters = new ArrayList();
+      var template = new StringBuilder();
+      var offset = 0;
+
+      foreach ( var e in expressions )
+      {
+        parameters.AddRange( e.Parameters );
+        template.Append( AddParameterOffset( e.Template, offset ) );
+
+        offset += e.Parameters.Length;
+      }
+
+      return new TemplateExpression( template.ToString(), parameters.ToArray() );
+    }
+
+    private static string AddParameterOffset( string template, int offset )
+    {
+
+      if ( offset == 0 )
+        return template;
+
+      else if ( offset < 0 )
+        throw new ArgumentOutOfRangeException( "offset" );
+
+
+      return FormatRegexNum.Replace( template, delegate( Match match )
+      {
+        var index = int.Parse( match.Groups["index"].Value );
+        index += offset;
+        return "{" + index + "}";
+      } );
+
+    }
+
+    /// <summary>
+    /// 将两个 TemplateExpression 拼接在一起
+    /// </summary>
+    /// <param name="template1">第一个要拼接的 TemplateExpression</param>
+    /// <param name="template2">第二个要拼接的 TemplateExpression</param>
+    /// <returns>拼接好的 TemplateExpression</returns>
+    public static TemplateExpression operator +( TemplateExpression template1, TemplateExpression template2 )
+    {
+      return Concat( template1, template2 );
+    }
+
+
+    public static TemplateExpression Join( string separator, params TemplateExpression[] expressions )
+    {
+      throw new NotImplementedException();
+    }
+
+
+
+
+
+    internal static readonly Regex FormatRegexNum = new Regex( @"\{(?<index>[0-9]+)\}", RegexOptions.Compiled );
   }
 
   /// <summary>
