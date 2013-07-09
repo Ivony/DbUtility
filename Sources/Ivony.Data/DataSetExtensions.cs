@@ -78,7 +78,7 @@ namespace Ivony.Data
     public static IDictionary<string, object> ToDictionary( this DataRow dataItem )
     {
 
-      IDictionary<string,object> result;
+      IDictionary<string, object> result;
 
       var table = dataItem.Table;
       if ( table.CaseSensitive )
@@ -90,6 +90,17 @@ namespace Ivony.Data
         result.Add( column.ColumnName, dataItem[column] );
 
       return result;
+    }
+
+
+    /// <summary>
+    /// 将 DataTable 转换为等效的 Dictionary 数组
+    /// </summary>
+    /// <param name="data">要转换的 DataTable</param>
+    /// <returns>等效的 Dictionary</returns>
+    public static IDictionary<string, object>[] ToDictionaries( this DataTable data )
+    {
+      return data.Rows.Cast<DataRow>().Where( r => r.RowState == DataRowState.Unchanged ).Select( r => ToDictionary( r ) ).ToArray();
     }
 
 
