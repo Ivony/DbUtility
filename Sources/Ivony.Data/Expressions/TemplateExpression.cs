@@ -145,7 +145,7 @@ namespace Ivony.Data
       foreach ( var e in expressions )
       {
         parameters.AddRange( e.Parameters );
-        template.Append( AddParameterOffset( e.Template, offset ) );
+        template.Append( OffsetParameterIndex( e.Template, offset ) );
 
         offset += e.Parameters.Length;
       }
@@ -153,7 +153,14 @@ namespace Ivony.Data
       return new TemplateExpression( template.ToString(), parameters.ToArray() );
     }
 
-    private static string AddParameterOffset( string template, int offset )
+
+    /// <summary>
+    /// 将所有参数序号推移指定的偏移量
+    /// </summary>
+    /// <param name="template">要处理的字符串模板</param>
+    /// <param name="offset">要推移的偏移量</param>
+    /// <returns>处理后的字符串模板</returns>
+    private static string OffsetParameterIndex( string template, int offset )
     {
 
       if ( offset == 0 )
@@ -184,11 +191,43 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 将多个 TemplateExpression 拼接在一起，并使用指定的字符串分隔
+    /// </summary>
+    /// <param name="separator">用于分隔各个 TemplateExpression 的字符串</param>
+    /// <param name="expressions">要拼合的模板表达式</param>
+    /// <returns></returns>
     public static TemplateExpression Join( string separator, params TemplateExpression[] expressions )
     {
-      throw new NotImplementedException();
+      return Join( new TemplateExpression( separator ), expressions );
     }
 
+    /// <summary>
+    /// 将多个 TemplateExpression 拼接在一起，并使用指定的 TemplateExpression 分隔
+    /// </summary>
+    /// <param name="separator">用于分隔各个 TemplateExpression 的字符串</param>
+    /// <param name="expressions">要拼合的模板表达式</param>
+    /// <returns></returns>
+    public static TemplateExpression Join( TemplateExpression separator, params TemplateExpression[] expressions )
+    {
+
+      if ( expressions.Length == 0 )
+        return null;
+
+      if ( expressions.Length == 1 )
+        return expressions[0];
+
+      var set = new TemplateExpression[expressions.Length + expressions.Length - 1];
+      for ( int i = 0; i < expressions.Length; i++ )
+        set[i * 2] = expressions[i];
+
+      for ( int i = 1; i < set.Length; i += 2 )
+        set[i] = separator;
+
+      return Concat( set );
+
+
+    }
 
 
 
