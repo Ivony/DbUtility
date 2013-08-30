@@ -445,6 +445,20 @@ namespace Ivony.Data
       }
     }
 
+
+    /// <summary>
+    /// 获取模板表达式
+    /// </summary>
+    /// <param name="template">字符串模板</param>
+    /// <param name="parameters">参数列表</param>
+    /// <returns>模板表达式对象</returns>
+    public static TemplateExpression Template( string template, object[] parameters )
+    {
+      return new TemplateExpression( template, parameters );
+    }
+
+
+
     /// <summary>
     /// 创建事务管理器
     /// </summary>
