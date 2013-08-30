@@ -62,7 +62,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccessDbUtility.cs" />
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="DbUtility.cs" />
     <Compile Include="DynamicExtensions.cs" />

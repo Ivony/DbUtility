@@ -17,21 +17,11 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 获取DbExpressionParser实例，用于分析数据查询表达式
-    /// </summary>
-    /// <returns>DbExpressionParser实例</returns>
-    protected abstract IDbExpressionParser GetExpressionParser();
-
-    /// <summary>
-    /// 创建 DbCommand 对象
+    /// 根据表达式创建要执行的指令对象
     /// </summary>
     /// <param name="expression">查询表达式</param>
-    /// <returns>DbCommand 对象</returns>
-    protected virtual IDbCommand CreateCommand( IDbExpression expression )
-    {
-      var parser = GetExpressionParser();
-      return parser.Parse( expression );
-    }
+    /// <returns>用于执行该表达式的指令对象</returns>
+    protected abstract IDbCommand CreateCommand( IDbExpression expression );
 
 
 

@@ -6,58 +6,18 @@ using System.Text;
 
 namespace Ivony.Data
 {
+  /// <summary>
+  /// 用于辅助执行通过OleDb 协议操作 Excel 文件的数据访问帮助器
+  /// </summary>
   public class ExcelDbUtility : DbUtility
   {
 
-    /// <summary>
-    /// 获取数据库表达式解析器
-    /// </summary>
-    /// <returns>数据库表达式解析器</returns>
-    protected override IDbExpressionParser GetExpressionParser()
+
+    protected override IDbCommand CreateCommand( IDbExpression expression )
     {
-      return new ExcelExpressionParser( this );
+      throw new NotImplementedException();
     }
 
-    private class ExcelExpressionParser : IDbExpressionParser
-    {
-
-      public ExcelDbUtility _dbUtility;
-
-      public ExcelExpressionParser( ExcelDbUtility dbUtility )
-      {
-        _dbUtility = dbUtility;
-      }
-
-
-      public IDbCommand Parse( IDbExpression expression )
-      {
-        var templateExpression = expression as TemplateExpression;
-        if ( templateExpression != null )
-          return ParseTemplate( templateExpression );
-
-        throw new NotSupportedException();
-      }
-
-      private IDbCommand ParseTemplate( TemplateExpression templateExpression )
-      {
-        var context = new ExcelTemplateParseContext();
-        var commandText = templateExpression.Parse( context );
-
-        throw new NotImplementedException();
-      }
-
-
-      private class ExcelTemplateParseContext : TemplateParseContext
-      {
-        public override string CreateParameterExpression( ParameterExpression parameter )
-        {
-          throw new NotImplementedException();
-        }
-      }
-
-
-    }
-
-
+    
   }
 }

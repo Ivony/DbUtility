@@ -49,14 +49,22 @@ namespace Ivony.Data
       return new SqlConnection( _connectionString );
     }
 
+
+
+
+
+
     /// <summary>
-    /// 获取查询表达式解析器
+    /// 根据表达式创建要执行的指令对象
     /// </summary>
-    /// <returns>查询表达式解析器</returns>
-    protected override IDbExpressionParser GetExpressionParser()
+    /// <param name="expression">查询表达式</param>
+    /// <returns>用于执行该表达式的指令对象</returns>
+    protected override IDbCommand CreateCommand( IDbExpression expression )
     {
-      return new SqlServerExpressionParser( this );
+      var parser = new SqlServerExpressionParser( this );
+      return parser.Parse( expression );
     }
+
 
 
 
