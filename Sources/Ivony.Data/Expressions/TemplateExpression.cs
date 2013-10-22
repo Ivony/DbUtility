@@ -62,8 +62,8 @@ namespace Ivony.Data
         return partial;
       } ).ToArray();
 
-      var maxIndex = FormatRegexNum.Matches( Template ).Cast<Match>().Select( m => int.Parse( m.Groups["index"].Value ) ).Max();
-      if ( maxIndex >= Parameters.Length )
+      var indexes = FormatRegexNum.Matches( Template ).Cast<Match>().Select( m => int.Parse( m.Groups["index"].Value ) );
+      if ( indexes.Any() && indexes.Max() >= Parameters.Length )
         throw new IndexOutOfRangeException();
     }
 
