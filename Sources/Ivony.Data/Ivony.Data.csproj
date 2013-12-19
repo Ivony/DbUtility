@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ivony.Data</RootNamespace>
     <AssemblyName>DbUtility.v2</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -27,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,6 +39,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <DocumentationFile>bin\Release\DbUtility.v2.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -63,26 +65,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataSetExtensions.cs" />
-    <Compile Include="DbUtility.cs" />
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
-    <Compile Include="ExcelDbUtility.cs" />
-    <Compile Include="ExecutableExpression.cs" />
-    <Compile Include="DbExpressions.cs" />
-    <Compile Include="Expressions\StoredProcedureExpression.cs" />
-    <Compile Include="Expressions\TableExpression.cs" />
-    <Compile Include="Expressions\TemplateExpression.cs" />
-    <Compile Include="IDbExpressionParser.cs" />
-    <Compile Include="ITransactionUtility.cs" />
-    <Compile Include="LegacyExtensions.cs" />
+    <Compile Include="BasicExecuteExtensions.cs" />
+    <Compile Include="StoredProcedureQuery.cs" />
+    <Compile Include="TableQuery.cs" />
+    <Compile Include="IDbExecutor.cs" />
+    <Compile Include="Templates\ITemplatePartial.cs" />
+    <Compile Include="Templates\ParameterExpression.cs" />
+    <Compile Include="Templates\TemplateParseContext.cs" />
+    <Compile Include="Templates\TemplateQuery.cs" />
+    <Compile Include="DbQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlDbUtility.cs" />
-    <Compile Include="SqlServerExpressionParser.cs" />
     <Compile Include="TemplateExtensions.cs" />
-    <Compile Include="TransactionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="StoredProcedures\" />
+    <Folder Include="Tables\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -23,9 +23,9 @@ namespace Ivony.Data
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="expression">查询表达式</param>
     /// <returns>实体集</returns>
-    public static T[] Entities<T>( this DbUtility dbUtility, IDbExpression expression ) where T : new()
+    public static T[] Entities<T>( this DbQuery query ) where T : new()
     {
-      var data = dbUtility.ExecuteData( expression );
+      var data = query.ExecuteDataTable();
       return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
     }
 
@@ -37,10 +37,11 @@ namespace Ivony.Data
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="expression">查询表达式</param>
     /// <returns>实体</returns>
-    public static T Entity<T>( this DbUtility dbUtility, IDbExpression expression ) where T : new()
+    public static T Entity<T>( this DbQuery query ) where T : new()
     {
-      var dataItem = dbUtility.ExecuteFirstRow( expression );
+      var dataItem = query.ExecuteFirstRow();
       return dataItem.ToEntity<T>();
+
     }
 
 
@@ -193,7 +194,7 @@ namespace Ivony.Data
       return method;
     }
 
-    
+
     /// <summary>
     /// 获取属性所对应的字段名
     /// </summary>

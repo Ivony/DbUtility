@@ -5,6 +5,7 @@ using System.Data;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
@@ -41,28 +42,26 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 查询数据库并将最后一个结果集填充动态对象列表
+    /// 执行查询并将第一个结果集填充动态对象列表
     /// </summary>
-    /// <param name="dbUtility">DbUtility 实例</param>
-    /// <param name="expression">查询表达式</param>
-    /// <returns>实体集</returns>
-    public static dynamic[] Dynamics( this DbUtility dbUtility, IDbExpression expression )
+    /// <param name="query">要执行的查询</param>
+    /// <returns>查询结果</returns>
+    public static dynamic[] ExecuteDynamics( this DbQuery query )
     {
-      var data = dbUtility.ExecuteData( expression );
+      var data = query.ExecuteDataTable();
       return ToDynamics( data );
     }
 
 
     /// <summary>
-    /// 查询数据库并将最后一个结果集填充动态对象列表
+    /// 异步执行查询并将第一个结果集填充动态对象列表
     /// </summary>
-    /// <param name="dbUtility">DbUtility 实例</param>
-    /// <param name="template">查询字符串模版</param>
-    /// <param name="parameters">模版参数</param>
-    /// <returns>实体集</returns>
-    public static dynamic[] Dynamics( this DbUtility dbUtility, string template, params object[] parameters )
+    /// <param name="query">要执行的查询</param>
+    /// <returns>查询结果</returns>
+    public static async Task<dynamic[]> ExecuteDynamicsAsync( this DbQuery query )
     {
-      return dbUtility.Dynamics( DbExpressions.Template( template, parameters ) );
+      var data = await query.ExecuteDataTableAsync();
+      return ToDynamics( data );
     }
 
 
