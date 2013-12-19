@@ -16,7 +16,7 @@ namespace Ivony.Data
   /// 用于操作 SQL Server 的数据库访问工具
   /// </summary>
   [Serializable]
-  public class SqlDbUtility : IAsyncDbExecutor<TemplateQuery>
+  public class SqlDbUtility : IAsyncDbExecutor<TemplateQuery>, IAsyncDbExecutor<StoredProcedureQuery>
   {
 
 
@@ -57,6 +57,16 @@ namespace Ivony.Data
     }
 
     Task<IDataReader> IAsyncDbExecutor<TemplateQuery>.ExecuteReaderAsync( TemplateQuery query )
+    {
+      throw new NotImplementedException();
+    }
+
+    Task<IDataReader> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteReaderAsync( StoredProcedureQuery query )
+    {
+      throw new NotImplementedException();
+    }
+
+    IDataReader IDbExecutor<StoredProcedureQuery>.ExecuteReader( StoredProcedureQuery query )
     {
       throw new NotImplementedException();
     }

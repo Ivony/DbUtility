@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
@@ -23,9 +24,23 @@ namespace Ivony.Data
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="expression">查询表达式</param>
     /// <returns>实体集</returns>
-    public static T[] Entities<T>( this DbQuery query ) where T : new()
+    public static T[] ExecuteEntities<T>( this DbQuery query ) where T : new()
     {
       var data = query.ExecuteDataTable();
+      return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
+    }
+
+
+    /// <summary>
+    /// 查询数据库并将最后一个结果集填充实体类型
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <returns>实体集</returns>
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this DbQuery query ) where T : new()
+    {
+      var data = await query.ExecuteDataTableAsync();
       return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
     }
 
@@ -37,9 +52,23 @@ namespace Ivony.Data
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="expression">查询表达式</param>
     /// <returns>实体</returns>
-    public static T Entity<T>( this DbQuery query ) where T : new()
+    public static T ExecuteEntity<T>( this DbQuery query ) where T : new()
     {
       var dataItem = query.ExecuteFirstRow();
+      return dataItem.ToEntity<T>();
+
+    }
+
+    /// <summary>
+    /// 查询数据库并将结果首行填充实体
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <returns>实体</returns>
+    public async static Task<T> ExecuteEntityAsync<T>( this DbQuery query ) where T : new()
+    {
+      var dataItem = await query.ExecuteFirstRowAsync();
       return dataItem.ToEntity<T>();
 
     }
