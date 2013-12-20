@@ -12,9 +12,9 @@ namespace Ivony.Data
 
   public abstract class DbQuery
   {
-    public abstract IDataReader ExecuteDataReader();
+    public abstract IDbExecuteContext Execute();
 
-    public abstract Task<IDataReader> ExecuteDataReaderAsync();
+    public abstract Task<IDbExecuteContext> ExecuteAsync();
 
   }
 

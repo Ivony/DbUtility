@@ -51,24 +51,24 @@ namespace Ivony.Data
 
 
 
-    IDataReader IDbExecutor<TemplateQuery>.ExecuteReader( TemplateQuery query )
+    IDbExecuteContext IDbExecutor<TemplateQuery>.Execute( TemplateQuery query )
     {
       throw new NotImplementedException();
     }
 
-    Task<IDataReader> IAsyncDbExecutor<TemplateQuery>.ExecuteReaderAsync( TemplateQuery query )
+    Task<IDbExecuteContext> IAsyncDbExecutor<TemplateQuery>.ExecuteAsync( TemplateQuery query )
     {
       throw new NotImplementedException();
     }
 
-    Task<IDataReader> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteReaderAsync( StoredProcedureQuery query )
+    IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
+    {
+      throw new NotImplementedException();
+    }
+    Task<IDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query )
     {
       throw new NotImplementedException();
     }
 
-    IDataReader IDbExecutor<StoredProcedureQuery>.ExecuteReader( StoredProcedureQuery query )
-    {
-      throw new NotImplementedException();
-    }
   }
 }

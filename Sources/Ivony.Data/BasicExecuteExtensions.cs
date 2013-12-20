@@ -22,11 +22,11 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static DataTable ExecuteDataTable( this DbQuery query )
     {
-      using ( var reader = query.ExecuteDataReader() )
+      using ( var context = query.Execute() )
       {
 
         var data = new DataTable();
-        data.Load( reader );
+        data.Load( context.DataReader );
 
         return data;
 
@@ -40,11 +40,11 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static async Task<DataTable> ExecuteDataTableAsync( this DbQuery query )
     {
-      using ( var reader = await query.ExecuteDataReaderAsync() )
+      using ( var context = await query.ExecuteAsync() )
       {
 
         var data = new DataTable();
-        data.Load( reader );
+        data.Load( context.DataReader );
 
         return data;
 
@@ -64,17 +64,17 @@ namespace Ivony.Data
 
       List<DataTable> dataTables = new List<DataTable>();
 
-      using ( var reader = query.ExecuteDataReader() )
+      using ( var context = query.Execute() )
       {
 
         do
         {
           var data = new DataTable();
-          data.Load( reader );
+          data.Load( context.DataReader );
 
           dataTables.Add( data );
 
-        } while ( reader.NextResult() );
+        } while ( context.DataReader.NextResult() );
       }
 
       return dataTables.ToArray();
@@ -90,17 +90,17 @@ namespace Ivony.Data
 
       List<DataTable> dataTables = new List<DataTable>();
 
-      using ( var reader = await query.ExecuteDataReaderAsync() )
+      using ( var context = await query.ExecuteAsync() )
       {
 
         do
         {
           var data = new DataTable();
-          data.Load( reader );
+          data.Load( context.DataReader );
 
           dataTables.Add( data );
 
-        } while ( reader.NextResult() );
+        } while ( context.DataReader.NextResult() );
       }
 
       return dataTables.ToArray();
@@ -117,10 +117,10 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static object ExecuteScalar( this DbQuery query )
     {
-      using ( var reader = query.ExecuteDataReader() )
+      using ( var context = query.Execute() )
       {
-        if ( reader.Read() )
-          return reader[0];
+        if ( context.DataReader.Read() )
+          return context.DataReader[0];
 
         else
           return null;
@@ -134,10 +134,10 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static async Task<object> ExecuteScalarAsync( this DbQuery query )
     {
-      using ( var reader = await query.ExecuteDataReaderAsync() )
+      using ( var context = await query.ExecuteAsync() )
       {
-        if ( reader.Read() )
-          return reader[0];
+        if ( context.DataReader.Read() )
+          return context.DataReader[0];
 
         else
           return null;
@@ -155,9 +155,9 @@ namespace Ivony.Data
     /// <returns>查询所影响的行数</returns>
     public static int ExecuteNonQuery( this DbQuery query )
     {
-      using ( var reader = query.ExecuteDataReader() )
+      using ( var context = query.Execute() )
       {
-        return reader.RecordsAffected;
+        return context.DataReader.RecordsAffected;
       }
     }
 
@@ -168,9 +168,9 @@ namespace Ivony.Data
     /// <returns>查询所影响的行数</returns>
     public static async Task<int> ExecuteNonQueryAsync( this DbQuery query )
     {
-      using ( var reader = await query.ExecuteDataReaderAsync() )
+      using ( var context = await query.ExecuteAsync() )
       {
-        return reader.RecordsAffected;
+        return context.DataReader.RecordsAffected;
       }
     }
 

@@ -26,18 +26,18 @@ namespace Ivony.Data.Queries
 
 
 
-    public override IDataReader ExecuteDataReader()
+    public override IDbExecuteContext Execute()
     {
-      return DbExecutor.ExecuteReader( this );
+      return DbExecutor.Execute( this );
     }
 
-    public override Task<IDataReader> ExecuteDataReaderAsync()
+    public override Task<IDbExecuteContext> ExecuteAsync()
     {
       var asyncExecutor = DbExecutor as IAsyncDbExecutor<TemplateQuery>;
       if ( asyncExecutor != null )
-        return asyncExecutor.ExecuteReaderAsync( this );
+        return asyncExecutor.ExecuteAsync( this );
 
-      return new Task<IDataReader>( ExecuteDataReader );
+      return new Task<IDbExecuteContext>( Execute );
     }
 
 

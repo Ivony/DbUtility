@@ -11,12 +11,12 @@ namespace Ivony.Data
   /// <summary>
   /// 查询执行上下文
   /// </summary>
-  public abstract class DbExecuteContext : IDisposable
+  public interface IDbExecuteContext : IDisposable
   {
 
-    public abstract IDataReader DataReader { get; }
+    IDataReader DataReader { get; }
 
-    public abstract void Dispose();
+    void Dispose();
 
 
   }

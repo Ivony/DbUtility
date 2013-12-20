@@ -10,7 +10,7 @@ namespace Ivony.Data
   public interface IDbExecutor<T> where T : DbQuery
   {
 
-    IDataReader ExecuteReader( T query );
+    IDbExecuteContext Execute( T query );
 
   }
 
@@ -18,7 +18,7 @@ namespace Ivony.Data
   public interface IAsyncDbExecutor<T> : IDbExecutor<T> where T : DbQuery
   {
 
-    Task<IDataReader> ExecuteReaderAsync( T query );
+    Task<IDbExecuteContext> ExecuteAsync( T query );
 
 
   }
