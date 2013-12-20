@@ -69,6 +69,8 @@
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="BasicExecuteExtensions.cs" />
     <Compile Include="IDbExecuteContext.cs" />
+    <Compile Include="IParameterizedQueryParser.cs" />
+    <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />
     <Compile Include="Queries\TableQuery.cs" />
     <Compile Include="IDbExecutor.cs" />
@@ -79,6 +81,8 @@
     <Compile Include="DbQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlDbUtility.cs" />
+    <Compile Include="SqlServer\SqlDbExecuteContext.cs" />
+    <Compile Include="SqlServer\SqlParameterizedQueryParser.cs" />
     <Compile Include="TableExtensions.cs" />
     <Compile Include="TemplateExtensions.cs" />
   </ItemGroup>

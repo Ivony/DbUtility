@@ -18,6 +18,9 @@ namespace Ivony.Data.Queries
   {
 
 
+    internal static readonly Regex FormatRegexNum = new Regex( @"\{(?<index>[0-9]+)\}", RegexOptions.Compiled );
+
+
     protected IDbExecutor<TemplateQuery> DbExecutor
     {
       get;
@@ -84,26 +87,7 @@ namespace Ivony.Data.Queries
       private set;
     }
 
-    /// <summary>
-    /// 解析模版表达式
-    /// </summary>
-    /// <param name="context">模版解析上下文</param>
-    /// <returns>需要嵌入在模版中的形式</returns>
-    public string Parse( TemplateParseContext context )
-    {
-      return FormatRegexNum.Replace( Template, delegate( Match match )
-      {
-        int index = int.Parse( match.Groups["index"].ToString() );
 
-        if ( index >= Parameters.Length )
-          throw new IndexOutOfRangeException();
-
-        ITemplatePartial partial = Parameters[index];
-
-        return partial.Parse( context );
-      }
-      );
-    }
 
 
     /// <summary>
@@ -126,6 +110,14 @@ namespace Ivony.Data.Queries
 
       return builder.ToString();
     }
+
+
+
+    public ParameterizedQuery CreateQuery()
+    {
+      throw new NotImplementedException();
+    }
+
 
 
 
@@ -242,9 +234,5 @@ namespace Ivony.Data.Queries
     }
 
 
-
-
-    internal static readonly Regex FormatRegexNum = new Regex( @"\{(?<index>[0-9]+)\}", RegexOptions.Compiled );
   }
-
 }

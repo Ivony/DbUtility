@@ -9,6 +9,7 @@ using System.Collections;
 using System.Configuration;
 using System.Threading.Tasks;
 using Ivony.Data.Queries;
+using Ivony.Data.SqlServer;
 
 namespace Ivony.Data
 {
@@ -21,12 +22,20 @@ namespace Ivony.Data
 
 
 
+    /// <summary>
+    /// 获取当前连接字符串
+    /// </summary>
     protected string ConnectionString
     {
       get;
       private set;
     }
 
+
+    /// <summary>
+    /// 创建 SqlDbUtility 实例
+    /// </summary>
+    /// <param name="connectionString">连接字符串</param>
     public SqlDbUtility( string connectionString )
     {
       ConnectionString = connectionString;
@@ -53,13 +62,42 @@ namespace Ivony.Data
 
     IDbExecuteContext IDbExecutor<TemplateQuery>.Execute( TemplateQuery query )
     {
-      throw new NotImplementedException();
+      var command = CreateCommand( query );
+
+      var connection = new SqlConnection( ConnectionString );
+      connection.Open();
+      command.Connection = connection;
+
+
+      return new SqlDbExecuteContext( command.Connection, command.ExecuteReader() );
     }
 
-    Task<IDbExecuteContext> IAsyncDbExecutor<TemplateQuery>.ExecuteAsync( TemplateQuery query )
+    async Task<IDbExecuteContext> IAsyncDbExecutor<TemplateQuery>.ExecuteAsync( TemplateQuery query )
     {
-      throw new NotImplementedException();
+      var command = CreateCommand( query );
+
+      var connection = new SqlConnection( ConnectionString );
+      await connection.OpenAsync();
+      command.Connection = connection;
+
+      return new SqlDbExecuteContext( connection, await command.ExecuteReaderAsync() );
     }
+
+
+    private SqlCommand CreateCommand( TemplateQuery query )
+    {
+      return CreateCommand( query.CreateQuery() );
+    }
+
+    private SqlCommand CreateCommand( ParameterizedQuery query )
+    {
+      var command = query.CreateCommand( new SqlParameterizedQueryParser() ) as SqlCommand;
+      var connection = new SqlConnection( ConnectionString );
+      command.Connection = connection;
+
+      return command;
+    }
+
 
     IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
     {
