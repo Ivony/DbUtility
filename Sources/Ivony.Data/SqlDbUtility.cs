@@ -17,7 +17,7 @@ namespace Ivony.Data
   /// 用于操作 SQL Server 的数据库访问工具
   /// </summary>
   [Serializable]
-  public class SqlDbUtility : IAsyncDbExecutor<TemplateQuery>, IAsyncDbExecutor<StoredProcedureQuery>
+  public class SqlDbUtility : IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>
   {
 
 
@@ -60,7 +60,7 @@ namespace Ivony.Data
 
 
 
-    IDbExecuteContext IDbExecutor<TemplateQuery>.Execute( TemplateQuery query )
+    IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
       var command = CreateCommand( query );
 
@@ -72,7 +72,7 @@ namespace Ivony.Data
       return new SqlDbExecuteContext( command.Connection, command.ExecuteReader() );
     }
 
-    async Task<IDbExecuteContext> IAsyncDbExecutor<TemplateQuery>.ExecuteAsync( TemplateQuery query )
+    async Task<IDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query )
     {
       var command = CreateCommand( query );
 
@@ -84,14 +84,9 @@ namespace Ivony.Data
     }
 
 
-    private SqlCommand CreateCommand( TemplateQuery query )
-    {
-      return CreateCommand( query.CreateQuery() );
-    }
-
     private SqlCommand CreateCommand( ParameterizedQuery query )
     {
-      var command = query.CreateCommand( new SqlParameterizedQueryParser() ) as SqlCommand;
+      var command = query.CreateCommand( new SqlParameterizedQueryParser() );
       var connection = new SqlConnection( ConnectionString );
       command.Connection = connection;
 
@@ -99,10 +94,12 @@ namespace Ivony.Data
     }
 
 
+
     IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
     {
       throw new NotImplementedException();
     }
+
     Task<IDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query )
     {
       throw new NotImplementedException();

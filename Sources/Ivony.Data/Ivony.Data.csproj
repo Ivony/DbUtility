@@ -75,7 +75,7 @@
     <Compile Include="Queries\TableQuery.cs" />
     <Compile Include="IDbExecutor.cs" />
     <Compile Include="Queries\ITemplatePartial.cs" />
-    <Compile Include="Queries\ParameterExpression.cs" />
+    <Compile Include="Queries\TemplateParameter.cs" />
     <Compile Include="Queries\TemplateParseContext.cs" />
     <Compile Include="Queries\TemplateQuery.cs" />
     <Compile Include="DbQuery.cs" />

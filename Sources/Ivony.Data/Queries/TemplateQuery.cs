@@ -60,7 +60,8 @@ namespace Ivony.Data.Queries
       {
         var partial = item as ITemplatePartial;
         if ( partial == null )
-          partial = new ParameterExpression( item );
+          partial = new TemplateParameter( item );
+        
         return partial;
       } ).ToArray();
 

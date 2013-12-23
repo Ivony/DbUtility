@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Ivony.Fluent;
 using Ivony.Data.Queries;
+using System.Text.RegularExpressions;
 
 namespace Ivony.Data
 {
@@ -21,9 +22,20 @@ namespace Ivony.Data
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>模版表达式</returns>
-    public static TemplateQuery Template( this IDbExecutor<TemplateQuery> executor, string template, params object[] parameters )
+    public static ParameterizedQuery Template( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
     {
-      return new TemplateQuery( executor, template, parameters );
+      return ParseTemplate( template, parameters );
+    }
+
+
+
+
+    private static readonly Regex templateParameterRegex = new Regex( @"(?<normal>{\n+})|(?<all>{\.\.\.})|(?<range>(?:{(?<begin>\n)\.\.(?<end>\n)})|)|" );
+
+
+    private static ParameterizedQuery ParseTemplate( string template, object[] parameters )
+    {
+      template.Replace( 
     }
 
 
@@ -33,10 +45,13 @@ namespace Ivony.Data
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>模版表达式</returns>
-    public static TemplateQuery T( this IDbExecutor<TemplateQuery> executor, string template, params object[] parameters )
+    public static ParameterizedQuery T( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
     {
       return Template( executor, template, parameters );
     }
+
+
+
 
 
 

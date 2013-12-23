@@ -17,7 +17,7 @@ namespace Ivony.Data.Queries
     /// </summary>
     /// <param name="parameter">参数表达式</param>
     /// <returns>该参数在 SQL 语句中引用的形式</returns>
-    public abstract string CreateParameterExpression( ParameterExpression parameter );
+    public abstract string CreateParameterExpression( TemplateParameter parameter );
 
   }
 }

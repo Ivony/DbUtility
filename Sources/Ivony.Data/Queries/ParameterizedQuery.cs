@@ -33,7 +33,7 @@ namespace Ivony.Data.Queries
 
 
 
-    public object CreateCommand( IParameterizedQueryParser provider )
+    public T CreateCommand<T>( IParameterizedQueryParser<T> provider )
     {
       var text = ParameterPlaceholdRegex.Replace( TextTemplate, ( match ) =>
       {

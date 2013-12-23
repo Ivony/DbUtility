@@ -8,9 +8,11 @@ using System.Data.SqlClient;
 
 namespace Ivony.Data.SqlServer
 {
-  public class SqlParameterizedQueryParser : IParameterizedQueryParser
+  public class SqlParameterizedQueryParser : IParameterizedQueryParser<SqlCommand>
   {
 
+
+    private bool _disposed = false;
 
 
     private int index = 0;
@@ -18,17 +20,27 @@ namespace Ivony.Data.SqlServer
 
     public string CreateParameterPlacehold( object parameterValue )
     {
+      if ( _disposed )
+        throw new ObjectDisposedException( "SqlParameterizedQueryParser" );
+
+
       var name = "Param" + index++;
       var parameter = new SqlParameter( name, parameterValue );
 
       return name;
     }
 
-    public object CreateCommand( string commandText )
+    public SqlCommand CreateCommand( string commandText )
     {
+      if ( _disposed )
+        throw new ObjectDisposedException( "SqlParameterizedQueryParser" );
+
+
       var command = new SqlCommand();
       command.CommandText = commandText;
       command.Parameters.AddRange( parameterList.ToArray() );
+
+      _disposed = true;
 
       return command;
     }

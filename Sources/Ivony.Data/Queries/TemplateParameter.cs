@@ -10,13 +10,13 @@ namespace Ivony.Data.Queries
   /// <summary>
   /// 参数表达式
   /// </summary>
-  public class ParameterExpression : ITemplatePartial
+  public class TemplateParameter : ITemplatePartial
   {
     /// <summary>
     /// 创建 ParameterExpression 实例
     /// </summary>
     /// <param name="value">参数值</param>
-    public ParameterExpression( object value )
+    public TemplateParameter( object value )
     {
       Value = value;
     }
