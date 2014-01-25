@@ -46,7 +46,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询</param>
     /// <returns>查询结果</returns>
-    public static dynamic[] ExecuteDynamics( this DbQuery query )
+    public static dynamic[] ExecuteDynamics( this IDbExecutableQuery query )
     {
       var data = query.ExecuteDataTable();
       return ToDynamics( data );
@@ -58,7 +58,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询</param>
     /// <returns>查询结果</returns>
-    public static async Task<dynamic[]> ExecuteDynamicsAsync( this DbQuery query )
+    public static async Task<dynamic[]> ExecuteDynamicsAsync( this IDbExecutableQuery query )
     {
       var data = await query.ExecuteDataTableAsync();
       return ToDynamics( data );

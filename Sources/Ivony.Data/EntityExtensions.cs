@@ -24,7 +24,7 @@ namespace Ivony.Data
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="expression">查询表达式</param>
     /// <returns>实体集</returns>
-    public static T[] ExecuteEntities<T>( this DbQuery query ) where T : new()
+    public static T[] ExecuteEntities<T>( this IDbExecutableQuery query ) where T : new()
     {
       var data = query.ExecuteDataTable();
       return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
@@ -38,7 +38,7 @@ namespace Ivony.Data
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="expression">查询表达式</param>
     /// <returns>实体集</returns>
-    public async static Task<T[]> ExecuteEntitiesAsync<T>( this DbQuery query ) where T : new()
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IDbExecutableQuery query ) where T : new()
     {
       var data = await query.ExecuteDataTableAsync();
       return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
@@ -52,7 +52,7 @@ namespace Ivony.Data
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="expression">查询表达式</param>
     /// <returns>实体</returns>
-    public static T ExecuteEntity<T>( this DbQuery query ) where T : new()
+    public static T ExecuteEntity<T>( this IDbExecutableQuery query ) where T : new()
     {
       var dataItem = query.ExecuteFirstRow();
       return dataItem.ToEntity<T>();
@@ -66,7 +66,7 @@ namespace Ivony.Data
     /// <param name="dbUtility">DbUtility 实例</param>
     /// <param name="expression">查询表达式</param>
     /// <returns>实体</returns>
-    public async static Task<T> ExecuteEntityAsync<T>( this DbQuery query ) where T : new()
+    public async static Task<T> ExecuteEntityAsync<T>( this IDbExecutableQuery query ) where T : new()
     {
       var dataItem = await query.ExecuteFirstRowAsync();
       return dataItem.ToEntity<T>();

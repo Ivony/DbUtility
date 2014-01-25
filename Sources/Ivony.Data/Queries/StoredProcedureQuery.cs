@@ -20,42 +20,20 @@ namespace Ivony.Data.Queries
     /// 创建 StoredProcedureExpression 对象
     /// </summary>
     /// <param name="name">存储过程名称</param>
-    public StoredProcedureQuery( IDbExecutor<StoredProcedureQuery> executor, string name ) : this( executor, name, new Dictionary<string, object>() ) { }
+    public StoredProcedureQuery( string name ) : this( name, new Dictionary<string, object>() ) { }
 
     /// <summary>
     /// 创建 StoredProcedureExpression 对象
     /// </summary>
     /// <param name="name">存储过程名称</param>
     /// <param name="parameters">存储过程参数列表</param>
-    public StoredProcedureQuery( IDbExecutor<StoredProcedureQuery> executor, string name, IDictionary<string, object> parameters )
+    public StoredProcedureQuery( string name, IDictionary<string, object> parameters )
     {
 
       _name = name;
       _parameters = parameters;
 
-      DbExecutor = executor;
     }
-
-
-
-    public override IDbExecuteContext Execute()
-    {
-      return DbExecutor.Execute( this );
-    }
-
-    public override Task<IDbExecuteContext> ExecuteAsync()
-    {
-      var asyncExecutor = DbExecutor as IAsyncDbExecutor<StoredProcedureQuery>;
-      if ( asyncExecutor != null )
-        return asyncExecutor.ExecuteAsync( this );
-
-      return new Task<IDbExecuteContext>( Execute );
-    }
-
-
-
-
-    protected IDbExecutor<StoredProcedureQuery> DbExecutor { get; private set; }
 
 
     /// <summary>

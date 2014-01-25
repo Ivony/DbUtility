@@ -12,7 +12,7 @@ namespace Ivony.Data.Queries
   /// <summary>
   /// 代表一个参数化查询
   /// </summary>
-  public class ParameterizedQuery
+  public class ParameterizedQuery : DbQuery
   {
 
     public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>\n+)#" );
@@ -29,6 +29,15 @@ namespace Ivony.Data.Queries
     {
       get;
       private set;
+    }
+
+
+
+    public ParameterizedQuery( string template, object[] values )
+    {
+      TextTemplate = template;
+      ParameterValues = new object[values.Length];
+      values.CopyTo( ParameterValues, 0 );
     }
 
 

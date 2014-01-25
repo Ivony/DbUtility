@@ -20,7 +20,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public static DataTable ExecuteDataTable( this DbQuery query )
+    public static DataTable ExecuteDataTable( this IDbExecutableQuery query )
     {
       using ( var context = query.Execute() )
       {
@@ -38,7 +38,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public static async Task<DataTable> ExecuteDataTableAsync( this DbQuery query )
+    public static async Task<DataTable> ExecuteDataTableAsync( this IDbExecutableQuery query )
     {
       using ( var context = await query.ExecuteAsync() )
       {
@@ -59,7 +59,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public static DataTable[] ExecuteAllDataTables( this DbQuery query )
+    public static DataTable[] ExecuteAllDataTables( this IDbExecutableQuery query )
     {
 
       List<DataTable> dataTables = new List<DataTable>();
@@ -85,7 +85,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public static async Task<DataTable[]> ExecuteAllDataTablesAsync( this DbQuery query )
+    public static async Task<DataTable[]> ExecuteAllDataTablesAsync( this IDbExecutableQuery query )
     {
 
       List<DataTable> dataTables = new List<DataTable>();
@@ -115,7 +115,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public static object ExecuteScalar( this DbQuery query )
+    public static object ExecuteScalar( this IDbExecutableQuery query )
     {
       using ( var context = query.Execute() )
       {
@@ -132,7 +132,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public static async Task<object> ExecuteScalarAsync( this DbQuery query )
+    public static async Task<object> ExecuteScalarAsync( this IDbExecutableQuery query )
     {
       using ( var context = await query.ExecuteAsync() )
       {
@@ -153,7 +153,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询所影响的行数</returns>
-    public static int ExecuteNonQuery( this DbQuery query )
+    public static int ExecuteNonQuery( this IDbExecutableQuery query )
     {
       using ( var context = query.Execute() )
       {
@@ -166,7 +166,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询所影响的行数</returns>
-    public static async Task<int> ExecuteNonQueryAsync( this DbQuery query )
+    public static async Task<int> ExecuteNonQueryAsync( this IDbExecutableQuery query )
     {
       using ( var context = await query.ExecuteAsync() )
       {
@@ -182,7 +182,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public static DataRow ExecuteFirstRow( this DbQuery query )
+    public static DataRow ExecuteFirstRow( this IDbExecutableQuery query )
     {
       //UNDONE
 
@@ -199,7 +199,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public static async Task<DataRow> ExecuteFirstRowAsync( this DbQuery query )
+    public static async Task<DataRow> ExecuteFirstRowAsync( this IDbExecutableQuery query )
     {
       //UNDONE
 
@@ -220,7 +220,7 @@ namespace Ivony.Data
     /// <typeparam name="T">返回值类型</typeparam>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public static T ExecuteScalar<T>( this DbQuery query )
+    public static T ExecuteScalar<T>( this IDbExecutableQuery query )
     {
       return ExecuteScalar( query ).ConvertTo<T>();
     }
@@ -231,7 +231,7 @@ namespace Ivony.Data
     /// <typeparam name="T">返回值类型</typeparam>
     /// <param name="query">要执行的查询对象</param>
     /// <returns>查询结果</returns>
-    public async static Task<T> ExecuteScalarAsync<T>( this DbQuery query )
+    public async static Task<T> ExecuteScalarAsync<T>( this IDbExecutableQuery query )
     {
       var scalar = await ExecuteScalarAsync( query );
       return scalar.ConvertTo<T>();

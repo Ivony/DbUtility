@@ -22,20 +22,9 @@ namespace Ivony.Data
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>模版表达式</returns>
-    public static ParameterizedQuery Template( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
+    public static DbExecutableQuery<ParameterizedQuery> Template( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
     {
-      return ParseTemplate( template, parameters );
-    }
-
-
-
-
-    private static readonly Regex templateParameterRegex = new Regex( @"(?<normal>{\n+})|(?<all>{\.\.\.})|(?<range>(?:{(?<begin>\n)\.\.(?<end>\n)})|)|" );
-
-
-    private static ParameterizedQuery ParseTemplate( string template, object[] parameters )
-    {
-      template.Replace( 
+      return new DbExecutableQuery<ParameterizedQuery>( executor, TemplateParser.ParseTemplate( template, parameters ) );
     }
 
 
@@ -45,15 +34,10 @@ namespace Ivony.Data
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>模版表达式</returns>
-    public static ParameterizedQuery T( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
+    public static DbExecutableQuery<ParameterizedQuery> T( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
     {
       return Template( executor, template, parameters );
     }
-
-
-
-
-
 
   }
 }

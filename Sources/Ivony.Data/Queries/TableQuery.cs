@@ -49,28 +49,6 @@ namespace Ivony.Data.Queries
     }
 
 
-
-
-    protected IDbExecutor<TableQuery> DbExecutor
-    {
-      get;
-      private set;
-    }
-
-
-    public override IDbExecuteContext Execute()
-    {
-      return DbExecutor.Execute( this );
-    }
-
-    public override Task<IDbExecuteContext> ExecuteAsync()
-    {
-      var asyncExecutor = DbExecutor as IAsyncDbExecutor<TableQuery>;
-      if ( asyncExecutor != null )
-        return asyncExecutor.ExecuteAsync( this );
-
-      return new Task<IDbExecuteContext>( Execute );
-    }
   }
 
   public class SelectClause

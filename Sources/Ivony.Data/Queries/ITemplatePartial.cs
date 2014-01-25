@@ -16,7 +16,6 @@ namespace Ivony.Data.Queries
     /// </summary>
     /// <param name="context">模版解析上下文</param>
     /// <returns></returns>
-    string Parse( TemplateParseContext context );
-
+    void Parse( ParameterizedQueryBuilder builder );
   }
 }
