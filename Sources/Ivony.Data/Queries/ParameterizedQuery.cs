@@ -12,7 +12,7 @@ namespace Ivony.Data.Queries
   /// <summary>
   /// 代表一个参数化查询
   /// </summary>
-  public class ParameterizedQuery : DbQuery
+  public class ParameterizedQuery : IDbQuery
   {
 
     public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>\n+)#" );

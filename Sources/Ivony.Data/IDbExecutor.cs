@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
-  public interface IDbExecutor<T> where T : DbQuery
+  public interface IDbExecutor<T> where T : IDbQuery
   {
 
     IDbExecuteContext Execute( T query );
@@ -15,7 +15,7 @@ namespace Ivony.Data
   }
 
 
-  public interface IAsyncDbExecutor<T> : IDbExecutor<T> where T : DbQuery
+  public interface IAsyncDbExecutor<T> : IDbExecutor<T> where T : IDbQuery
   {
 
     Task<IDbExecuteContext> ExecuteAsync( T query );

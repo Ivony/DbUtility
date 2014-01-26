@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
-  public sealed class DbExecutableQuery<T> : IDbExecutableQuery where T : DbQuery
+  public sealed class DbExecutableQuery<T> : IDbExecutableQuery where T : IDbQuery
   {
 
 
@@ -18,6 +18,7 @@ namespace Ivony.Data
     public DbExecutableQuery( IDbExecutor<T> executor, T query )
     {
       Executor = executor;
+      AsyncExecutor = executor as IAsyncDbExecutor<T>;
       Query = query;
     }
 
@@ -58,7 +59,7 @@ namespace Ivony.Data
     /// 同步执行查询
     /// </summary>
     /// <returns>查询执行上下文</returns>
-    public override IDbExecuteContext Execute()
+    public IDbExecuteContext Execute()
     {
       return Executor.Execute( Query );
     }
@@ -69,7 +70,7 @@ namespace Ivony.Data
     /// 异步执行查询
     /// </summary>
     /// <returns>查询执行上下文</returns>
-    public override Task<IDbExecuteContext> ExecuteAsync()
+    public Task<IDbExecuteContext> ExecuteAsync()
     {
 
       if ( AsyncExecutor == null )
@@ -77,5 +78,17 @@ namespace Ivony.Data
 
       return AsyncExecutor.ExecuteAsync( Query );
     }
+
+
+    /// <summary>
+    /// 定义隐式类型转换，将 DbExecutableQuery 转换为实际的查询对象
+    /// </summary>
+    /// <param name="executable"></param>
+    /// <returns></returns>
+    public static implicit operator T( DbExecutableQuery<T> executable )
+    {
+      return executable.Query;
+    }
+
   }
 }

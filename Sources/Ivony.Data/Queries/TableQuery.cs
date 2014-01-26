@@ -10,7 +10,7 @@ namespace Ivony.Data.Queries
   /// <summary>
   /// 数据表表达式
   /// </summary>
-  public class TableQuery : DbQuery
+  public class TableQuery : IDbQuery
   {
 
     private string _tableName;
@@ -47,9 +47,8 @@ namespace Ivony.Data.Queries
     {
       throw new NotImplementedException();
     }
-
-
   }
+
 
   public class SelectClause
   {
@@ -57,11 +56,7 @@ namespace Ivony.Data.Queries
     {
       throw new NotImplementedException();
     }
-
-
   }
-
-
 
 
 }
