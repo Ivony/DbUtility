@@ -66,12 +66,12 @@
   <ItemGroup>
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="DbExecutableQuery.cs" />
-    <Compile Include="DbQuery.cs" />
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="BasicExecuteExtensions.cs" />
     <Compile Include="IDbExecutableQuery.cs" />
     <Compile Include="IDbExecuteContext.cs" />
+    <Compile Include="IDbQuery.cs" />
     <Compile Include="IParameterizedQueryParser.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
