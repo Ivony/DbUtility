@@ -6,10 +6,17 @@ using System.Text;
 
 namespace Ivony.Data
 {
-  public interface IParameterizedQueryParser<TCommand>
+  public interface IParameterizedQueryParser<TCommand> : IDisposable
   {
     string CreateParameterPlacehold( object parameterValue );
 
     TCommand CreateCommand( string commandText );
+
+
+    object SyncRoot
+    {
+      get;
+    }
+
   }
 }

@@ -52,70 +52,82 @@ namespace Ivony.Data
           {
 
             if ( i == templateText.Length - 1 )
-              throw new FormatException( string.Format( "解析字符串 \"{0}\" 时在字符 {1} 处出现问题。", templateText, i ) );
+              throw FormatError( templateText, i );
 
             if ( templateText[i + 1] == '{' )
             {
-              builder.Append( '{' );
               i++;
+              builder.Append( '{' );
               continue;
             }
 
-            var match = numberRegex.Match( templateText, i );
 
-            if ( match.Success )
+
+            Match match = null;
+
+            do
             {
+              match = numberRegex.Match( templateText, i );
 
-              int parameterIndex;
-              if ( !int.TryParse( match.Groups["index"].Value, out parameterIndex ) )
-                throw new FormatException( string.Format( "解析字符串 \"{0}\" 时在字符 {1} 处出现问题。", templateText, i ) );
-
-              AddParameter( builder, parameters[parameterIndex] );
-
-              i += match.Length - 1;
-            }
-
-            match = rangeRegex.Match( templateText, i );
-            if ( match.Success )
-            {
-              int begin, end;
-              if ( !int.TryParse( match.Groups["begin"].Value, out begin ) )
-                throw new FormatException( string.Format( "解析字符串 \"{0}\" 时在字符 {1} 处出现问题。", templateText, i ) );
-
-              if ( match.Groups["end"] != null )
+              if ( match.Success )
               {
-                if ( !int.TryParse( match.Groups["end"].Value, out end ) )
-                  throw new FormatException( string.Format( "解析字符串 \"{0}\" 时在字符 {1} 处出现问题。", templateText, i ) );
-              }
-              else
-                end = parameters.Length - 1;
 
+                int parameterIndex;
+                if ( !int.TryParse( match.Groups["index"].Value, out parameterIndex ) )
+                  throw FormatError( templateText, i );
 
-              if ( begin > end || end >= parameters.Length )
-                throw new FormatException( string.Format( "解析字符串 \"{0}\" 时在字符 {1} 处出现问题。", templateText, i ) );
-
-
-              for ( int parameterIndex = begin; parameterIndex < end; parameterIndex++ )
-              {
                 AddParameter( builder, parameters[parameterIndex] );
-                builder.Append( "," );
               }
 
-              AddParameter( builder, parameters[end] );
+              match = rangeRegex.Match( templateText, i );
+              if ( match.Success )
+              {
+                int begin, end;
+                if ( !int.TryParse( match.Groups["begin"].Value, out begin ) )
+                  throw FormatError( templateText, i );
 
-              i += match.Length - 1;
-            }
+                if ( match.Groups["end"] != null )
+                {
+                  if ( !int.TryParse( match.Groups["end"].Value, out end ) )
+                    throw FormatError( templateText, i );
+                }
+                else
+                  end = parameters.Length - 1;
+
+
+                if ( begin > end || end >= parameters.Length )
+                  throw FormatError( templateText, i );
+
+
+                AddParameters( builder, parameters, begin, end );
+                break;
+              }
+
+
+              match = allRegex.Match( templateText, i );
+              if ( match.Success )
+              {
+                AddParameters( builder, parameters, 0, parameters.Length - 1 );
+                break;
+              }
+            } while ( false );
+
+            
+            if ( match == null || !match.Success )
+              throw FormatError( templateText, i );
+            i += match.Length - 1;
+
+
           }
-
           else if ( ch == '}' )
           {
             if ( i == templateText.Length - 1 )
-              throw new FormatException( string.Format( "解析字符串 \"{0}\" 时在字符 {1} 处出现问题。", templateText, i ) );
+              throw FormatError( templateText, i );
 
             if ( templateText[i + 1] == '}' )
             {
-              builder.Append( '}' );
               i++;
+              builder.Append( '}' );
               continue;
             }
           }
@@ -125,10 +137,25 @@ namespace Ivony.Data
 
         }
 
-
+        
         return builder.CreateQuery();
-
       }
+    }
+
+    private static FormatException FormatError( string templateText, int i )
+    {
+      return new FormatException( string.Format( "解析字符串 \"{0}\" 时在字符 {1} 处出现问题。", templateText, i ) );
+    }
+
+    private static void AddParameters( ParameterizedQueryBuilder builder, object[] parameters, int begin, int end )
+    {
+      for ( int parameterIndex = begin; parameterIndex < end; parameterIndex++ )
+      {
+        AddParameter( builder, parameters[parameterIndex] );
+        builder.Append( "," );
+      }
+
+      AddParameter( builder, parameters[end] );
     }
 
     private static void AddParameter( ParameterizedQueryBuilder builder, object value )

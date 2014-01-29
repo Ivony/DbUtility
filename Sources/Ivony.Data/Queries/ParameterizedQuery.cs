@@ -15,7 +15,7 @@ namespace Ivony.Data.Queries
   public class ParameterizedQuery : IDbQuery
   {
 
-    public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>\n+)#" );
+    public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>[0-9]+)#" );
 
 
     public string TextTemplate
@@ -44,14 +44,19 @@ namespace Ivony.Data.Queries
 
     public T CreateCommand<T>( IParameterizedQueryParser<T> provider )
     {
-      var text = ParameterPlaceholdRegex.Replace( TextTemplate, ( match ) =>
+
+      lock ( provider.SyncRoot )
       {
-        var index = int.Parse( match.Groups["index"].Value );
-        return provider.CreateParameterPlacehold( ParameterValues[index] );
-      } );
+
+        var text = ParameterPlaceholdRegex.Replace( TextTemplate, ( match ) =>
+        {
+          var index = int.Parse( match.Groups["index"].Value );
+          return provider.CreateParameterPlacehold( ParameterValues[index] );
+        } );
 
 
-      return provider.CreateCommand( text.Replace( "##", "#" ) );
+        return provider.CreateCommand( text.Replace( "##", "#" ) );
+      }
     }
   }
 }

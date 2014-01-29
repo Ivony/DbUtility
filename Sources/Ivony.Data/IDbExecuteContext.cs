@@ -14,10 +14,14 @@ namespace Ivony.Data
   public interface IDbExecuteContext : IDisposable
   {
 
+    /// <summary>
+    /// 用于获取查询结果的 DataReader 对象
+    /// </summary>
     IDataReader DataReader { get; }
 
+    /// <summary>
+    /// 销毁查询执行上下文
+    /// </summary>
     void Dispose();
-
-
   }
 }

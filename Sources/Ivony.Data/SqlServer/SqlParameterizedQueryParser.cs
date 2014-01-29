@@ -18,14 +18,24 @@ namespace Ivony.Data.SqlServer
     private int index = 0;
     private IList<SqlParameter> parameterList = new List<SqlParameter>();
 
+
+
+    private object _sync = new object();
+
+    public object SyncRoot
+    {
+      get { return _sync; }
+    }
+
+
     public string CreateParameterPlacehold( object parameterValue )
     {
       if ( _disposed )
         throw new ObjectDisposedException( "SqlParameterizedQueryParser" );
 
 
-      var name = "Param" + index++;
-      var parameter = new SqlParameter( name, parameterValue );
+      var name = "@Param" + index++;
+      parameterList.Add( new SqlParameter( name, parameterValue ) );
 
       return name;
     }
@@ -43,6 +53,12 @@ namespace Ivony.Data.SqlServer
       _disposed = true;
 
       return command;
+    }
+
+
+    public void Dispose()
+    {
+      _disposed = true;
     }
   }
 }
