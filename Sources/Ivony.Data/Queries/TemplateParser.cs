@@ -112,7 +112,7 @@ namespace Ivony.Data
               }
             } while ( false );
 
-            
+
             if ( match == null || !match.Success )
               throw FormatError( templateText, i );
             i += match.Length - 1;
@@ -137,7 +137,7 @@ namespace Ivony.Data
 
         }
 
-        
+
         return builder.CreateQuery();
       }
     }
@@ -160,7 +160,16 @@ namespace Ivony.Data
 
     private static void AddParameter( ParameterizedQueryBuilder builder, object value )
     {
+
+
       var partial = value as ITemplatePartial;
+      if ( partial == null )
+      {
+        var container = value as IDbQueryContainer;
+        if ( container != null )
+          partial = container.Query as ITemplatePartial;
+      }
+
       if ( partial != null )
         partial.Parse( builder );
 

@@ -12,7 +12,7 @@ namespace Ivony.Data.Queries
   /// <summary>
   /// 代表一个参数化查询
   /// </summary>
-  public class ParameterizedQuery : IDbQuery
+  public class ParameterizedQuery : IDbQuery, ITemplatePartial
   {
 
     public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>[0-9]+)#" );
@@ -57,6 +57,28 @@ namespace Ivony.Data.Queries
 
         return provider.CreateCommand( text.Replace( "##", "#" ) );
       }
+    }
+
+    public void Parse( ParameterizedQueryBuilder builder )
+    {
+
+      int index = 0;
+
+      foreach ( Match match in ParameterPlaceholdRegex.Matches( TextTemplate ) )
+      {
+
+        var length = match.Index - index;
+        if ( length > 0 )
+          builder.Append( TextTemplate.Substring( index, length ) );
+
+
+        var parameterIndex = int.Parse( match.Groups["index"].Value );
+        builder.AppendParameter( ParameterValues[parameterIndex] );
+
+        index += match.Length;
+      }
+
+      builder.Append( TextTemplate.Substring( index, TextTemplate.Length - index ) );
     }
   }
 }

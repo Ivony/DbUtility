@@ -30,6 +30,7 @@ namespace Ivony.Data
     }
 
 
+
     /// <summary>
     /// 将 DataTable 转换为动态对象数组
     /// </summary>
@@ -63,6 +64,33 @@ namespace Ivony.Data
       var data = await query.ExecuteDataTableAsync();
       return ToDynamics( data );
     }
+
+
+
+
+    /// <summary>
+    /// 执行查询并将第一个结果集的第一条记录填充动态对象
+    /// </summary>
+    /// <param name="query">要执行的查询</param>
+    /// <returns>查询结果</returns>
+    public static dynamic ExecuteDynamicObject( this IDbExecutableQuery query )
+    {
+      var dataItem = query.ExecuteFirstRow();
+      return ToDynamic( dataItem );
+    }
+
+
+    /// <summary>
+    /// 异步执行查询并将第一个结果集的第一条记录填充动态对象
+    /// </summary>
+    /// <param name="query">要执行的查询</param>
+    /// <returns>查询结果</returns>
+    public static async Task<dynamic> ExecuteDynamicObjectAsync( this IDbExecutableQuery query )
+    {
+      var dataItem = await query.ExecuteFirstRowAsync();
+      return ToDynamic( dataItem );
+    }
+
 
 
 

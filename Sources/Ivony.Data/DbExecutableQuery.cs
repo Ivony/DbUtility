@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
-  public sealed class DbExecutableQuery<T> : IDbExecutableQuery where T : IDbQuery
+  public sealed class DbExecutableQuery<T> : IDbExecutableQuery, IDbQueryContainer where T : IDbQuery
   {
 
 
@@ -90,5 +90,10 @@ namespace Ivony.Data
       return executable.Query;
     }
 
+
+    IDbQuery IDbQueryContainer.Query
+    {
+      get { return Query; }
+    }
   }
 }
