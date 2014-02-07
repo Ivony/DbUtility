@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using System.Threading.Tasks;
 
 
 namespace Ivony.Data
@@ -18,9 +19,20 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="table">要转换的 DataTable</param>
     /// <returns>易于数据绑定的形式</returns>
-    public static IEnumerable<DataRowView> AsView( this DataTable table )
+    public static IEnumerable<DataRowView> GetRowViews( this DataTable table )
     {
       return table.DefaultView.Cast<DataRowView>();
+    }
+
+
+    /// <summary>
+    /// 获取 DataRow 列表
+    /// </summary>
+    /// <param name="table">要转换的 DataTable</param>
+    /// <returns>DataRow 列表</returns>
+    public static IEnumerable<DataRow> GetRows( this DataTable table )
+    {
+      return table.Rows.Cast<DataRow>();
     }
 
 
@@ -31,7 +43,7 @@ namespace Ivony.Data
     /// <returns>易于数据绑定的形式</returns>
     public static IEnumerable<IDictionary<string, object>> AsDictionaries( this DataTable table )
     {
-      return AsView( table ).Select( item => CreateDictionary( item, table ) );
+      return GetRowViews( table ).Select( item => CreateDictionary( item, table ) );
     }
 
     private static IDictionary<string, object> CreateDictionary( DataRowView item, DataTable table )
@@ -103,6 +115,73 @@ namespace Ivony.Data
       return data.Rows.Cast<DataRow>().Where( r => r.RowState == DataRowState.Unchanged ).Select( r => ToDictionary( r ) ).ToArray();
     }
 
+
+
+    /// <summary>
+    /// 执行查询并返回第一列数据
+    /// </summary>
+    /// <typeparam name="T">列类型</typeparam>
+    /// <param name="query">要执行的查询</param>
+    /// <returns>第一列的数据</returns>
+    public static T[] ExecuteFirstColumn<T>( this IDbExecutableQuery query )
+    {
+      return query.ExecuteDataTable().Column<T>();
+    }
+
+    /// <summary>
+    /// 异步执行查询并返回第一列数据
+    /// </summary>
+    /// <typeparam name="T">列类型</typeparam>
+    /// <param name="query">要执行的查询</param>
+    /// <returns>第一列的数据</returns>
+    public async static Task<T[]> ExecuteFirstColumnAsync<T>( this IDbExecutableQuery query )
+    {
+      return (await query.ExecuteDataTableAsync()).Column<T>();
+    }
+
+
+    /// <summary>
+    /// 执行查询并将数据转换为 DataRowView 集合返回
+    /// </summary>
+    /// <param name="query">要执行的查询</param>
+    /// <returns>转换为 DataRowView 的数据集合</returns>
+    public static IEnumerable<DataRowView> ExecuteDataRowViews( this IDbExecutableQuery query )
+    {
+      return query.ExecuteDataTable().GetRowViews();
+    }
+
+
+    /// <summary>
+    /// 异步执行查询并将数据转换为 DataRowView 集合返回
+    /// </summary>
+    /// <param name="query">要执行的查询</param>
+    /// <returns>转换为 DataRowView 的数据集合</returns>
+    public async static Task<IEnumerable<DataRowView>> ExecuteDataRowViewsAsync( this IDbExecutableQuery query )
+    {
+      return (await query.ExecuteDataTableAsync()).GetRowViews();
+    }
+
+
+
+    /// <summary>
+    /// 执行查询并将第一行数据数据转换为 DataRowView 返回
+    /// </summary>
+    /// <param name="query">要执行的查询</param>
+    /// <returns>转换为 DataRowView 的数据集合</returns>
+    public static DataRowView ExecuteFirstDataRowView( this IDbExecutableQuery query )
+    {
+      return query.ExecuteDataTable().GetRowViews().FirstOrDefault();
+    }
+
+    /// <summary>
+    /// 异步执行查询并将第一行数据数据转换为 DataRowView 返回
+    /// </summary>
+    /// <param name="query">要执行的查询</param>
+    /// <returns>转换为 DataRowView 的数据集合</returns>
+    public async static Task<DataRowView> ExecuteFirstDataRowViewAsync( this IDbExecutableQuery query )
+    {
+      return (await query.ExecuteDataTableAsync()).GetRowViews().FirstOrDefault();
+    }
 
 
   }
