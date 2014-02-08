@@ -18,7 +18,7 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 查询数据库并将最后一个结果集填充实体类型
+    /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="dbUtility">DbUtility 实例</param>
@@ -27,12 +27,12 @@ namespace Ivony.Data
     public static T[] ExecuteEntities<T>( this IDbExecutableQuery query ) where T : new()
     {
       var data = query.ExecuteDataTable();
-      return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
+      return data.GetRows().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
     }
 
 
     /// <summary>
-    /// 查询数据库并将最后一个结果集填充实体类型
+    /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="dbUtility">DbUtility 实例</param>
@@ -41,8 +41,95 @@ namespace Ivony.Data
     public async static Task<T[]> ExecuteEntitiesAsync<T>( this IDbExecutableQuery query ) where T : new()
     {
       var data = await query.ExecuteDataTableAsync();
-      return data.Rows.Cast<DataRow>().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
+      return data.GetRows().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
     }
+
+
+
+    /// <summary>
+    /// 查询数据库并将第一个结果集填充实体类型
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体集</returns>
+    public static T[] ExecuteEntities<T>( this IDbExecutableQuery query, IEntityConverter<T> converter ) where T : new()
+    {
+      var data = query.ExecuteDataTable();
+      return data.GetRows().Select( dataItem => dataItem.ToEntity( converter ) ).ToArray();
+    }
+
+
+    /// <summary>
+    /// 查询数据库并将第一个结果集填充实体类型
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体集</returns>
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IDbExecutableQuery query, IEntityConverter<T> converter ) where T : new()
+    {
+      var data = await query.ExecuteDataTableAsync();
+      return data.GetRows().Select( dataItem => dataItem.ToEntity<T>( converter ) ).ToArray();
+    }
+
+
+
+    /// <summary>
+    /// 查询数据库并将第一个结果集填充实体类型
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体集</returns>
+    public static T[] ExecuteEntities<T>( this IDbExecutableQuery query, Func<DataRow, T> converter )
+    {
+      var data = query.ExecuteDataTable();
+      return data.GetRows().Select( dataItem => converter( dataItem ) ).ToArray();
+    }
+
+
+    /// <summary>
+    /// 查询数据库并将第一个结果集填充实体类型
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体集</returns>
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IDbExecutableQuery query, Func<DataRow, T> converter )
+    {
+      var data = await query.ExecuteDataTableAsync();
+      return data.GetRows().Select( dataItem => converter( dataItem ) ).ToArray();
+    }
+
+
+    /// <summary>
+    /// 查询数据库并将第一个结果集填充实体类型
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体集</returns>
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IDbExecutableQuery query, Func<DataRow, Task<T>> converter )
+    {
+      var data = await query.ExecuteDataTableAsync();
+      List<T> result = new List<T>();
+
+      foreach ( var dataItem in data.GetRows() )
+      {
+        var entity = await converter( dataItem );
+        result.Add( entity );
+      }
+
+      return result.ToArray();
+
+    }
+
 
 
     /// <summary>
@@ -72,6 +159,88 @@ namespace Ivony.Data
       return dataItem.ToEntity<T>();
 
     }
+
+
+
+    /// <summary>
+    /// 查询数据库并将结果首行填充实体
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体</returns>
+    public static T ExecuteEntity<T>( this IDbExecutableQuery query, IEntityConverter<T> converter ) where T : new()
+    {
+      var dataItem = query.ExecuteFirstRow();
+      return dataItem.ToEntity<T>( converter );
+
+    }
+
+    /// <summary>
+    /// 查询数据库并将结果首行填充实体
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体</returns>
+    public async static Task<T> ExecuteEntityAsync<T>( this IDbExecutableQuery query, IEntityConverter<T> converter ) where T : new()
+    {
+      var dataItem = await query.ExecuteFirstRowAsync();
+      return dataItem.ToEntity<T>( converter );
+
+    }
+
+
+    /// <summary>
+    /// 查询数据库并将第一个结果集填充实体类型
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体集</returns>
+    public static T ExecuteEntity<T>( this IDbExecutableQuery query, Func<DataRow, T> converter )
+    {
+      var dataItem = query.ExecuteFirstRow();
+      return converter( dataItem );
+    }
+
+
+    /// <summary>
+    /// 查询数据库并将第一个结果集填充实体类型
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体集</returns>
+    public async static Task<T> ExecuteEntityAsync<T>( this IDbExecutableQuery query, Func<DataRow, T> converter )
+    {
+      var dataItem = await query.ExecuteFirstRowAsync();
+      return converter( dataItem );
+    }
+
+
+    /// <summary>
+    /// 查询数据库并将第一个结果集填充实体类型
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dbUtility">DbUtility 实例</param>
+    /// <param name="expression">查询表达式</param>
+    /// <param name="converter">实体转换器</param>
+    /// <returns>实体集</returns>
+    public async static Task<T> ExecuteEntityAsync<T>( this IDbExecutableQuery query, Func<DataRow, Task<T>> converter )
+    {
+      var dataItem = await query.ExecuteFirstRowAsync();
+      return await converter( dataItem );
+    }
+
+
+
+
+
 
 
     /// <summary>

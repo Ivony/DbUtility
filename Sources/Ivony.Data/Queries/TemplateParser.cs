@@ -77,6 +77,7 @@ namespace Ivony.Data
                   throw FormatError( templateText, i );
 
                 AddParameter( builder, parameters[parameterIndex] );
+                break;
               }
 
               match = rangeRegex.Match( templateText, i );
