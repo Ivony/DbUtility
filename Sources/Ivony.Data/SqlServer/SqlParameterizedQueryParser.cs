@@ -21,6 +21,12 @@ namespace Ivony.Data.SqlServer
 
 
     private object _sync = new object();
+    private SqlDbUtility _dbUtility;
+
+    public SqlParameterizedQueryParser( SqlDbUtility dbUtility )
+    {
+      _dbUtility = dbUtility;
+    }
 
     public object SyncRoot
     {
@@ -28,16 +34,21 @@ namespace Ivony.Data.SqlServer
     }
 
 
-    public string CreateParameterPlacehold( object parameterValue )
+    public string CreateParameterPlacehold( object value )
     {
       if ( _disposed )
         throw new ObjectDisposedException( "SqlParameterizedQueryParser" );
 
 
       var name = "@Param" + index++;
-      parameterList.Add( new SqlParameter( name, parameterValue ) );
+      parameterList.Add( CreateParameter( name, value ) );
 
       return name;
+    }
+
+    protected SqlParameter CreateParameter( string name, object value )
+    {
+      return _dbUtility.CreateParameter( name, value );
     }
 
     public SqlCommand CreateCommand( string commandText )

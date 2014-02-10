@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 using Ivony.Data.Queries;
 using Ivony.Data.SqlServer;
+using System.Linq;
 
 namespace Ivony.Data
 {
@@ -62,20 +63,56 @@ namespace Ivony.Data
 
     IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
-      var command = CreateCommand( query );
+      return CreateExecuteContext( CreateCommand( query ) );
+    }
 
+    Task<IDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query )
+    {
+      return CreateAsyncExecuteContext( CreateCommand( query ) );
+    }
+
+
+    private SqlCommand CreateCommand( ParameterizedQuery query )
+    {
+      return query.CreateCommand( new SqlParameterizedQueryParser( this ) );
+    }
+
+
+
+    IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
+    {
+      var command = CreateCommand( query );
+      return CreateExecuteContext( command );
+    }
+
+    Task<IDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query )
+    {
+      var command = CreateCommand( query );
+      return CreateAsyncExecuteContext( command );
+    }
+
+
+    private SqlCommand CreateCommand( StoredProcedureQuery query )
+    {
+      var command = new SqlCommand( query.Name );
+      command.Parameters.AddRange( query.Parameters.Select( pair => CreateParameter( pair.Key, pair.Value ) ).ToArray() );
+
+      return command;
+    }
+
+
+    protected virtual IDbExecuteContext CreateExecuteContext( SqlCommand command )
+    {
       var connection = new SqlConnection( ConnectionString );
       connection.Open();
       command.Connection = connection;
 
-
-      return new SqlDbExecuteContext( command.Connection, command.ExecuteReader() );
+      return new SqlDbExecuteContext( connection, command.ExecuteReader() );
     }
 
-    async Task<IDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query )
-    {
-      var command = CreateCommand( query );
 
+    protected virtual async Task<IDbExecuteContext> CreateAsyncExecuteContext( SqlCommand command )
+    {
       var connection = new SqlConnection( ConnectionString );
       await connection.OpenAsync();
       command.Connection = connection;
@@ -84,25 +121,14 @@ namespace Ivony.Data
     }
 
 
-    private SqlCommand CreateCommand( ParameterizedQuery query )
+
+
+    public virtual SqlParameter CreateParameter( string name, object value )
     {
-      var command = query.CreateCommand( new SqlParameterizedQueryParser() );
-      var connection = new SqlConnection( ConnectionString );
-      command.Connection = connection;
+      if ( !name.StartsWith( "@" ) )
+        throw new InvalidOperationException( "对于 SQL Server 而言，参数名必须以 '@' 开头" );
 
-      return command;
-    }
-
-
-
-    IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
-    {
-      throw new NotImplementedException();
-    }
-
-    Task<IDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query )
-    {
-      throw new NotImplementedException();
+      return new SqlParameter( name, value );
     }
 
   }
