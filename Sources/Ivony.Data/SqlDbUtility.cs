@@ -16,7 +16,6 @@ namespace Ivony.Data
   /// <summary>
   /// 用于操作 SQL Server 的数据库访问工具
   /// </summary>
-  [Serializable]
   public class SqlDbUtility : IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>
   {
 
@@ -41,6 +40,12 @@ namespace Ivony.Data
       ConnectionString = connectionString;
     }
 
+    internal SqlDbUtility( SqlDbTransactionContext transaction )
+    {
+      ConnectionString = TransactionContext.Connection.ConnectionString;
+      TransactionContext = transaction;
+    }
+
 
     /// <summary>
     /// 创建数据库访问工具
@@ -57,30 +62,77 @@ namespace Ivony.Data
     }
 
 
+    public SqlDbTransactionContext CreateTransactrion()
+    {
+      return new SqlDbTransactionContext( ConnectionString );
+    }
+
+
+    /// <summary>
+    /// 当前所处的事务，如果有的话。
+    /// </summary>
+    protected SqlDbTransactionContext TransactionContext
+    {
+      get;
+      private set;
+    }
+
+    /// <summary>
+    /// 执行查询命令并返回执行上下文
+    /// </summary>
+    /// <param name="command">查询命令</param>
+    /// <returns>查询执行上下文</returns>
+    protected IDbExecuteContext Execute( SqlCommand command )
+    {
+
+      if ( TransactionContext != null )
+      {
+        command.Connection = TransactionContext.Connection;
+        return new SqlDbExecuteContext( TransactionContext, command.ExecuteReader() );
+      }
+      else
+      {
+        var connection = new SqlConnection( ConnectionString );
+        command.Connection = connection;
+
+        return new SqlDbExecuteContext( connection, command.ExecuteReader() );
+      }
+    }
+
+
+    /// <summary>
+    /// 异步执行查询命令并返回执行上下文
+    /// </summary>
+    /// <param name="command">查询命令</param>
+    /// <returns>查询执行上下文</returns>
+    protected async Task<IDbExecuteContext> ExecuteAsync( SqlCommand command )
+    {
+      if ( TransactionContext != null )
+      {
+        command.Connection = TransactionContext.Connection;
+        return new SqlDbExecuteContext( TransactionContext, await command.ExecuteReaderAsync() );
+      }
+      else
+      {
+        var connection = new SqlConnection( ConnectionString );
+        command.Connection = connection;
+
+        return new SqlDbExecuteContext( connection, await command.ExecuteReaderAsync() );
+      }
+    }
 
 
 
     IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
       var command = CreateCommand( query );
-
-      var connection = new SqlConnection( ConnectionString );
-      connection.Open();
-      command.Connection = connection;
-
-
-      return new SqlDbExecuteContext( command.Connection, command.ExecuteReader() );
+      return Execute( command );
     }
 
-    async Task<IDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query )
+    Task<IDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query )
     {
       var command = CreateCommand( query );
-
-      var connection = new SqlConnection( ConnectionString );
-      await connection.OpenAsync();
-      command.Connection = connection;
-
-      return new SqlDbExecuteContext( connection, await command.ExecuteReaderAsync() );
+      return ExecuteAsync( command );
     }
 
 

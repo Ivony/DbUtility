@@ -87,6 +87,7 @@
     <Compile Include="IDbExecutableQuery.cs" />
     <Compile Include="IDbExecuteContext.cs" />
     <Compile Include="IDbQuery.cs" />
+    <Compile Include="IDbTransactionContext.cs" />
     <Compile Include="IParameterizedQueryParser.cs" />
     <Compile Include="IDbQueryContainer.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
@@ -100,11 +101,9 @@
     <Compile Include="SqlDbUtility.cs" />
     <Compile Include="SqlServer\SqlDbExecuteContext.cs" />
     <Compile Include="SqlServer\SqlParameterizedQueryParser.cs" />
+    <Compile Include="SqlServer\SqlDbTensactionContext.cs" />
     <Compile Include="TableExtensions.cs" />
     <Compile Include="TemplateExtensions.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

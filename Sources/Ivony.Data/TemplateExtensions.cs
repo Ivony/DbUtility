@@ -39,5 +39,31 @@ namespace Ivony.Data
       return Template( executor, template, parameters );
     }
 
+
+
+
+
+    /// <summary>
+    /// 创建模版表达式实例
+    /// </summary>
+    /// <param name="template">SQL 命令模版</param>
+    /// <param name="parameters">模版参数列表</param>
+    /// <returns>模版表达式</returns>
+    public static DbExecutableQuery<ParameterizedQuery> Template( this IDbTransactionContext<IDbExecutor<ParameterizedQuery>> transaction, string template, params object[] parameters )
+    {
+      return transaction.DbExecutor.Template( template, parameters );
+    }
+
+
+    /// <summary>
+    /// 创建模版表达式实例
+    /// </summary>
+    /// <param name="template">SQL 命令模版</param>
+    /// <param name="parameters">模版参数列表</param>
+    /// <returns>模版表达式</returns>
+    public static DbExecutableQuery<ParameterizedQuery> T( this IDbTransactionContext<IDbExecutor<ParameterizedQuery>> transaction, string template, params object[] parameters )
+    {
+      return transaction.DbExecutor.Template( template, parameters );
+    }
   }
 }

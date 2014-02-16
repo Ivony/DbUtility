@@ -15,13 +15,15 @@ namespace Ivony.Data
   {
 
     /// <summary>
-    /// 用于获取查询结果的 DataReader 对象
+    /// 获取查询结果的 DataReader 对象
     /// </summary>
     IDataReader DataReader { get; }
 
+
     /// <summary>
-    /// 销毁查询执行上下文
+    /// 获取用于确保同步查询过程的同步对象
     /// </summary>
-    void Dispose();
+    object SyncRoot { get; }
+
   }
 }
