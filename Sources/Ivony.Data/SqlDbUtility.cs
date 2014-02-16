@@ -93,8 +93,8 @@ namespace Ivony.Data
       else
       {
         var connection = new SqlConnection( ConnectionString );
+        connection.Open();
         command.Connection = connection;
-
         return new SqlDbExecuteContext( connection, command.ExecuteReader() );
       }
     }
@@ -115,8 +115,8 @@ namespace Ivony.Data
       else
       {
         var connection = new SqlConnection( ConnectionString );
+        await connection.OpenAsync();
         command.Connection = connection;
-
         return new SqlDbExecuteContext( connection, await command.ExecuteReaderAsync() );
       }
     }
@@ -138,11 +138,22 @@ namespace Ivony.Data
 
     private SqlCommand CreateCommand( ParameterizedQuery query )
     {
-      var command = query.CreateCommand( new SqlParameterizedQueryParser() );
+      var command = query.CreateCommand( new SqlParameterizedQueryParser( this ) );
       var connection = new SqlConnection( ConnectionString );
       command.Connection = connection;
 
       return command;
+    }
+
+
+
+    public virtual SqlParameter CreateParameter( string name, object value )
+    {
+      throw new NotImplementedException();
+      if ( !name.StartsWith( "@" ) )
+        throw new InvalidOperationException( "适用于 SQL Server 的查询参数必须以 '@' 符号开头" );
+
+      return new SqlParameter( name, value );
     }
 
 

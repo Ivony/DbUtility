@@ -8,7 +8,7 @@ namespace Ivony.Data.Queries
 {
 
   /// <summary>
-  /// 辅助构建 ParameterizedQueryBuilder 对象
+  /// 辅助构建 ParameterizedQuery 对象
   /// </summary>
   public sealed class ParameterizedQueryBuilder
   {
@@ -73,6 +73,10 @@ namespace Ivony.Data.Queries
     }
 
 
+    /// <summary>
+    /// 创建参数化查询对象实例
+    /// </summary>
+    /// <returns>参数化查询对象</returns>
     public ParameterizedQuery CreateQuery()
     {
       return new ParameterizedQuery( textBuilder.ToString(), values.ToArray() );
