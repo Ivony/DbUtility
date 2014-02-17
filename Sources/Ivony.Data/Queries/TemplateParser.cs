@@ -172,10 +172,26 @@ namespace Ivony.Data
       }
 
       if ( partial != null )
+      {
         partial.Parse( builder );
+        return;
+      }
 
-      else
-        builder.AppendParameter( value );
+
+      var array = value as Array;
+      if ( array != null )
+      {
+        for ( int i = 0; i < array.Length - 1; i++ )
+        {
+          AddParameter( builder, array.GetValue( i ) );
+          builder.Append( "," );
+        }
+
+        AddParameter( builder, array.GetValue( array.Length ) );
+      }
+
+
+      builder.AppendParameter( value );
     }
   }
 }
