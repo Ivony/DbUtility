@@ -28,7 +28,21 @@ namespace Ivony.Data.Test
       Assert.AreEqual( db.T( "INSERT INTO Test1 ( Name, Data, [Index] ) VALUES ( {...} )", "Ivony", "Test", 1 ).ExecuteNonQuery(), 1, "插入数据测试失败" );
       Assert.AreEqual( db.T( "SELECT * FROM Test1" ).ExecuteDynamics().Length, 1, "插入数据后查询测试失败" );
 
-      
+    }
+
+
+    [TestMethod]
+    public void RollbackTest()
+    {
+
+      using ( var transaction = db.CreateTransactrion() )
+      {
+        transaction.BeginTransaction();
+        Assert.AreEqual( transaction.T( "INSERT INTO Test1 ( Name, Data, [Index] ) VALUES ( {...} )", "Ivony", "Test", 1 ).ExecuteNonQuery(), 1, "插入数据测试失败" );
+        Assert.AreEqual( transaction.T( "SELECT * FROM Test1" ).ExecuteDynamics().Length, 1, "插入数据后查询测试失败" );
+      }
+
+      Assert.AreEqual( db.T( "SELECT * FROM Test1" ).ExecuteDynamics().Length, 0, "自动回滚测试失败" );
 
     }
   }

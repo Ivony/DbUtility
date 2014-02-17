@@ -81,7 +81,10 @@ namespace Ivony.Data.SqlServer
     /// </summary>
     public void Dispose()
     {
-      Connection.Close();
+      DataReader.Close();
+
+      if ( TransactionContext == null )
+        Connection.Close();
     }
 
 

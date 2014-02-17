@@ -45,8 +45,8 @@ namespace Ivony.Data
 
     internal SqlDbUtility( SqlDbTransactionContext transaction )
     {
-      ConnectionString = TransactionContext.Connection.ConnectionString;
       TransactionContext = transaction;
+      ConnectionString = transaction.Connection.ConnectionString;
     }
 
 
@@ -91,6 +91,7 @@ namespace Ivony.Data
       if ( TransactionContext != null )
       {
         command.Connection = TransactionContext.Connection;
+        command.Transaction = TransactionContext.Transaction;
         return new SqlDbExecuteContext( TransactionContext, command.ExecuteReader() );
       }
       else
@@ -113,6 +114,7 @@ namespace Ivony.Data
       if ( TransactionContext != null )
       {
         command.Connection = TransactionContext.Connection;
+        command.Transaction = TransactionContext.Transaction;
         return new SqlDbExecuteContext( TransactionContext, await command.ExecuteReaderAsync() );
       }
       else

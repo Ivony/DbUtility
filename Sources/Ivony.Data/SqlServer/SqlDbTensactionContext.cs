@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,8 @@ namespace Ivony.Data.SqlServer
 
     internal SqlDbTransactionContext( string connectionString )
     {
-      _connectionString = connectionString;
+      Connection = new SqlConnection( connectionString );
+      DbExecutor = new SqlDbUtility( this );
       _sync = new object();
     }
 
@@ -57,10 +59,10 @@ namespace Ivony.Data.SqlServer
 
       lock ( SyncRoot )
       {
-        if ( Connection != null )
+        if ( Connection.State != ConnectionState.Closed )
           throw new InvalidOperationException();
 
-        Connection = new SqlConnection( _connectionString );
+        Connection.Open();
         Transaction = Connection.BeginTransaction();
       }
     }
@@ -101,7 +103,8 @@ namespace Ivony.Data.SqlServer
     /// </summary>
     public SqlDbUtility DbExecutor
     {
-      get { throw new NotImplementedException(); }
+      get;
+      private set;
     }
 
 
