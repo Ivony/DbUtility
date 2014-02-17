@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using Ivony.Fluent;
 
 namespace Ivony.Data.SqlServer
 {
@@ -16,17 +17,11 @@ namespace Ivony.Data.SqlServer
 
 
     private int index = 0;
-    private IList<SqlParameter> parameterList = new List<SqlParameter>();
+    private IDictionary<string, object> parameterList = new Dictionary<string, object>();
 
 
 
     private object _sync = new object();
-    private SqlDbUtility _dbUtility;
-
-    public SqlParameterizedQueryParser( SqlDbUtility dbUtility )
-    {
-      _dbUtility = dbUtility;
-    }
 
     public object SyncRoot
     {
@@ -41,15 +36,11 @@ namespace Ivony.Data.SqlServer
 
 
       var name = "@Param" + index++;
-      parameterList.Add( CreateParameter( name, value ) );
+      parameterList.Add( name, value );
 
       return name;
     }
 
-    protected SqlParameter CreateParameter( string name, object value )
-    {
-      return _dbUtility.CreateParameter( name, value );
-    }
 
     public SqlCommand CreateCommand( string commandText )
     {
@@ -59,8 +50,7 @@ namespace Ivony.Data.SqlServer
 
       var command = new SqlCommand();
       command.CommandText = commandText;
-      command.Parameters.AddRange( parameterList.ToArray() );
-
+      parameterList.ForAll( pair => command.Parameters.AddWithValue( pair.Key, pair.Value ) );
       _disposed = true;
 
       return command;

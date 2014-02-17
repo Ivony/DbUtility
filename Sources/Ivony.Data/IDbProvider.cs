@@ -8,7 +8,7 @@ namespace Ivony.Data
   public interface IDbProvider
   {
 
-    IDbExecutor<T> GetDbExecutor<T>( string connectionString );
+    IDbExecutor<T> GetDbExecutor<T>( string connectionString ) where T : IDbQuery;
 
   }
 }

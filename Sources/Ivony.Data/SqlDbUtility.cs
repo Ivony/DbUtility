@@ -10,6 +10,9 @@ using System.Configuration;
 using System.Threading.Tasks;
 using Ivony.Data.Queries;
 using Ivony.Data.SqlServer;
+using Ivony.Fluent;
+
+using System.Linq;
 
 namespace Ivony.Data
 {
@@ -125,28 +128,28 @@ namespace Ivony.Data
 
     IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
-      var command = CreateCommand( query );
-      return Execute( command );
+      return Execute( CreateCommand( query ) );
     }
 
     Task<IDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query )
     {
-      var command = CreateCommand( query );
-      return ExecuteAsync( command );
+      return ExecuteAsync( CreateCommand( query ) );
     }
 
 
-    private SqlCommand CreateCommand( ParameterizedQuery query )
+    protected SqlCommand CreateCommand( ParameterizedQuery query )
     {
-      var command = query.CreateCommand( new SqlParameterizedQueryParser( this ) );
-      var connection = new SqlConnection( ConnectionString );
-      command.Connection = connection;
-
-      return command;
+      return query.CreateCommand( new SqlParameterizedQueryParser() );
     }
 
 
 
+    /// <summary>
+    /// 创建查询参数
+    /// </summary>
+    /// <param name="name">参数名</param>
+    /// <param name="value">参数值</param>
+    /// <returns>SQL 查询参数对象</returns>
     public virtual SqlParameter CreateParameter( string name, object value )
     {
       throw new NotImplementedException();
@@ -160,13 +163,23 @@ namespace Ivony.Data
 
     IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
     {
-      throw new NotImplementedException();
+      return Execute( CreateCommand( query ) );
     }
 
     Task<IDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query )
     {
-      throw new NotImplementedException();
+      return ExecuteAsync( CreateCommand( query ) );
     }
+
+
+    protected SqlCommand CreateCommand( StoredProcedureQuery query )
+    {
+      var command = new SqlCommand( query.Name );
+      command.CommandType = CommandType.StoredProcedure;
+      query.Parameters.ForAll( pair => command.Parameters.AddWithValue( pair.Key, pair.Value ) );
+      return command;
+    }
+
 
   }
 }
