@@ -86,6 +86,7 @@
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="BasicExecuteExtensions.cs" />
+    <Compile Include="IDbTransactionProvider.cs" />
     <Compile Include="IDbExecutableQuery.cs" />
     <Compile Include="IDbExecuteContext.cs" />
     <Compile Include="IDbProvider.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="SqlServer\SqlDbTensactionContext.cs" />
     <Compile Include="TableExtensions.cs" />
     <Compile Include="TemplateExtensions.cs" />
+    <Compile Include="TransactionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

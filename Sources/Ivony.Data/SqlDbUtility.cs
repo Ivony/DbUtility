@@ -19,7 +19,7 @@ namespace Ivony.Data
   /// <summary>
   /// 用于操作 SQL Server 的数据库访问工具
   /// </summary>
-  public class SqlDbUtility : IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>
+  public class SqlDbUtility : IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>, IDbTransactionProvider<SqlDbUtility>
   {
 
 
@@ -65,10 +65,16 @@ namespace Ivony.Data
     }
 
 
-    public SqlDbTransactionContext CreateTransactrion()
+    public SqlDbTransactionContext CreateTransaction()
     {
       return new SqlDbTransactionContext( ConnectionString );
     }
+
+    IDbTransactionContext<SqlDbUtility> IDbTransactionProvider<SqlDbUtility>.CreateTransaction()
+    {
+      return CreateTransaction();
+    }
+
 
 
     /// <summary>
@@ -181,7 +187,5 @@ namespace Ivony.Data
       query.Parameters.ForAll( pair => command.Parameters.AddWithValue( pair.Key, pair.Value ) );
       return command;
     }
-
-
   }
 }

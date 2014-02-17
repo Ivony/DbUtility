@@ -59,11 +59,11 @@ namespace Ivony.Data.SqlServer
 
       lock ( SyncRoot )
       {
-        if ( Connection.State != ConnectionState.Closed )
-          throw new InvalidOperationException();
-
-        Connection.Open();
-        Transaction = Connection.BeginTransaction();
+        if ( Connection.State == ConnectionState.Closed )
+        {
+          Connection.Open();
+          Transaction = Connection.BeginTransaction();
+        }
       }
     }
 
