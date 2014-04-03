@@ -13,6 +13,7 @@ using Ivony.Data.SqlServer;
 using Ivony.Fluent;
 
 using System.Linq;
+using System.Threading;
 
 namespace Ivony.Data
 {
@@ -65,10 +66,15 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 创建数据库事务上下文
+    /// </summary>
+    /// <returns>数据库事务上下文</returns>
     public SqlDbTransactionContext CreateTransaction()
     {
       return new SqlDbTransactionContext( ConnectionString );
     }
+
 
     IDbTransactionContext<SqlDbUtility> IDbTransactionProvider<SqlDbUtility>.CreateTransaction()
     {
@@ -114,21 +120,22 @@ namespace Ivony.Data
     /// 异步执行查询命令并返回执行上下文
     /// </summary>
     /// <param name="command">查询命令</param>
+    /// <param name="token">取消指示</param>
     /// <returns>查询执行上下文</returns>
-    protected async Task<IDbExecuteContext> ExecuteAsync( SqlCommand command )
+    protected async Task<IDbExecuteContext> ExecuteAsync( SqlCommand command, CancellationToken token )
     {
       if ( TransactionContext != null )
       {
         command.Connection = TransactionContext.Connection;
         command.Transaction = TransactionContext.Transaction;
-        return new SqlDbExecuteContext( TransactionContext, await command.ExecuteReaderAsync() );
+        return new SqlDbExecuteContext( TransactionContext, await command.ExecuteReaderAsync( token ) );
       }
       else
       {
         var connection = new SqlConnection( ConnectionString );
-        await connection.OpenAsync();
+        await connection.OpenAsync( token );
         command.Connection = connection;
-        return new SqlDbExecuteContext( connection, await command.ExecuteReaderAsync() );
+        return new SqlDbExecuteContext( connection, await command.ExecuteReaderAsync( token ) );
       }
     }
 
@@ -139,9 +146,9 @@ namespace Ivony.Data
       return Execute( CreateCommand( query ) );
     }
 
-    Task<IDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query )
+    Task<IDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )
     {
-      return ExecuteAsync( CreateCommand( query ) );
+      return ExecuteAsync( CreateCommand( query ), token );
     }
 
 
@@ -174,12 +181,17 @@ namespace Ivony.Data
       return Execute( CreateCommand( query ) );
     }
 
-    Task<IDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query )
+    Task<IDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query, CancellationToken token )
     {
-      return ExecuteAsync( CreateCommand( query ) );
+      return ExecuteAsync( CreateCommand( query ), token );
     }
 
 
+    /// <summary>
+    /// 通过存储过程查询创建 SqlCommand 对象
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
     protected SqlCommand CreateCommand( StoredProcedureQuery query )
     {
       var command = new SqlCommand( query.Name );

@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
+
+  /// <summary>
+  /// IDbExecutableQuery 的一个标准实现
+  /// </summary>
+  /// <typeparam name="T">查询对象的类型</typeparam>
   public sealed class DbExecutableQuery<T> : IDbExecutableQuery, IDbQueryContainer where T : IDbQuery
   {
 
@@ -70,13 +76,13 @@ namespace Ivony.Data
     /// 异步执行查询
     /// </summary>
     /// <returns>查询执行上下文</returns>
-    public Task<IDbExecuteContext> ExecuteAsync()
+    public Task<IDbExecuteContext> ExecuteAsync( CancellationToken token = default( CancellationToken ) )
     {
 
       if ( AsyncExecutor == null )
         return new Task<IDbExecuteContext>( Execute );
 
-      return AsyncExecutor.ExecuteAsync( Query );
+      return AsyncExecutor.ExecuteAsync( Query, token );
     }
 
 

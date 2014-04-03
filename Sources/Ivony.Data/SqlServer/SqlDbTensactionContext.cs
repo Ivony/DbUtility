@@ -21,7 +21,6 @@ namespace Ivony.Data.SqlServer
     private bool _disposed = false;
 
     private object _sync = new object();
-    private string _connectionString;
 
     internal SqlDbTransactionContext( string connectionString )
     {

@@ -42,6 +42,10 @@ namespace Ivony.Data
 
 
 
+  /// <summary>
+  /// 定义异步数据库事务上下文
+  /// </summary>
+  /// <typeparam name="TDbExecutor">数据查询执行器类型</typeparam>
   public interface IAsyncDbTransactionContext<out TDbExecutor> : IDbTransactionContext<TDbExecutor>
   {
 

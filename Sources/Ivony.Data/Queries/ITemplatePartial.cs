@@ -14,7 +14,7 @@ namespace Ivony.Data.Queries
     /// <summary>
     /// 解析模版并提供嵌入的 SQL 表达式
     /// </summary>
-    /// <param name="context">模版解析上下文</param>
+    /// <param name="builder">参数化查询构建器</param>
     /// <returns></returns>
     void Parse( ParameterizedQueryBuilder builder );
   }

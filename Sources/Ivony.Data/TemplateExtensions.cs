@@ -19,6 +19,7 @@ namespace Ivony.Data
     /// <summary>
     /// 创建模版表达式实例
     /// </summary>
+    /// <param name="executor">查询执行器</param>
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>模版表达式</returns>
@@ -31,6 +32,7 @@ namespace Ivony.Data
     /// <summary>
     /// 创建模版表达式实例
     /// </summary>
+    /// <param name="executor">查询执行器</param>
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>模版表达式</returns>
@@ -46,6 +48,7 @@ namespace Ivony.Data
     /// <summary>
     /// 创建模版表达式实例
     /// </summary>
+    /// <param name="transaction">数据库事务对象</param>
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>模版表达式</returns>
@@ -58,6 +61,7 @@ namespace Ivony.Data
     /// <summary>
     /// 创建模版表达式实例
     /// </summary>
+    /// <param name="transaction">数据库事务对象</param>
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>模版表达式</returns>

@@ -8,6 +8,11 @@ using Ivony.Data.Queries;
 
 namespace Ivony.Data
 {
+
+
+  /// <summary>
+  /// SQL模板解析器
+  /// </summary>
   public class TemplateParser
   {
 

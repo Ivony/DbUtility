@@ -97,7 +97,6 @@
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />
-    <Compile Include="Queries\TableQuery.cs" />
     <Compile Include="IDbExecutor.cs" />
     <Compile Include="Queries\ITemplatePartial.cs" />
     <Compile Include="Queries\TemplateParser.cs" />
@@ -106,7 +105,6 @@
     <Compile Include="SqlServer\SqlDbExecuteContext.cs" />
     <Compile Include="SqlServer\SqlParameterizedQueryParser.cs" />
     <Compile Include="SqlServer\SqlDbTensactionContext.cs" />
-    <Compile Include="TableExtensions.cs" />
     <Compile Include="TemplateExtensions.cs" />
     <Compile Include="TransactionExtensions.cs" />
   </ItemGroup>

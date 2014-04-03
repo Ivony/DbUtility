@@ -9,6 +9,10 @@ using Ivony.Fluent;
 
 namespace Ivony.Data.SqlServer
 {
+
+  /// <summary>
+  /// 定义 SQL Server 的参数化查询解析器
+  /// </summary>
   public class SqlParameterizedQueryParser : IParameterizedQueryParser<SqlCommand>
   {
 
@@ -23,12 +27,21 @@ namespace Ivony.Data.SqlServer
 
     private object _sync = new object();
 
+
+    /// <summary>
+    /// 获取用于同步的对象
+    /// </summary>
     public object SyncRoot
     {
       get { return _sync; }
     }
 
 
+    /// <summary>
+    /// 创建参数占位符
+    /// </summary>
+    /// <param name="value">参数值</param>
+    /// <returns>参数占位符或参数值表达式</returns>
     public string CreateParameterPlacehold( object value )
     {
       if ( _disposed )
@@ -42,6 +55,11 @@ namespace Ivony.Data.SqlServer
     }
 
 
+    /// <summary>
+    /// 创建 SqlCommand 对象
+    /// </summary>
+    /// <param name="commandText">查询文本</param>
+    /// <returns>SqlCommand 对象</returns>
     public SqlCommand CreateCommand( string commandText )
     {
       if ( _disposed )
@@ -57,6 +75,9 @@ namespace Ivony.Data.SqlServer
     }
 
 
+    /// <summary>
+    /// 销毁此对象，释放所有托管和非托管资源
+    /// </summary>
     public void Dispose()
     {
       _disposed = true;

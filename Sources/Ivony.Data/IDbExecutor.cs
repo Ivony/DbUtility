@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ivony.Data
@@ -16,6 +17,11 @@ namespace Ivony.Data
   public interface IDbExecutor<T> where T : IDbQuery
   {
 
+    /// <summary>
+    /// 执行查询
+    /// </summary>
+    /// <param name="query">查询对象</param>
+    /// <returns>查询执行上下文</returns>
     IDbExecuteContext Execute( T query );
 
   }
@@ -28,7 +34,13 @@ namespace Ivony.Data
   public interface IAsyncDbExecutor<T> : IDbExecutor<T> where T : IDbQuery
   {
 
-    Task<IDbExecuteContext> ExecuteAsync( T query );
+    /// <summary>
+    /// 异步执行查询
+    /// </summary>
+    /// <param name="query">要执行的查询</param>
+    /// <param name="token">取消指示</param>
+    /// <returns>查询执行上下文</returns>
+    Task<IDbExecuteContext> ExecuteAsync( T query, CancellationToken token );
 
 
   }

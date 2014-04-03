@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
+
+  /// <summary>
+  /// 提供有关事务的一些扩展方法
+  /// </summary>
   public static class TransactionExtensions
   {
 

@@ -5,6 +5,7 @@ using System.Data;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ivony.Data
@@ -58,10 +59,11 @@ namespace Ivony.Data
     /// 异步执行查询并将第一个结果集填充动态对象列表
     /// </summary>
     /// <param name="query">要执行的查询</param>
+    /// <param name="token">取消指示</param>
     /// <returns>查询结果</returns>
-    public static async Task<dynamic[]> ExecuteDynamicsAsync( this IDbExecutableQuery query )
+    public static async Task<dynamic[]> ExecuteDynamicsAsync( this IDbExecutableQuery query, CancellationToken token = default( CancellationToken ) )
     {
-      var data = await query.ExecuteDataTableAsync();
+      var data = await query.ExecuteDataTableAsync( token );
       return ToDynamics( data );
     }
 

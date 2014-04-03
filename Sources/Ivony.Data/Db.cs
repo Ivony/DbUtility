@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
+
+  /// <summary>
+  /// 提供一系列静态方法辅助访问数据库
+  /// </summary>
   public static class Db
   {
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Ivony.Data
 {
@@ -27,7 +28,7 @@ namespace Ivony.Data
     /// 异步执行查询
     /// </summary>
     /// <returns></returns>
-    Task<IDbExecuteContext> ExecuteAsync();
+    Task<IDbExecuteContext> ExecuteAsync( CancellationToken token );
 
   }
 
