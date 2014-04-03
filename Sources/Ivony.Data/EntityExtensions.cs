@@ -76,8 +76,8 @@ namespace Ivony.Data
     /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
-    /// <param name="dbUtility">DbUtility 实例</param>
-    /// <param name="expression">查询表达式</param>
+    /// <param name="query">要执行的查询</param>
+    /// <param name="token">取消指示</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体集</returns>
     public async static Task<T[]> ExecuteEntitiesAsync<T>( this IDbExecutableQuery query, CancellationToken token, IEntityConverter<T> converter ) where T : new()
@@ -246,7 +246,6 @@ namespace Ivony.Data
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="query">要执行的查询</param>
-    /// <param name="token">取消指示</param>
     /// <param name="converter">实体转换方法</param>
     /// <returns>实体</returns>
     public static Task<T> ExecuteEntityAsync<T>( this IDbExecutableQuery query, Func<DataRow, T> converter )
@@ -538,11 +537,20 @@ namespace Ivony.Data
 
     private Type _convertType;
 
+    /// <summary>
+    /// 创建 EntityConvertAttribute 对象
+    /// </summary>
+    /// <param name="convertType">实体转换器类型</param>
     public EntityConvertAttribute( Type convertType )
     {
       _convertType = convertType;
     }
 
+    /// <summary>
+    /// 创建实体转换器实例
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <returns>实体转换器实例</returns>
     public IEntityConverter<T> CreateConverter<T>()
     {
       return (IEntityConverter<T>) Activator.CreateInstance( _convertType );
@@ -553,13 +561,14 @@ namespace Ivony.Data
   /// <summary>
   /// 定义实体转换器类型
   /// </summary>
-  /// <typeparam name="T"></typeparam>
+  /// <typeparam name="T">实体类型</typeparam>
   public interface IEntityConverter<T>
   {
     /// <summary>
     /// 将数据写入实体
     /// </summary>
-    /// <param name="dataItem"></param>
+    /// <param name="dataItem">数据行</param>
+    /// <param name="entity">要写入数据的实体</param>
     /// <returns></returns>
     void Convert( DataRow dataItem, T entity );
 

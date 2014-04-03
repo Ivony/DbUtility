@@ -152,26 +152,14 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 从参数化查询创建查询命令对象
+    /// </summary>
+    /// <param name="query">参数化查询对象</param>
+    /// <returns>SQL 查询命令对象</returns>
     protected SqlCommand CreateCommand( ParameterizedQuery query )
     {
       return query.CreateCommand( new SqlParameterizedQueryParser() );
-    }
-
-
-
-    /// <summary>
-    /// 创建查询参数
-    /// </summary>
-    /// <param name="name">参数名</param>
-    /// <param name="value">参数值</param>
-    /// <returns>SQL 查询参数对象</returns>
-    public virtual SqlParameter CreateParameter( string name, object value )
-    {
-      throw new NotImplementedException();
-      if ( !name.StartsWith( "@" ) )
-        throw new InvalidOperationException( "适用于 SQL Server 的查询参数必须以 '@' 符号开头" );
-
-      return new SqlParameter( name, value );
     }
 
 
