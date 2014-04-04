@@ -65,7 +65,7 @@ the method name **T** means **Template**, so we can also write code like below:
 ```CSharp
 db.Template( "SELECT MemberID FROM Members WHERE Username = {0} AND Password = {1}", username, password )
 ```
-and the **T** is an **extension method**, you can declare another query definition method **as you like**.
+and the **T** is an **extension method**, you can customize another query definition method **as you like**.
 
 ---
 
@@ -77,4 +77,5 @@ the popular result definition method under this:
 **ExecuteScaler**, execute query and return the first column of the first row.<br />
 **ExecuteDataTable**, execute query and fill a DataTable and return.<br />
 **ExecuteFirstRow**, execute query and return ths first row.<br />
-**ExecuteEntity**, execute query and return the first row to fill the specified type of entity
+**ExecuteEntity**, execute query and return the first row to fill the specified type of entity<br />
+and more, and **customize as you like**
