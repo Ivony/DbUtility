@@ -29,8 +29,8 @@ db.T( "SELECT FirstName, LastName FROM Members WHERE Username = {0}", username )
 
 In the code above, 
 ```db``` is called **database executor**,
-```T( "SELECT FirstName, LastName FROM Members WHERE Username = {0}", username )``` is called **query define**,
-and ```ExecuteFirstRow()``` is called **result define** 
+```T( "SELECT FirstName, LastName FROM Members WHERE Username = {0}", username )``` is called **query definition**,
+and ```ExecuteFirstRow()``` is called **result definition** 
 
 ---
 
@@ -47,19 +47,34 @@ var db = new SqlDbUtility( "connection-string" );
 
 ----
 
-A typical **query define** like this below
+A typical **query definition** like this below
 ```CSharp
 db.T( "query-text-template", params parameters );
 ```
-The query text is SQL command to be executed. and you can use parameter placehold inside like ```string.Format``` syntax.
-
-like this
+The query text is SQL command to be executed. and you can use parameter placehold inside like ```string.Format``` syntax. like this below:
 ```CSharp
 db.T( "SELECT MemberID FROM Members WHERE Username = {0} AND Password = {1}", username, password )
 ```
 it will create a SQL query like this below:
 ```SQL
-DEFINE @Param0 as nvarchar = 'text of username';
-DEFINE @Param1 as nvarchar = 'text of password';
+DECLARE @Param0 AS nvarchar = 'text of username';
+DECLARE @Param1 AS nvarchar = 'text of password';
 SELECT MemberID FROM Members WHERE Username = @Param0 AND Password = @Param1;
 ```
+the method name **T** means **Template**, so we can also write code like below:
+```CSharp
+db.Template( "SELECT MemberID FROM Members WHERE Username = {0} AND Password = {1}", username, password )
+```
+and the **T** is an **extension method**, you can declare another query definition method **as you like**.
+
+---
+
+In the last, we talk about the **result definition**.
+like same as the query definition, result definition are also en extension method. we have many result definition method, and all of they have asynchronous version.
+the popular result definition method under this:
+
+**ExecuteNonQuery**, execute query, and return the number of rows affected.
+**ExecuteScaler**, execute query and return the first column of the first row.
+**ExecuteDataTable**, execute query and fill a DataTable and return.
+**ExecuteFirstRow**, execute query and return ths first row.
+**ExecuteEntity**, execute query and return the first row to fill the specified type of entity
