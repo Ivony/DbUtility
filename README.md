@@ -28,9 +28,9 @@ db.T( "SELECT FirstName, LastName FROM Members WHERE Username = {0}", username )
 ```
 
 In the code above, 
-```db``` is called **database executor**,
-```T( "SELECT FirstName, LastName FROM Members WHERE Username = {0}", username )``` is called **query definition**,
-and ```ExecuteFirstRow()``` is called **result definition** 
+```db``` is called **database executor**,<br />
+```T( "SELECT FirstName, LastName FROM Members WHERE Username = {0}", username )``` is called **query definition**,<br />
+and ```ExecuteFirstRow()``` is called **result definition** <br />
 
 ---
 
@@ -73,8 +73,8 @@ In the last, we talk about the **result definition**.
 like same as the query definition, result definition are also en extension method. we have many result definition method, and all of they have asynchronous version.
 the popular result definition method under this:
 
-**ExecuteNonQuery**, execute query, and return the number of rows affected.
-**ExecuteScaler**, execute query and return the first column of the first row.
-**ExecuteDataTable**, execute query and fill a DataTable and return.
-**ExecuteFirstRow**, execute query and return ths first row.
+**ExecuteNonQuery**, execute query, and return the number of rows affected.<br />
+**ExecuteScaler**, execute query and return the first column of the first row.<br />
+**ExecuteDataTable**, execute query and fill a DataTable and return.<br />
+**ExecuteFirstRow**, execute query and return ths first row.<br />
 **ExecuteEntity**, execute query and return the first row to fill the specified type of entity
