@@ -80,9 +80,32 @@ namespace Ivony.Data
     {
 
       if ( AsyncExecutor == null )
-        return new Task<IDbExecuteContext>( Execute );
+      {
+        var builder = new TaskCompletionSource<IDbExecuteContext>();
 
-      return AsyncExecutor.ExecuteAsync( Query, token );
+        if ( token.IsCancellationRequested )
+        {
+          builder.SetCanceled();
+          return builder.Task;
+        }
+
+        try
+        {
+          var result = Execute();
+
+          builder.SetResult( result );
+          return builder.Task;
+        }
+
+        catch ( Exception e )
+        {
+          builder.SetException( e );
+          return builder.Task;
+        }
+      }
+
+      else
+        return AsyncExecutor.ExecuteAsync( Query, token );
     }
 
 
