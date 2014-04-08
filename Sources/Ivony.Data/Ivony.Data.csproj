@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="DatabaseStructure\DataRelation.cs" />
     <Compile Include="DataSetExtensions.cs" />
+    <Compile Include="DataTableAdapter.cs" />
     <Compile Include="Db.cs" />
     <Compile Include="DbExecutableQuery.cs" />
     <Compile Include="DynamicExtensions.cs" />

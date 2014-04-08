@@ -26,11 +26,7 @@ namespace Ivony.Data
       using ( var context = query.Execute() )
       {
 
-        var data = new DataTable();
-        data.Load( context.DataReader );
-
-        return data;
-
+        return context.LoadDataTable( 0, 0 );
       }
     }
 
@@ -45,10 +41,7 @@ namespace Ivony.Data
       using ( var context = await query.ExecuteAsync( token ) )
       {
 
-        var data = new DataTable();
-        data.Load( context.DataReader );
-
-        return data;
+        return context.LoadDataTable( 0, 0 );
 
       }
     }
@@ -71,11 +64,7 @@ namespace Ivony.Data
 
         do
         {
-          var data = new DataTable();
-          data.Load( context.DataReader );
-
-          dataTables.Add( data );
-
+          dataTables.Add( context.LoadDataTable( 0, 0 ) );
         } while ( context.DataReader.NextResult() );
       }
 
@@ -98,10 +87,7 @@ namespace Ivony.Data
 
         do
         {
-          var data = new DataTable();
-          data.Load( context.DataReader );
-
-          dataTables.Add( data );
+          dataTables.Add( context.LoadDataTable( 0, 0 ) );
 
         } while ( context.DataReader.NextResult() );
       }
@@ -191,12 +177,15 @@ namespace Ivony.Data
     {
       //UNDONE
 
-      var data = query.ExecuteDataTable();
-      if ( data.Rows.Count > 0 )
-        return data.Rows[0];
+      using ( var context = query.Execute() )
+      {
+        var data = context.LoadDataTable( 0, 1 );
+        if ( data.Rows.Count > 0 )
+          return data.Rows[0];
 
-      else
-        return null;
+        else
+          return null;
+      }
     }
 
     /// <summary>
@@ -209,12 +198,15 @@ namespace Ivony.Data
     {
       //UNDONE
 
-      var data = await query.ExecuteDataTableAsync( token );
-      if ( data.Rows.Count > 0 )
-        return data.Rows[0];
+      using ( var context = await query.ExecuteAsync( token ) )
+      {
+        var data = context.LoadDataTable( 0, 1 );
+        if ( data.Rows.Count > 0 )
+          return data.Rows[0];
 
-      else
-        return null;
+        else
+          return null;
+      }
     }
 
 

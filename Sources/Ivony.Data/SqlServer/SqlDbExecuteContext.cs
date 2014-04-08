@@ -14,7 +14,7 @@ namespace Ivony.Data.SqlServer
   /// <summary>
   /// 实现 SQL Server 执行上下文
   /// </summary>
-  public class SqlDbExecuteContext : IDbExecuteContext
+  public class SqlDbExecuteContext : IAsyncDbExecuteContext
   {
 
 
@@ -27,6 +27,8 @@ namespace Ivony.Data.SqlServer
     {
       Connection = connection;
       DataReader = reader;
+
+      DataTableAdapter = new DataTableAdapter();
 
       SyncRoot = new object();
     }
@@ -41,6 +43,8 @@ namespace Ivony.Data.SqlServer
       TransactionContext = transaction;
       Connection = transaction.Connection;
       DataReader = reader;
+
+      DataTableAdapter = new DataTableAdapter();
 
       SyncRoot = transaction.SyncRoot;
     }
@@ -76,6 +80,17 @@ namespace Ivony.Data.SqlServer
     }
 
 
+
+    /// <summary>
+    /// 获取 DataTableAdapter 对象
+    /// </summary>
+    protected DataTableAdapter DataTableAdapter
+    {
+      get;
+      private set;
+    }
+
+
     /// <summary>
     /// 销毁此执行上下文对象
     /// </summary>
@@ -95,6 +110,42 @@ namespace Ivony.Data.SqlServer
     {
       get;
       private set;
+    }
+
+
+
+    public DataTable LoadDataTable( int startRecord, int maxRecords )
+    {
+      return DataTableAdapter.FillDataTable( DataReader, startRecord, maxRecords );
+    }
+
+
+    public Task<DataTable> LoadDataTableAsync( int startRecord, int maxRecords, CancellationToken token = default( CancellationToken ) )
+    {
+
+      var builder = new TaskCompletionSource<DataTable>();
+
+      if ( token.IsCancellationRequested )
+      {
+        builder.SetCanceled();
+        return builder.Task;
+      }
+
+
+      try
+      {
+
+        var result = LoadDataTable( startRecord, maxRecords );
+        builder.SetResult( result );
+        return builder.Task;
+
+      }
+      catch ( Exception exception )
+      {
+
+        builder.SetException( exception );
+        return builder.Task;
+      }
     }
   }
 }
