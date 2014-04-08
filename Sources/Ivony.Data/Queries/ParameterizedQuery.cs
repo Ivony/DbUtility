@@ -106,5 +106,23 @@ namespace Ivony.Data.Queries
 
       builder.Append( TextTemplate.Substring( index, TextTemplate.Length - index ) );
     }
+
+
+
+    public static ParameterizedQuery operator +( ParameterizedQuery query1, ParameterizedQuery query2 )
+    {
+      return query1.Concat( query2 );
+    }
+
+    public static DbExecutableQuery<ParameterizedQuery> operator +( DbExecutableQuery<ParameterizedQuery> query1, ParameterizedQuery query2 )
+    {
+      return query1.Concat( query2 );
+    }
+
+    public static AsyncDbExecutableQuery<ParameterizedQuery> operator +( AsyncDbExecutableQuery<ParameterizedQuery> query1, ParameterizedQuery query2 )
+    {
+      return query1.Concat( query2 );
+    }
+
   }
 }

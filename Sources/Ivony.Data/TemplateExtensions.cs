@@ -122,5 +122,45 @@ namespace Ivony.Data
     }
 
 
+
+    public static ParameterizedQuery Concat( this ParameterizedQuery firstQuery, params ParameterizedQuery[] otherQuerys )
+    {
+      var builder = new ParameterizedQueryBuilder();
+
+      firstQuery.Parse( builder );
+      foreach ( var query in otherQuerys )
+        query.Parse( builder );
+
+      return builder.CreateQuery();
+    }
+
+
+    public static DbExecutableQuery<ParameterizedQuery> Concat( this DbExecutableQuery<ParameterizedQuery> firstQuery, params ParameterizedQuery[] otherQueries )
+    {
+      var query = Concat( firstQuery.Query, otherQueries );
+      return new DbExecutableQuery<ParameterizedQuery>( firstQuery.Executor, query );
+    }
+
+
+    public static AsyncDbExecutableQuery<ParameterizedQuery> Concat( this AsyncDbExecutableQuery<ParameterizedQuery> firstQuery, params ParameterizedQuery[] otherQueries )
+    {
+      var query = Concat( firstQuery.Query, otherQueries );
+      return new AsyncDbExecutableQuery<ParameterizedQuery>( firstQuery.Executor, query );
+    }
+
+
+
+
+    public static DbExecutableQuery<ParameterizedQuery> Concat( this DbExecutableQuery<ParameterizedQuery> firstQuery, string templateText, params object[] parameters )
+    {
+      return Concat( firstQuery, Db.T( templateText, parameters ) );
+    }
+
+
+    public static AsyncDbExecutableQuery<ParameterizedQuery> Concat( this AsyncDbExecutableQuery<ParameterizedQuery> firstQuery, string templateText, params object[] parameters )
+    {
+      return Concat( firstQuery, Db.T( templateText, parameters ) );
+    }
+
   }
 }
