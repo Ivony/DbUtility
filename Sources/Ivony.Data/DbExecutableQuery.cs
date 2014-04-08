@@ -68,7 +68,10 @@ namespace Ivony.Data
   }
 
 
-
+  /// <summary>
+  /// IAsyncDbExecutableQuery 的标准实现
+  /// </summary>
+  /// <typeparam name="T">查询类型</typeparam>
   public sealed class AsyncDbExecutableQuery<T> : IAsyncDbExecutableQuery, IDbQueryContainer where T : IDbQuery
   {
 

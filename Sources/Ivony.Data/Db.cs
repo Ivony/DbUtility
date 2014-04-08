@@ -22,7 +22,7 @@ namespace Ivony.Data
     /// <param name="templateText">模板文本</param>
     /// <param name="paramaters">模板参数</param>
     /// <returns>参数化查询</returns>
-    public static ParameterizedQuery Template( string templateText, object[] paramaters )
+    public static ParameterizedQuery Template( string templateText, params object[] paramaters )
     {
       return TemplateParser.ParseTemplate( templateText, paramaters );
     }
@@ -35,7 +35,7 @@ namespace Ivony.Data
     /// <param name="templateText">模板文本</param>
     /// <param name="paramaters">模板参数</param>
     /// <returns>参数化查询</returns>
-    public static ParameterizedQuery T( string templateText, object[] paramaters )
+    public static ParameterizedQuery T( string templateText, params object[] paramaters )
     {
       return Template( templateText, paramaters );
     }
