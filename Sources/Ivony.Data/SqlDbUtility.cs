@@ -122,7 +122,7 @@ namespace Ivony.Data
     /// <param name="command">查询命令</param>
     /// <param name="token">取消指示</param>
     /// <returns>查询执行上下文</returns>
-    protected async Task<IDbExecuteContext> ExecuteAsync( SqlCommand command, CancellationToken token )
+    protected async Task<IAsyncDbExecuteContext> ExecuteAsync( SqlCommand command, CancellationToken token )
     {
       if ( TransactionContext != null )
       {
@@ -146,7 +146,7 @@ namespace Ivony.Data
       return Execute( CreateCommand( query ) );
     }
 
-    Task<IDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )
+    Task<IAsyncDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )
     {
       return ExecuteAsync( CreateCommand( query ), token );
     }
@@ -169,7 +169,7 @@ namespace Ivony.Data
       return Execute( CreateCommand( query ) );
     }
 
-    Task<IDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query, CancellationToken token )
+    Task<IAsyncDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query, CancellationToken token )
     {
       return ExecuteAsync( CreateCommand( query ), token );
     }

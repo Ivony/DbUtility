@@ -40,7 +40,7 @@ namespace Ivony.Data
     /// <param name="query">要执行的查询</param>
     /// <param name="token">取消指示</param>
     /// <returns>查询执行上下文</returns>
-    Task<IDbExecuteContext> ExecuteAsync( T query, CancellationToken token );
+    Task<IAsyncDbExecuteContext> ExecuteAsync( T query, CancellationToken token );
 
 
   }

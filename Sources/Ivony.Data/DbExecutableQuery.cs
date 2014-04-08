@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -24,22 +25,8 @@ namespace Ivony.Data
     public DbExecutableQuery( IDbExecutor<T> executor, T query )
     {
       Executor = executor;
-      AsyncExecutor = executor as IAsyncDbExecutor<T>;
       Query = query;
     }
-
-    /// <summary>
-    /// 创建 DbExecutableQuery 对象
-    /// </summary>
-    /// <param name="executor">可以执行查询的执行器</param>
-    /// <param name="query">要执行的查询</param>
-    public DbExecutableQuery( IAsyncDbExecutor<T> executor, T query )
-    {
-      Executor = AsyncExecutor = executor;
-      Query = query;
-    }
-
-
 
     /// <summary>
     /// 用于同步执行查询的执行器
@@ -48,17 +35,9 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 用于异步执行查询的查询器
-    /// </summary>
-    public IAsyncDbExecutor<T> AsyncExecutor { get; private set; }
-
-
-    /// <summary>
     /// 要执行的查询对象
     /// </summary>
     public T Query { get; private set; }
-
-
 
 
     /// <summary>
@@ -68,44 +47,6 @@ namespace Ivony.Data
     public IDbExecuteContext Execute()
     {
       return Executor.Execute( Query );
-    }
-
-
-
-    /// <summary>
-    /// 异步执行查询
-    /// </summary>
-    /// <returns>查询执行上下文</returns>
-    public Task<IDbExecuteContext> ExecuteAsync( CancellationToken token = default( CancellationToken ) )
-    {
-
-      if ( AsyncExecutor == null )
-      {
-        var builder = new TaskCompletionSource<IDbExecuteContext>();
-
-        if ( token.IsCancellationRequested )
-        {
-          builder.SetCanceled();
-          return builder.Task;
-        }
-
-        try
-        {
-          var result = Execute();
-
-          builder.SetResult( result );
-          return builder.Task;
-        }
-
-        catch ( Exception e )
-        {
-          builder.SetException( e );
-          return builder.Task;
-        }
-      }
-
-      else
-        return AsyncExecutor.ExecuteAsync( Query, token );
     }
 
 
@@ -123,6 +64,73 @@ namespace Ivony.Data
     IDbQuery IDbQueryContainer.Query
     {
       get { return Query; }
+    }
+  }
+
+
+
+  public sealed class AsyncDbExecutableQuery<T> : IAsyncDbExecutableQuery, IDbQueryContainer where T : IDbQuery
+  {
+
+    /// <summary>
+    /// 创建 AsyncDbExecutableQuery 对象
+    /// </summary>
+    /// <param name="executor">可以执行查询的执行器</param>
+    /// <param name="query">要执行的查询</param>
+    public AsyncDbExecutableQuery( IAsyncDbExecutor<T> executor, T query )
+    {
+      Executor = executor;
+      Query = query;
+    }
+
+
+
+    /// <summary>
+    /// 用于异步执行查询的查询器
+    /// </summary>
+    public IAsyncDbExecutor<T> Executor { get; private set; }
+
+
+    /// <summary>
+    /// 要执行的查询对象
+    /// </summary>
+    public T Query { get; private set; }
+
+
+    /// <summary>
+    /// 定义隐式类型转换，将 DbExecutableQuery 转换为实际的查询对象
+    /// </summary>
+    /// <param name="executable">可异步执行的查询</param>
+    /// <returns></returns>
+    public static implicit operator T( AsyncDbExecutableQuery<T> executable )
+    {
+      return executable.Query;
+    }
+
+
+    IDbQuery IDbQueryContainer.Query
+    {
+      get { return Query; }
+    }
+
+
+
+    /// <summary>
+    /// 同步执行查询
+    /// </summary>
+    /// <returns>查询执行上下文</returns>
+    public IDbExecuteContext Execute()
+    {
+      return Executor.Execute( Query );
+    }
+
+    /// <summary>
+    /// 异步执行查询
+    /// </summary>
+    /// <returns>异步查询执行上下文</returns>
+    public Task<IAsyncDbExecuteContext> ExecuteAsync( CancellationToken token = default( CancellationToken ) )
+    {
+      return Executor.ExecuteAsync( Query, token );
     }
   }
 }
