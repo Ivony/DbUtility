@@ -39,9 +39,10 @@ namespace Ivony.Data
     /// 创建 SqlDbUtility 实例
     /// </summary>
     /// <param name="connectionString">连接字符串</param>
-    public SqlDbUtility( string connectionString )
+    public SqlDbUtility( string connectionString, IDbTracing tracing = null )
     {
       ConnectionString = connectionString;
+      Tracing = tracing;
     }
 
     internal SqlDbUtility( SqlDbTransactionContext transaction )
@@ -51,12 +52,20 @@ namespace Ivony.Data
     }
 
 
+
+    protected IDbTracing Tracing
+    {
+      get;
+      private set;
+    }
+
+
     /// <summary>
     /// 创建数据库访问工具
     /// </summary>
     /// <param name="name">连接字符串名称</param>
     /// <returns>数据库访问工具</returns>
-    public static SqlDbUtility Create( string name )
+    public static SqlDbUtility Create( string name, IDbTracing tracing = null )
     {
       var setting = ConfigurationManager.ConnectionStrings[name];
       if ( setting == null )
@@ -104,14 +113,14 @@ namespace Ivony.Data
       {
         command.Connection = TransactionContext.Connection;
         command.Transaction = TransactionContext.Transaction;
-        return new SqlDbExecuteContext( TransactionContext, command.ExecuteReader() );
+        return new SqlDbExecuteContext( TransactionContext, command.ExecuteReader(), Tracing );
       }
       else
       {
         var connection = new SqlConnection( ConnectionString );
         connection.Open();
         command.Connection = connection;
-        return new SqlDbExecuteContext( connection, command.ExecuteReader() );
+        return new SqlDbExecuteContext( connection, command.ExecuteReader(), Tracing );
       }
     }
 
@@ -128,14 +137,14 @@ namespace Ivony.Data
       {
         command.Connection = TransactionContext.Connection;
         command.Transaction = TransactionContext.Transaction;
-        return new SqlDbExecuteContext( TransactionContext, await command.ExecuteReaderAsync( token ) );
+        return new SqlDbExecuteContext( TransactionContext, await command.ExecuteReaderAsync( token ), Tracing );
       }
       else
       {
         var connection = new SqlConnection( ConnectionString );
         await connection.OpenAsync( token );
         command.Connection = connection;
-        return new SqlDbExecuteContext( connection, await command.ExecuteReaderAsync( token ) );
+        return new SqlDbExecuteContext( connection, await command.ExecuteReaderAsync( token ), Tracing );
       }
     }
 

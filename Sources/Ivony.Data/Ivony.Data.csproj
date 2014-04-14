@@ -81,12 +81,15 @@
   <ItemGroup>
     <Compile Include="DatabaseStructure\DataRelation.cs" />
     <Compile Include="DataSetExtensions.cs" />
-    <Compile Include="DataTableAdapter.cs" />
+    <Compile Include="DataTableAdapter.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Db.cs" />
     <Compile Include="DbExecutableQuery.cs" />
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="BasicExecuteExtensions.cs" />
+    <Compile Include="IDbTracing.cs" />
     <Compile Include="IDbTransactionProvider.cs" />
     <Compile Include="IDbExecutableQuery.cs" />
     <Compile Include="IDbExecuteContext.cs" />

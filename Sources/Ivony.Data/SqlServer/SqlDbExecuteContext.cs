@@ -23,7 +23,7 @@ namespace Ivony.Data.SqlServer
     /// </summary>
     /// <param name="connection">数据库连接</param>
     /// <param name="reader">数据读取器</param>
-    internal SqlDbExecuteContext( SqlConnection connection, SqlDataReader reader )
+    internal SqlDbExecuteContext( SqlConnection connection, SqlDataReader reader, IDbTracing tracing )
     {
       Connection = connection;
       DataReader = reader;
@@ -38,7 +38,7 @@ namespace Ivony.Data.SqlServer
     /// </summary>
     /// <param name="transaction">数据库事务</param>
     /// <param name="reader">数据读取器</param>
-    internal SqlDbExecuteContext( SqlDbTransactionContext transaction, SqlDataReader reader )
+    internal SqlDbExecuteContext( SqlDbTransactionContext transaction, SqlDataReader reader, IDbTracing tracing )
     {
       TransactionContext = transaction;
       Connection = transaction.Connection;
@@ -114,12 +114,24 @@ namespace Ivony.Data.SqlServer
 
 
 
+    /// <summary>
+    /// 加载数据到 DataTable
+    /// </summary>
+    /// <param name="startRecord">要填充的起始记录位置</param>
+    /// <param name="maxRecords">最多填充的记录条数</param>
+    /// <returns>填充好的 DataTable</returns>
     public DataTable LoadDataTable( int startRecord, int maxRecords )
     {
       return DataTableAdapter.FillDataTable( DataReader, startRecord, maxRecords );
     }
 
 
+    /// <summary>
+    /// 异步加载数据到 DataTable
+    /// </summary>
+    /// <param name="startRecord">要填充的起始记录位置</param>
+    /// <param name="maxRecords">最多填充的记录条数</param>
+    /// <returns>填充好的 DataTable</returns>
     public Task<DataTable> LoadDataTableAsync( int startRecord, int maxRecords, CancellationToken token = default( CancellationToken ) )
     {
 
