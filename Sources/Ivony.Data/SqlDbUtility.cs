@@ -113,14 +113,20 @@ namespace Ivony.Data
       {
         command.Connection = TransactionContext.Connection;
         command.Transaction = TransactionContext.Transaction;
-        return new SqlDbExecuteContext( TransactionContext, command.ExecuteReader(), Tracing );
+
+        var reader =  command.ExecuteReader();
+
+        return new SqlDbExecuteContext( TransactionContext, reader, Tracing );
       }
       else
       {
         var connection = new SqlConnection( ConnectionString );
         connection.Open();
         command.Connection = connection;
-        return new SqlDbExecuteContext( connection, command.ExecuteReader(), Tracing );
+
+        var reader = command.ExecuteReader();
+
+        return new SqlDbExecuteContext( connection, reader, Tracing );
       }
     }
 
@@ -137,14 +143,21 @@ namespace Ivony.Data
       {
         command.Connection = TransactionContext.Connection;
         command.Transaction = TransactionContext.Transaction;
-        return new SqlDbExecuteContext( TransactionContext, await command.ExecuteReaderAsync( token ), Tracing );
+
+        var reader = await command.ExecuteReaderAsync( token );
+
+        return new SqlDbExecuteContext( TransactionContext, reader, Tracing );
       }
       else
       {
         var connection = new SqlConnection( ConnectionString );
         await connection.OpenAsync( token );
         command.Connection = connection;
-        return new SqlDbExecuteContext( connection, await command.ExecuteReaderAsync( token ), Tracing );
+
+
+        var reader = await command.ExecuteReaderAsync( token );
+
+        return new SqlDbExecuteContext( connection, reader, Tracing );
       }
     }
 
