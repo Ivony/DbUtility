@@ -126,7 +126,7 @@ namespace Ivony.Data
     {
       using ( var context = await query.ExecuteAsync( token ) )
       {
-        if ( context.DataReader.Read() )
+        if ( context.DataReader.Read() && context.DataReader.FieldCount > 0 )
           return context.DataReader[0];
 
         else

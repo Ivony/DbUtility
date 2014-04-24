@@ -158,7 +158,7 @@ namespace Ivony.Data
       for ( int parameterIndex = begin; parameterIndex < end; parameterIndex++ )
       {
         AddParameter( builder, parameters[parameterIndex] );
-        builder.Append( "," );
+        builder.AppendText( "," );
       }
 
       AddParameter( builder, parameters[end] );
@@ -189,7 +189,7 @@ namespace Ivony.Data
         for ( int i = 0; i < array.Length - 1; i++ )
         {
           AddParameter( builder, array.GetValue( i ) );
-          builder.Append( "," );
+          builder.AppendText( "," );
         }
 
         AddParameter( builder, array.GetValue( array.Length ) );

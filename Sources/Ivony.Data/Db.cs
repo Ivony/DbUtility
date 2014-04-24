@@ -62,5 +62,26 @@ namespace Ivony.Data
     {
       return null;
     }
+
+
+
+    public static ParameterizedQuery Join( this string sperator, params ParameterizedQuery[] queries )
+    {
+      if ( !queries.Any() )
+        return null;
+
+      var builder = new ParameterizedQueryBuilder();
+      queries[0].Parse( builder );
+
+      foreach ( var q in queries.Skip( 1 ) )
+      {
+        builder.AppendText( sperator );
+        builder.AppendPartial( q );
+      }
+
+
+      return builder.CreateQuery();
+    }
+
   }
 }

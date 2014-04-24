@@ -95,7 +95,7 @@ namespace Ivony.Data.Queries
 
         var length = match.Index - index;
         if ( length > 0 )
-          builder.Append( TextTemplate.Substring( index, length ) );
+          builder.AppendText( TextTemplate.Substring( index, length ) );
 
 
         var parameterIndex = int.Parse( match.Groups["index"].Value );
@@ -104,7 +104,7 @@ namespace Ivony.Data.Queries
         index = match.Index + match.Length;
       }
 
-      builder.Append( TextTemplate.Substring( index, TextTemplate.Length - index ) );
+      builder.AppendText( TextTemplate.Substring( index, TextTemplate.Length - index ) );
     }
 
 
