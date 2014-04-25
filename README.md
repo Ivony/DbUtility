@@ -69,7 +69,7 @@ and the **T** is an **extension method**, you can customize another query defini
 
 ---
 
-In the last, we talk about the **result definition**.
+In the end, we talk about the **result definition**.
 like same as the query definition, result definition are also en extension method. we have many result definition method, and all of they have asynchronous version.
 the popular result definition method under this:
 
