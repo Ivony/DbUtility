@@ -65,8 +65,15 @@ namespace Ivony.Data
 
 
 
+    /// <summary>
+    /// 将多个参数化查询串联起来并用指定的字符串分隔
+    /// </summary>
+    /// <param name="sperator">分隔符</param>
+    /// <param name="queries">参数化查询</param>
+    /// <returns>串联后的结果</returns>
     public static ParameterizedQuery Join( this string sperator, params ParameterizedQuery[] queries )
     {
+
       if ( !queries.Any() )
         return null;
 
