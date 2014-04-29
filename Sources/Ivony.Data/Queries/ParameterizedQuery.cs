@@ -18,7 +18,7 @@ namespace Ivony.Data.Queries
     /// <summary>
     /// 定义匹配参数占位符的正则表达式
     /// </summary>
-    public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>[0-9]+)#" );
+    public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>[0-9]+)#", RegexOptions.Compiled );
 
 
 
@@ -53,31 +53,6 @@ namespace Ivony.Data.Queries
       TextTemplate = template;
       ParameterValues = new object[values.Length];
       values.CopyTo( ParameterValues, 0 );
-    }
-
-
-
-    /// <summary>
-    /// 创建查询命令
-    /// </summary>
-    /// <typeparam name="T">查询命令类型</typeparam>
-    /// <param name="provider">参数化查询命令提供程序</param>
-    /// <returns>查询命令</returns>
-    public T CreateCommand<T>( IParameterizedQueryParser<T> provider )
-    {
-
-      lock ( provider.SyncRoot )
-      {
-
-        var text = ParameterPlaceholdRegex.Replace( TextTemplate, ( match ) =>
-        {
-          var index = int.Parse( match.Groups["index"].Value );
-          return provider.CreateParameterPlacehold( ParameterValues[index] );
-        } );
-
-
-        return provider.CreateCommand( text.Replace( "##", "#" ) );
-      }
     }
 
 

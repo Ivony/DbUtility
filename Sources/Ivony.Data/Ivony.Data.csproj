@@ -81,7 +81,9 @@
   <ItemGroup>
     <Compile Include="DatabaseStructure\DataRelation.cs" />
     <Compile Include="DataSetExtensions.cs" />
-    <Compile Include="DataTableAdapter.cs" />
+    <Compile Include="DataTableAdapter.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Db.cs" />
     <Compile Include="DbExecutableQuery.cs" />
     <Compile Include="DynamicExtensions.cs" />
@@ -93,8 +95,10 @@
     <Compile Include="IDbProvider.cs" />
     <Compile Include="IDbQuery.cs" />
     <Compile Include="IDbTransactionContext.cs" />
-    <Compile Include="IParameterizedQueryParser.cs" />
     <Compile Include="IDbQueryContainer.cs" />
+    <Compile Include="IParameterizedQueryParser.cs" />
+    <Compile Include="ParameterizedQueryParser.cs" />
+    <Compile Include="ParameterizedQueryLiteralValueParser.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />
