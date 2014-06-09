@@ -55,9 +55,23 @@ namespace Ivony.Data
       }
     }
 
+
+    /// <summary>
+    /// 派生类实现此方法产生一个参数对象，并生成一段占位符字符串。
+    /// </summary>
+    /// <param name="value">参数值</param>
+    /// <param name="index">参数索引位置</param>
+    /// <param name="parameter">参数对象</param>
+    /// <returns>参数占位符</returns>
     protected abstract string GetParameterPlaceholder( object value, int index, out TParameter parameter );
 
 
+    /// <summary>
+    /// 创建命令对象
+    /// </summary>
+    /// <param name="commandText">命令文本</param>
+    /// <param name="parameters">命令参数</param>
+    /// <returns>命令对象</returns>
     protected abstract TCommand CreateCommand( string commandText, TParameter[] parameters );
 
   }
