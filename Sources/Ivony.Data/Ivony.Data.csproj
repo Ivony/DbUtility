@@ -91,6 +91,7 @@
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="BasicExecuteExtensions.cs" />
+    <Compile Include="IDbTraceService.cs" />
     <Compile Include="IDbTracing.cs" />
     <Compile Include="IDbTransactionProvider.cs" />
     <Compile Include="IDbExecutableQuery.cs" />

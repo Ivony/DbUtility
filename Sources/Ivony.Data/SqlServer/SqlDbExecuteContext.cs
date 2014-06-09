@@ -27,6 +27,7 @@ namespace Ivony.Data.SqlServer
     {
       Connection = connection;
       DataReader = reader;
+      Tracing = tracing;
 
       DataTableAdapter = new DataTableAdapter();
 
@@ -43,6 +44,7 @@ namespace Ivony.Data.SqlServer
       TransactionContext = transaction;
       Connection = transaction.Connection;
       DataReader = reader;
+      Tracing = tracing;
 
       DataTableAdapter = new DataTableAdapter();
 
@@ -92,6 +94,15 @@ namespace Ivony.Data.SqlServer
 
 
     /// <summary>
+    /// 获取数据库查询追踪器
+    /// </summary>
+    protected IDbTracing Tracing
+    {
+      get;
+      private set;
+    }
+
+    /// <summary>
     /// 销毁此执行上下文对象
     /// </summary>
     public void Dispose()
@@ -100,6 +111,9 @@ namespace Ivony.Data.SqlServer
 
       if ( TransactionContext == null )
         Connection.Close();
+
+      if ( Tracing != null )
+        Tracing.OnComplete();
     }
 
 

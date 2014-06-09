@@ -15,29 +15,27 @@ namespace Ivony.Data
   {
 
     /// <summary>
-    /// 当执行某个查询之前将调用此方法通知追踪记录器
+    /// 通知追踪记录器正在执行查询
     /// </summary>
-    /// <typeparam name="TQuery">即将要执行的查询类型</typeparam>
-    /// <param name="context">执行查询前的数据上下文</param>
-    /// <param name="moment">引发事件的时刻</param>
-    void OnQueryExecuting<TQuery>( DbQueryExecutingContext<TQuery> context, DateTime moment ) where TQuery : IDbQuery;
-
+    /// <param name="commandObject">查询命令对象</param>
+    void OnExecuting( object commandObject );
 
     /// <summary>
-    /// 当执行某个查询之前将调用此方法通知追踪记录器
+    /// 通知追踪记录器正在加载数据。
     /// </summary>
-    /// <typeparam name="TQuery">即将要执行的查询类型</typeparam>
-    /// <param name="context">执行查询后的数据上下文</param>
-    /// <param name="moment">引发事件的时刻</param>
-    void OnQueryExecuted<TQuery>( DbQueryExecutedContext<TQuery> context, DateTime moment ) where TQuery : IDbQuery;
+    /// <param name="context">查询执行上下文</param>
+    void OnLoadingData( IDbExecuteContext context );
 
+    /// <summary>
+    /// 通知追踪记录器查询已经全部完成。
+    /// </summary>
+    void OnComplete();
 
-
-    void OnResultConstructing( IDbQuery query, DateTime moment );
-
-    void OnResultConstructed( IDbQuery query, DateTime moment );
-
+    /// <summary>
+    /// 通知追踪记录器查询数据库时出现了异常。
+    /// </summary>
+    /// <param name="exception">异常信息</param>
+    void OnException( Exception exception );
 
   }
-
 }
