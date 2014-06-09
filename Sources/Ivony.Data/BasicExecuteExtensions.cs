@@ -65,7 +65,7 @@ namespace Ivony.Data
         do
         {
           dataTables.Add( context.LoadDataTable( 0, 0 ) );
-        } while ( context.DataReader.NextResult() );
+        } while ( context.NextResult() );
       }
 
       return dataTables.ToArray();
@@ -89,7 +89,7 @@ namespace Ivony.Data
         {
           dataTables.Add( context.LoadDataTable( 0, 0 ) );
 
-        } while ( context.DataReader.NextResult() );
+        } while ( await context.NextResultAsync() );
       }
 
       return dataTables.ToArray();
@@ -108,8 +108,9 @@ namespace Ivony.Data
     {
       using ( var context = query.Execute() )
       {
-        if ( context.DataReader.Read() && context.DataReader.FieldCount > 0 )
-          return context.DataReader[0];
+        var record = context.ReadRecord();
+        if ( record != null && record.FieldCount > 0 )
+          return record[0];
 
         else
           return null;
@@ -126,8 +127,10 @@ namespace Ivony.Data
     {
       using ( var context = await query.ExecuteAsync( token ) )
       {
-        if ( context.DataReader.Read() && context.DataReader.FieldCount > 0 )
-          return context.DataReader[0];
+
+        var record = await context.ReadRecordAsync();
+        if ( record != null && record.FieldCount > 0 )
+          return record[0];
 
         else
           return null;
@@ -147,7 +150,7 @@ namespace Ivony.Data
     {
       using ( var context = query.Execute() )
       {
-        return context.DataReader.RecordsAffected;
+        return context.RecordsAffected;
       }
     }
 
@@ -161,7 +164,7 @@ namespace Ivony.Data
     {
       using ( var context = await query.ExecuteAsync( token ) )
       {
-        return context.DataReader.RecordsAffected;
+        return context.RecordsAffected;
       }
     }
 

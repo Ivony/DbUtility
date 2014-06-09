@@ -53,7 +53,7 @@ namespace Ivony.Data.SqlServer
     /// <summary>
     /// 数据读取器
     /// </summary>
-    public IDataReader DataReader
+    public SqlDataReader DataReader
     {
       get;
       private set;
@@ -158,6 +158,58 @@ namespace Ivony.Data.SqlServer
         builder.SetException( exception );
         return builder.Task;
       }
+    }
+
+
+
+
+    /// <summary>
+    /// 尝试读取下一个结果集
+    /// </summary>
+    /// <returns>若存在下一个结果集，则返回 true ，否则返回 false</returns>
+    public bool NextResult()
+    {
+      return DataReader.NextResult();
+    }
+
+
+    /// <summary>
+    /// 尝试异步读取下一个结果集
+    /// </summary>
+    /// <returns>若存在下一个结果集，则返回 true ，否则返回 false</returns>
+    public Task<bool> NextResultAsync()
+    {
+      return DataReader.NextResultAsync();
+    }
+
+
+
+    /// <summary>
+    /// 获取更改、插入或删除的行数，如果没有任何行受到影响或语句失败，则为 0。-1 表示是 SELECT 语句。
+    /// </summary>
+    public int RecordsAffected
+    {
+      get { return DataReader.RecordsAffected; }
+    }
+
+
+    IDataRecord IDbExecuteContext.ReadRecord()
+    {
+      if ( DataReader.Read() )
+        return DataReader;
+
+      else
+        return null;
+    }
+
+
+    async Task<IDataRecord> IAsyncDbExecuteContext.ReadRecordAsync()
+    {
+      if ( await DataReader.ReadAsync() )
+        return DataReader;
+
+      else
+        return null;
     }
   }
 }
