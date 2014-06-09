@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Ivony.Data;
+using Ivony.Fluent;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
-using Ivony.Fluent;
+
 
 namespace Ivony.Data.SqlServer
 {
@@ -13,43 +15,22 @@ namespace Ivony.Data.SqlServer
   /// <summary>
   /// 定义 SQL Server 的参数化查询解析器
   /// </summary>
-  public class SqlParameterizedQueryParser : IParameterizedQueryParser<SqlCommand>
+  public class SqlParameterizedQueryParser : ParameterizedQueryParser<SqlCommand, SqlParameter>
   {
 
 
-    private bool _disposed = false;
-
-
-    private int index = 0;
-    private IDictionary<string, object> parameterList = new Dictionary<string, object>();
-
-
-
-    private object _sync = new object();
-
 
     /// <summary>
-    /// 获取用于同步的对象
-    /// </summary>
-    public object SyncRoot
-    {
-      get { return _sync; }
-    }
-
-
-    /// <summary>
-    /// 创建参数占位符
+    /// 创建参数并获取参数占位符
     /// </summary>
     /// <param name="value">参数值</param>
-    /// <returns>参数占位符或参数值表达式</returns>
-    public string CreateParameterPlacehold( object value )
+    /// <param name="index">在模板中参数的位置顺序</param>
+    /// <param name="parameter">创建的参数对象</param>
+    /// <returns>参数占位符</returns>
+    protected override string GetParameterPlaceholder( object value, int index, out SqlParameter parameter )
     {
-      if ( _disposed )
-        throw new ObjectDisposedException( "SqlParameterizedQueryParser" );
-
-
-      var name = "@Param" + index++;
-      parameterList.Add( name, value );
+      var name = "@Param" + index;
+      parameter = new SqlParameter( name, value );
 
       return name;
     }
@@ -58,29 +39,17 @@ namespace Ivony.Data.SqlServer
     /// <summary>
     /// 创建 SqlCommand 对象
     /// </summary>
-    /// <param name="commandText">查询文本</param>
-    /// <returns>SqlCommand 对象</returns>
-    public SqlCommand CreateCommand( string commandText )
+    /// <param name="commandText">经过分析后的 SQL 查询文本</param>
+    /// <param name="parameters">参数值列表</param>
+    /// <returns>用于执行查询的 SqlCommand 对象</returns>
+    protected override SqlCommand CreateCommand( string commandText, SqlParameter[] parameters )
     {
-      if ( _disposed )
-        throw new ObjectDisposedException( "SqlParameterizedQueryParser" );
-
-
       var command = new SqlCommand();
+
       command.CommandText = commandText;
-      parameterList.ForAll( pair => command.Parameters.AddWithValue( pair.Key, pair.Value ) );
-      _disposed = true;
+      command.Parameters.AddRange( parameters );
 
       return command;
-    }
-
-
-    /// <summary>
-    /// 销毁此对象，释放所有托管和非托管资源
-    /// </summary>
-    public void Dispose()
-    {
-      _disposed = true;
     }
   }
 }

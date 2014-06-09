@@ -42,5 +42,32 @@ namespace Ivony.Data
       return dataSet;
     }
 
+
+
+    /// <summary>
+    /// 使用指定范围内的行异步填充 DataTable 并返回。
+    /// </summary>
+    /// <param name="dataReader">用来读取数据的 DataReader</param>
+    /// <param name="startRecord">要填充的起始记录位置</param>
+    /// <param name="maxRecords">最多填充的记录条数</param>
+    /// <returns>填充好的 DataTable</returns>
+    public async Task<DataTable> FillDataTableAsync( DbDataReader dataReader, int startRecord, int maxRecords )
+    {
+
+      var dataTable = new DataTable();
+
+      base.FillSchema( dataTable, SchemaType.Source, dataReader );
+
+      var array = new object[dataReader.FieldCount];
+
+      while ( await dataReader.ReadAsync() )
+      {
+        dataReader.GetValues( array );
+        dataTable.LoadDataRow( array, true );
+      }
+
+      return dataTable;
+    }
+
   }
 }

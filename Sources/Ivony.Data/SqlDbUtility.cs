@@ -181,7 +181,7 @@ namespace Ivony.Data
     /// <returns>SQL 查询命令对象</returns>
     protected SqlCommand CreateCommand( ParameterizedQuery query )
     {
-      return query.CreateCommand( new SqlParameterizedQueryParser() );
+      return new SqlParameterizedQueryParser().Parse( query );
     }
 
 

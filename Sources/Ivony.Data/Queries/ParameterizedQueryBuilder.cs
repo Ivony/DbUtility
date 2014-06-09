@@ -34,7 +34,7 @@ namespace Ivony.Data.Queries
     /// 添加一段查询文本
     /// </summary>
     /// <param name="text">要添加到末尾的查询文本</param>
-    public void Append( string text )
+    public void AppendText( string text )
     {
       lock ( _sync )
       {
@@ -65,6 +65,10 @@ namespace Ivony.Data.Queries
     /// <param name="value">参数值</param>
     public void AppendParameter( object value )
     {
+      var partial = value as ITemplatePartial;
+      if ( partial != null )
+        AppendPartial( partial );
+
       lock ( _sync )
       {
         values.Add( value );
@@ -80,6 +84,18 @@ namespace Ivony.Data.Queries
     public ParameterizedQuery CreateQuery()
     {
       return new ParameterizedQuery( textBuilder.ToString(), values.ToArray() );
+    }
+
+
+    /// <summary>
+    /// 在当前位置添加一个部分查询
+    /// </summary>
+    /// <param name="partial">要添加的部分查询对象</param>
+    public void AppendPartial( ITemplatePartial partial )
+    {
+
+      partial.Parse( this );
+
     }
   }
 }

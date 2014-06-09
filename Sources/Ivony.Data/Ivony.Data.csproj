@@ -98,8 +98,10 @@
     <Compile Include="IDbProvider.cs" />
     <Compile Include="IDbQuery.cs" />
     <Compile Include="IDbTransactionContext.cs" />
-    <Compile Include="IParameterizedQueryParser.cs" />
     <Compile Include="IDbQueryContainer.cs" />
+    <Compile Include="IParameterizedQueryParser.cs" />
+    <Compile Include="ParameterizedQueryParser.cs" />
+    <Compile Include="ParameterizedQueryLiteralValueParser.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />

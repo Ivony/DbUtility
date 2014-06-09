@@ -18,7 +18,7 @@ namespace Ivony.Data.Queries
     /// <summary>
     /// 定义匹配参数占位符的正则表达式
     /// </summary>
-    public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>[0-9]+)#" );
+    public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>[0-9]+)#", RegexOptions.Compiled );
 
 
 
@@ -56,31 +56,6 @@ namespace Ivony.Data.Queries
     }
 
 
-
-    /// <summary>
-    /// 创建查询命令
-    /// </summary>
-    /// <typeparam name="T">查询命令类型</typeparam>
-    /// <param name="provider">参数化查询命令提供程序</param>
-    /// <returns>查询命令</returns>
-    public T CreateCommand<T>( IParameterizedQueryParser<T> provider )
-    {
-
-      lock ( provider.SyncRoot )
-      {
-
-        var text = ParameterPlaceholdRegex.Replace( TextTemplate, ( match ) =>
-        {
-          var index = int.Parse( match.Groups["index"].Value );
-          return provider.CreateParameterPlacehold( ParameterValues[index] );
-        } );
-
-
-        return provider.CreateCommand( text.Replace( "##", "#" ) );
-      }
-    }
-
-
     /// <summary>
     /// 将参数化查询解析为另一个参数化查询的一部分。
     /// </summary>
@@ -95,7 +70,7 @@ namespace Ivony.Data.Queries
 
         var length = match.Index - index;
         if ( length > 0 )
-          builder.Append( TextTemplate.Substring( index, length ) );
+          builder.AppendText( TextTemplate.Substring( index, length ) );
 
 
         var parameterIndex = int.Parse( match.Groups["index"].Value );
@@ -104,7 +79,7 @@ namespace Ivony.Data.Queries
         index = match.Index + match.Length;
       }
 
-      builder.Append( TextTemplate.Substring( index, TextTemplate.Length - index ) );
+      builder.AppendText( TextTemplate.Substring( index, TextTemplate.Length - index ) );
     }
 
 
