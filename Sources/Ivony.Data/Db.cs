@@ -89,6 +89,5 @@ namespace Ivony.Data
 
       return builder.CreateQuery();
     }
-
   }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ivony.Data;
+using Ivony.Data.Queries;
+using System.Data;
 
 namespace Ivony.Data.Test
 {
@@ -86,6 +88,30 @@ namespace Ivony.Data.Test
       Assert.AreEqual( query.Concat( query, query ).TextTemplate, "SELECT * FROM Users WHERE UserID = #0#;SELECT * FROM Users WHERE UserID = #1#;SELECT * FROM Users WHERE UserID = #2#;", "多个带参数模板连接测试失败" );
 
 
+      var db = SqlDbUtility.Create( "Database" );
+      var data = db.DT( "Users" );
+
+    }
+  }
+
+  public static class MyExtensions
+  {
+    public static DataTable DT( this IDbExecutor<ParameterizedQuery> executor, string tableName )
+    {
+      ParameterizedQuery query = Db.T( "SELECT * FROM " + tableName );
+      return new DbExecutableQuery<ParameterizedQuery>( executor, query ).ExecuteDataTable();
+    }
+
+
+    public static DbExecutableQuery<ParameterizedQuery> Template( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
+    {
+      return new DbExecutableQuery<ParameterizedQuery>( executor, TemplateParser.ParseTemplate( template, parameters ) );
+    }
+    public static DbExecutableQuery<ParameterizedQuery> T( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
+    {
+      return Template( executor, template, parameters );
     }
   }
 }
+
+

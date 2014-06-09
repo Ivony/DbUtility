@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data.Queries
+namespace Ivony.Data.QuickQuery
 {
-  class FilterExpression
+  public class LogicalExpression : BooleanExpression
   {
   }
 }

@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data.Queries
+namespace Ivony.Data.QuickQuery
 {
-  public struct FieldExpression
+  public struct TableAliasExpression
   {
 
-    public FieldExpression( string fieldName, string tableName )
+    public TableAliasExpression( string tableName, string alias )
     {
-      FieldName = fieldName;
       TableName = tableName;
+      Alias = alias;
     }
 
-    public string FieldName { get; private set; }
+
     public string TableName { get; private set; }
+    public string Alias { get; private set; }
 
   }
 }
