@@ -41,6 +41,7 @@
     <Reference Include="Ivony.Logs">
       <HintPath>..\packages\Ivony.Logs.1.2\lib\net40\Ivony.Logs.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
