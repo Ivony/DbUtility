@@ -22,10 +22,10 @@ namespace Ivony.Data.SqlServer
 
     private object _sync = new object();
 
-    internal SqlDbTransactionContext( string connectionString )
+    internal SqlDbTransactionContext( string connectionString, IDbTraceService traceService )
     {
       Connection = new SqlConnection( connectionString );
-      DbExecutor = new SqlDbUtility( this );
+      DbExecutor = new SqlDbUtilityWithTransaction( this, traceService );
       _sync = new object();
     }
 

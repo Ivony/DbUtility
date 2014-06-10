@@ -38,6 +38,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ivony.Logs">
+      <HintPath>..\packages\Ivony.Logs.1.2\lib\net40\Ivony.Logs.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -61,12 +64,16 @@
     <Compile Include="DbUtilityTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTest.cs" />
+    <Compile Include="TestTraceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ivony.Data\Ivony.Data.csproj">
       <Project>{27d46d02-f7bc-42b2-ae3e-33eb5b1fa3f9}</Project>
       <Name>Ivony.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
