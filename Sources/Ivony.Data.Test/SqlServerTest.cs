@@ -15,12 +15,16 @@ namespace Ivony.Data.Test
 
     private static readonly string connectionString = @"Data Source=(local)\SQLEXPRESS;Initial Catalog=TestDatabase;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
 
-    private SqlDbUtility db = new SqlDbUtility( connectionString );
+    private TestTraceService traceService;
+    private SqlDbUtility db;
 
 
-    [TestInitialize]
-    public void Initialize()
+    public SqlServerTest()
     {
+      traceService = new TestTraceService();
+      db = new SqlDbUtility( connectionString, traceService );
+
+
       db.T( "IF OBJECT_ID(N'[dbo].[Test1]') IS NOT NULL DROP TABLE [dbo].[Test1]" ).ExecuteNonQuery();
       db.T( @"
 CREATE TABLE [dbo].[Test1]
@@ -31,6 +35,15 @@ CREATE TABLE [dbo].[Test1]
     [Index] INT NOT NULL, 
     CONSTRAINT [PK_Test1] PRIMARY KEY ([ID]) 
 )" ).ExecuteNonQuery();
+    }
+
+
+    [TestInitialize]
+    public void Initialize()
+    {
+
+      db.T( "TRUNCATE TABLE Test1" ).ExecuteNonQuery();
+
     }
 
 
@@ -113,14 +126,10 @@ CREATE TABLE [dbo].[Test1]
     public void TraceTest()
     {
 
-      var service = new TestTraceService();
-      var db = new SqlDbUtility( connectionString, service );
-
       db.T( "SELECT * FROM Test1" ).ExecuteDataTable();
 
-      var tracing = service.FirstOrDefault();
+      var tracing = traceService.Last();
 
-      Assert.IsNotNull( tracing );
       var logs = tracing.GetLogEntries();
       Assert.AreEqual( logs.Length, 3 );
 
@@ -128,6 +137,23 @@ CREATE TABLE [dbo].[Test1]
       Assert.AreEqual( logs[1].Message, "OnLoadingData" );
       Assert.AreEqual( logs[2].Message, "OnComplete" );
 
+
+      try
+      {
+        db.T( "SELECT * FROM Nothing" ).ExecuteDynamics();
+      }
+      catch
+      { 
+      
+      }
+
+      tracing = traceService.Last();
+
+      logs = tracing.GetLogEntries();
+      Assert.AreEqual( logs.Length, 2 );
+
+      Assert.AreEqual( logs[0].Message, "OnExecuting" );
+      Assert.AreEqual( logs[1].Message, "OnException" );
     }
 
   }

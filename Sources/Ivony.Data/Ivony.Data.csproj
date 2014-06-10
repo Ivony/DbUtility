@@ -67,6 +67,7 @@
     <Reference Include="Ivony.Core">
       <HintPath>..\packages\Ivony.Core.1.0.0\lib\Ivony.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">

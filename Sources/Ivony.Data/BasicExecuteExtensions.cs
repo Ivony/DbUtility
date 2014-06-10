@@ -41,7 +41,7 @@ namespace Ivony.Data
       using ( var context = await query.ExecuteAsync( token ) )
       {
 
-        return context.LoadDataTable( 0, 0 );
+        return await context.LoadDataTableAsync( 0, 0, token );
 
       }
     }

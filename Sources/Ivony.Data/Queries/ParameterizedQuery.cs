@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -81,6 +82,33 @@ namespace Ivony.Data.Queries
 
       builder.AppendText( TextTemplate.Substring( index, TextTemplate.Length - index ) );
     }
+
+
+    public override string ToString()
+    {
+      if ( stringExpression == null )
+        stringExpression = GetString();
+
+      return stringExpression;
+    }
+
+    private string stringExpression;
+
+    private string GetString()
+    {
+      var writer = new StringWriter();
+
+      writer.WriteLine( "\"" + TextTemplate.Replace( "\"", "\"\"" ) + "\"" );
+      writer.WriteLine();
+
+      for ( int i = 0; i < this.ParameterValues.Length; i++ )
+      {
+        writer.WriteLine( "#{0}#: {1}", i, ParameterValues[i] );
+      }
+
+      return writer.ToString();
+    }
+
 
 
 
