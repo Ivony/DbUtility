@@ -114,9 +114,7 @@ namespace Ivony.Data
       }
       catch ( DbException exception )
       {
-        if ( tracing != null )
-          tracing.OnException( exception );
-
+        TryExecuteTracing( tracing, t => t.OnException( exception ) );
         throw;
       }
     }
@@ -133,7 +131,6 @@ namespace Ivony.Data
     {
       try
       {
-
         TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
 
         var connection = new SqlConnection( ConnectionString );
@@ -150,9 +147,7 @@ namespace Ivony.Data
       }
       catch ( DbException exception )
       {
-        if ( tracing != null )
-          tracing.OnException( exception );
-
+        TryExecuteTracing( tracing, t => t.OnException( exception ) );
         throw;
       }
     }
@@ -219,8 +214,8 @@ namespace Ivony.Data
     /// <summary>
     /// 通过存储过程查询创建 SqlCommand 对象
     /// </summary>
-    /// <param name="query"></param>
-    /// <returns></returns>
+    /// <param name="query">存储过程查询对象</param>
+    /// <returns>SQL 查询命令对象</returns>
     protected SqlCommand CreateCommand( StoredProcedureQuery query )
     {
       var command = new SqlCommand( query.Name );
@@ -258,17 +253,28 @@ namespace Ivony.Data
     /// <param name="token">取消指示</param>
     /// <param name="tracing">用于追踪的追踪器</param>
     /// <returns>查询执行上下文</returns>
-    protected override async Task<IAsyncDbExecuteContext> ExecuteAsync( SqlCommand command, CancellationToken token, IDbTracing tracing = null )
+    protected sealed override async Task<IAsyncDbExecuteContext> ExecuteAsync( SqlCommand command, CancellationToken token, IDbTracing tracing = null )
     {
-      command.Connection = TransactionContext.Connection;
-      command.Transaction = TransactionContext.Transaction;
+      try
+      {
+        TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
 
-      var reader = await command.ExecuteReaderAsync( token );
-      var context = new SqlDbExecuteContext( TransactionContext, reader, tracing );
+        command.Connection = TransactionContext.Connection;
+        command.Transaction = TransactionContext.Transaction;
 
-      TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
+        var reader = await command.ExecuteReaderAsync( token );
+        var context = new SqlDbExecuteContext( TransactionContext, reader, tracing );
 
-      return context;
+        TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
+
+        return context;
+      }
+      catch ( DbException exception )
+      {
+        TryExecuteTracing( tracing, t => t.OnException( exception ) );
+        throw;
+      }
+
     }
 
 
@@ -278,17 +284,27 @@ namespace Ivony.Data
     /// <param name="command">查询命令</param>
     /// <param name="tracing">用于追踪查询过程的追踪器</param>
     /// <returns>查询执行上下文</returns>
-    protected override IDbExecuteContext Execute( SqlCommand command, IDbTracing tracing = null )
+    protected sealed override IDbExecuteContext Execute( SqlCommand command, IDbTracing tracing = null )
     {
-      command.Connection = TransactionContext.Connection;
-      command.Transaction = TransactionContext.Transaction;
+      try
+      {
+        TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
 
-      var reader =  command.ExecuteReader();
-      var context =  new SqlDbExecuteContext( TransactionContext, reader, tracing );
+        command.Connection = TransactionContext.Connection;
+        command.Transaction = TransactionContext.Transaction;
 
-      TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
+        var reader =  command.ExecuteReader();
+        var context =  new SqlDbExecuteContext( TransactionContext, reader, tracing );
 
-      return context;
+        TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
+
+        return context;
+      }
+      catch ( DbException exception )
+      {
+        TryExecuteTracing( tracing, t => t.OnException( exception ) );
+        throw;
+      }
     }
 
   }
