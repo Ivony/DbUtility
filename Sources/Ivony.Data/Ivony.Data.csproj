@@ -81,7 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlankTraceService.cs" />
-    <Compile Include="DatabaseStructure\DataRelation.cs" />
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="DataTableAdapter.cs">
       <SubType>Component</SubType>
