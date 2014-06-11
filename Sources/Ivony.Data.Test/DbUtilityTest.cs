@@ -51,6 +51,41 @@ namespace Ivony.Data.Test
       Assert.AreEqual( query.ParameterValues.Length, 1, "花括号混合转义测试失败" );
       Assert.AreEqual( query.ParameterValues[0], 1, "花括号混合转义测试失败" );
 
+
+      query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID = ( {0} )", Db.T( "SELECT ID FROM Users WHERE Username = {0}", "Ivony" ) );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID = ( SELECT ID FROM Users WHERE Username = #0# )", "一个参数化查询作为另一个参数化查询参数测试失败" );
+      Assert.AreEqual( query.ParameterValues.Length, 1, "一个参数化查询作为另一个参数化查询参数测试失败" );
+      Assert.AreEqual( query.ParameterValues[0], "Ivony", "一个参数化查询作为另一个参数化查询参数测试失败" );
+
+
+      query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID = ( {1} ) AND Status = {0}", 3, Db.T( "SELECT ID FROM Users WHERE Username = {0}", "Ivony" ) );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID = ( SELECT ID FROM Users WHERE Username = #0# ) AND Status = #1#", "一个参数化查询作为另一个参数化查询参数测试失败" );
+      Assert.AreEqual( query.ParameterValues.Length, 2, "一个参数化查询作为另一个参数化查询参数测试失败" );
+      Assert.AreEqual( query.ParameterValues[0], "Ivony", "一个参数化查询作为另一个参数化查询参数测试失败" );
+      Assert.AreEqual( query.ParameterValues[1], 3, "一个参数化查询作为另一个参数化查询参数测试失败" );
+
+    }
+
+    [TestMethod]
+    public void ConcatTest()
+    {
+
+      var query = TemplateParser.ParseTemplate( "SELECT * FROM Users;" );
+
+      Assert.AreEqual( (query + query).TextTemplate, "SELECT * FROM Users;SELECT * FROM Users;", "两个纯文本模板连接测试失败" );
+      Assert.AreEqual( query.Concat( query ).TextTemplate, "SELECT * FROM Users;SELECT * FROM Users;", "两个纯文本模板连接测试失败" );
+
+
+      Assert.AreEqual( (query + query + query).TextTemplate, "SELECT * FROM Users;SELECT * FROM Users;SELECT * FROM Users;", "多个纯文本模板连接测试失败" );
+      Assert.AreEqual( query.Concat( query, query ).TextTemplate, "SELECT * FROM Users;SELECT * FROM Users;SELECT * FROM Users;", "多个纯文本模板连接测试失败" );
+
+
+      query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE UserID = {0};", 1 );
+
+      Assert.AreEqual( (query + query + query).TextTemplate, "SELECT * FROM Users WHERE UserID = #0#;SELECT * FROM Users WHERE UserID = #1#;SELECT * FROM Users WHERE UserID = #2#;", "多个带参数模板连接测试失败" );
+      Assert.AreEqual( query.Concat( query, query ).TextTemplate, "SELECT * FROM Users WHERE UserID = #0#;SELECT * FROM Users WHERE UserID = #1#;SELECT * FROM Users WHERE UserID = #2#;", "多个带参数模板连接测试失败" );
+
+
     }
   }
 }

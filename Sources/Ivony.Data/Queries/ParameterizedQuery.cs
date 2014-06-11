@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -18,7 +19,7 @@ namespace Ivony.Data.Queries
     /// <summary>
     /// 定义匹配参数占位符的正则表达式
     /// </summary>
-    public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>[0-9]+)#" );
+    public static readonly Regex ParameterPlaceholdRegex = new Regex( @"#(?<index>[0-9]+)#", RegexOptions.Compiled );
 
 
 
@@ -56,31 +57,6 @@ namespace Ivony.Data.Queries
     }
 
 
-
-    /// <summary>
-    /// 创建查询命令
-    /// </summary>
-    /// <typeparam name="T">查询命令类型</typeparam>
-    /// <param name="provider">参数化查询命令提供程序</param>
-    /// <returns>查询命令</returns>
-    public T CreateCommand<T>( IParameterizedQueryParser<T> provider )
-    {
-
-      lock ( provider.SyncRoot )
-      {
-
-        var text = ParameterPlaceholdRegex.Replace( TextTemplate, ( match ) =>
-        {
-          var index = int.Parse( match.Groups["index"].Value );
-          return provider.CreateParameterPlacehold( ParameterValues[index] );
-        } );
-
-
-        return provider.CreateCommand( text.Replace( "##", "#" ) );
-      }
-    }
-
-
     /// <summary>
     /// 将参数化查询解析为另一个参数化查询的一部分。
     /// </summary>
@@ -95,16 +71,61 @@ namespace Ivony.Data.Queries
 
         var length = match.Index - index;
         if ( length > 0 )
-          builder.Append( TextTemplate.Substring( index, length ) );
+          builder.AppendText( TextTemplate.Substring( index, length ) );
 
 
         var parameterIndex = int.Parse( match.Groups["index"].Value );
         builder.AppendParameter( ParameterValues[parameterIndex] );
 
-        index += match.Length;
+        index = match.Index + match.Length;
       }
 
-      builder.Append( TextTemplate.Substring( index, TextTemplate.Length - index ) );
+      builder.AppendText( TextTemplate.Substring( index, TextTemplate.Length - index ) );
     }
+
+
+    public override string ToString()
+    {
+      if ( stringExpression == null )
+        stringExpression = GetString();
+
+      return stringExpression;
+    }
+
+    private string stringExpression;
+
+    private string GetString()
+    {
+      var writer = new StringWriter();
+
+      writer.WriteLine( "\"" + TextTemplate.Replace( "\"", "\"\"" ) + "\"" );
+      writer.WriteLine();
+
+      for ( int i = 0; i < this.ParameterValues.Length; i++ )
+      {
+        writer.WriteLine( "#{0}#: {1}", i, ParameterValues[i] );
+      }
+
+      return writer.ToString();
+    }
+
+
+
+
+    public static ParameterizedQuery operator +( ParameterizedQuery query1, ParameterizedQuery query2 )
+    {
+      return query1.Concat( query2 );
+    }
+
+    public static DbExecutableQuery<ParameterizedQuery> operator +( DbExecutableQuery<ParameterizedQuery> query1, ParameterizedQuery query2 )
+    {
+      return query1.Concat( query2 );
+    }
+
+    public static AsyncDbExecutableQuery<ParameterizedQuery> operator +( AsyncDbExecutableQuery<ParameterizedQuery> query1, ParameterizedQuery query2 )
+    {
+      return query1.Concat( query2 );
+    }
+
   }
 }

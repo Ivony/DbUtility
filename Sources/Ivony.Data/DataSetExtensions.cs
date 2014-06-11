@@ -134,7 +134,7 @@ namespace Ivony.Data
     /// <typeparam name="T">列类型</typeparam>
     /// <param name="query">要执行的查询</param>
     /// <returns>第一列的数据</returns>
-    public async static Task<T[]> ExecuteFirstColumnAsync<T>( this IDbExecutableQuery query )
+    public async static Task<T[]> ExecuteFirstColumnAsync<T>( this IAsyncDbExecutableQuery query )
     {
       return (await query.ExecuteDataTableAsync()).Column<T>();
     }
@@ -156,7 +156,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询</param>
     /// <returns>转换为 DataRowView 的数据集合</returns>
-    public async static Task<IEnumerable<DataRowView>> ExecuteDataRowViewsAsync( this IDbExecutableQuery query )
+    public async static Task<IEnumerable<DataRowView>> ExecuteDataRowViewsAsync( this IAsyncDbExecutableQuery query )
     {
       return (await query.ExecuteDataTableAsync()).GetRowViews();
     }
@@ -178,7 +178,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">要执行的查询</param>
     /// <returns>转换为 DataRowView 的数据集合</returns>
-    public async static Task<DataRowView> ExecuteFirstDataRowViewAsync( this IDbExecutableQuery query )
+    public async static Task<DataRowView> ExecuteFirstDataRowViewAsync( this IAsyncDbExecutableQuery query )
     {
       return (await query.ExecuteDataTableAsync()).GetRowViews().FirstOrDefault();
     }

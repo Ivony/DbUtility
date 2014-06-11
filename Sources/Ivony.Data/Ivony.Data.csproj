@@ -67,6 +67,7 @@
     <Reference Include="Ivony.Core">
       <HintPath>..\packages\Ivony.Core.1.0.0\lib\Ivony.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -79,21 +80,31 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlankTraceService.cs" />
     <Compile Include="DatabaseStructure\DataRelation.cs" />
     <Compile Include="DataSetExtensions.cs" />
+    <Compile Include="DataTableAdapter.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Db.cs" />
     <Compile Include="DbExecutableQuery.cs" />
+    <Compile Include="DbQueryExecutedContext.cs" />
+    <Compile Include="DbQueryExecutingContext.cs" />
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="BasicExecuteExtensions.cs" />
+    <Compile Include="IDbTraceService.cs" />
+    <Compile Include="IDbTracing.cs" />
     <Compile Include="IDbTransactionProvider.cs" />
     <Compile Include="IDbExecutableQuery.cs" />
     <Compile Include="IDbExecuteContext.cs" />
     <Compile Include="IDbProvider.cs" />
     <Compile Include="IDbQuery.cs" />
     <Compile Include="IDbTransactionContext.cs" />
-    <Compile Include="IParameterizedQueryParser.cs" />
     <Compile Include="IDbQueryContainer.cs" />
+    <Compile Include="IParameterizedQueryParser.cs" />
+    <Compile Include="ParameterizedQueryParser.cs" />
+    <Compile Include="ParameterizedQueryLiteralValueParser.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />
@@ -127,10 +138,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>DEL "$(TargetDir)Code.RAR"
-"%25ProgramFiles%25\WinRAR\RAR.exe" a -cfg- -inul -k -ep1 -m5 -rr -x"$(TargetDir)" -x*.pfx -x*.dll -x*.pdb -x*.exe "$(TargetDir)Code.RAR" "$(ProjectDir)..\$(ProjectName)"
-"%25ProgramFiles%25\WinRAR\RAR.exe" a -cfg- -inul -k -ep1 -m5 -rr -ag_yyyy.mm.dd_n -ms*.rar -x*.tmp -x*.pdb -x*.pfx C:\Assembly\$(ProjectName)_$(ConfigurationName).RAR "$(TargetDir)*.*"
-DEL "$(TargetDir)Code.RAR"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
