@@ -53,9 +53,7 @@ namespace Ivony.Data
 
     private MySqlCommand CreateCommand( ParameterizedQuery query )
     {
-      var parser = new MySqlParameterizedQueryParser();
-
-      return parser.Parse( query );
+      return new MySqlParameterizedQueryParser().Parse( query );
     }
   }
 }
