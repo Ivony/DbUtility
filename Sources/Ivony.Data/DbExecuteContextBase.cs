@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ivony.Data
@@ -110,7 +112,7 @@ namespace Ivony.Data
     }
 
 
-    
+
     /// <summary>
     /// 获取更改、插入或删除的行数，如果没有任何行受到影响或语句失败，则为 0。-1 表示是 SELECT 语句。
     /// </summary>
@@ -153,4 +155,111 @@ namespace Ivony.Data
       catch { }
     }
   }
+
+
+
+  /// <summary>
+  /// 辅助实现 IAsyncDbExecuteContext 接口的基类
+  /// </summary>
+  public abstract class AsyncDbExecuteContextBase : DbExecuteContextBase, IAsyncDbExecuteContext
+  {
+
+
+    /// <summary>
+    /// 创建数据库异步查询执行上下文
+    /// </summary>
+    /// <param name="dataReader">用于读取数据的 IDataReader 对象</param>
+    /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
+    /// <param name="SyncRoot">用于同步的对象</param>
+    protected AsyncDbExecuteContextBase( DbDataReader dataReader, IDisposable connectionResource = null, IDbTracing tracing = null )
+      : base( dataReader, connectionResource, tracing )
+    {
+
+      DataReader = dataReader;
+
+    }
+
+
+
+    /// <summary>
+    /// 获取当前用于读取数据的 IDataReader 对象
+    /// </summary>
+    protected new DbDataReader DataReader
+    {
+      get;
+      private set;
+    }
+
+
+    
+    /// <summary>
+    /// 异步加载数据到 DataTable
+    /// </summary>
+    /// <param name="startRecord">要填充的起始记录位置</param>
+    /// <param name="maxRecords">最多填充的记录条数</param>
+    /// <returns>填充好的 DataTable</returns>
+    public Task<DataTable> LoadDataTableAsync( int startRecord, int maxRecords, CancellationToken token = default( CancellationToken ) )
+    {
+      var builder = new TaskCompletionSource<DataTable>();
+
+      if ( token.IsCancellationRequested )
+      {
+        builder.SetCanceled();
+        return builder.Task;
+      }
+
+
+      try
+      {
+
+        var result = LoadDataTable( startRecord, maxRecords );
+        builder.SetResult( result );
+        return builder.Task;
+
+      }
+      catch ( Exception exception )
+      {
+
+        builder.SetException( exception );
+        return builder.Task;
+      }
+    }
+
+
+    
+    /// <summary>
+    /// 尝试异步读取下一个结果集
+    /// </summary>
+    /// <returns>若存在下一个结果集，则返回 true ，否则返回 false</returns>
+    public Task<bool> NextResultAsync()
+    {
+      return DataReader.NextResultAsync();
+    }
+
+
+    /// <summary>
+    /// 异步读取一条记录，并将读取指针推移到下一个位置。
+    /// </summary>
+    /// <returns>若当前位置存在记录，则返回该记录，否则返回 null</returns>
+    public Task<IDataRecord> ReadRecordAsync()
+    {
+
+      return DataReader.ReadAsync().ContinueWith( task =>
+        {
+
+          if ( task.Exception != null )
+            throw task.Exception;
+
+          if ( task.Result )
+            return (IDataRecord) DataReader;
+
+          else
+            return null;
+
+        } );
+
+    }
+  }
+
+
 }

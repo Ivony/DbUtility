@@ -14,7 +14,7 @@ namespace Ivony.Data.SqlServer
   /// <summary>
   /// 实现 SQL Server 执行上下文
   /// </summary>
-  public class SqlDbExecuteContext : DbExecuteContextBase, IAsyncDbExecuteContext
+  public class SqlDbExecuteContext : AsyncDbExecuteContextBase
   {
 
 
@@ -63,26 +63,6 @@ namespace Ivony.Data.SqlServer
 
 
     /// <summary>
-    /// 获取 DataTableAdapter 对象
-    /// </summary>
-    protected DataTableAdapter DataTableAdapter
-    {
-      get;
-      private set;
-    }
-
-
-    /// <summary>
-    /// 获取数据库查询追踪器
-    /// </summary>
-    protected IDbTracing Tracing
-    {
-      get;
-      private set;
-    }
-
-
-    /// <summary>
     /// 获取用于同步的对象
     /// </summary>
     public override object SyncRoot
@@ -97,65 +77,5 @@ namespace Ivony.Data.SqlServer
       }
     }
 
-
-
-
-
-    /// <summary>
-    /// 异步加载数据到 DataTable
-    /// </summary>
-    /// <param name="startRecord">要填充的起始记录位置</param>
-    /// <param name="maxRecords">最多填充的记录条数</param>
-    /// <returns>填充好的 DataTable</returns>
-    public Task<DataTable> LoadDataTableAsync( int startRecord, int maxRecords, CancellationToken token = default( CancellationToken ) )
-    {
-
-      var builder = new TaskCompletionSource<DataTable>();
-
-      if ( token.IsCancellationRequested )
-      {
-        builder.SetCanceled();
-        return builder.Task;
-      }
-
-
-      try
-      {
-
-        var result = LoadDataTable( startRecord, maxRecords );
-        builder.SetResult( result );
-        return builder.Task;
-
-      }
-      catch ( Exception exception )
-      {
-
-        builder.SetException( exception );
-        return builder.Task;
-      }
-    }
-
-
-
-
-    /// <summary>
-    /// 尝试异步读取下一个结果集
-    /// </summary>
-    /// <returns>若存在下一个结果集，则返回 true ，否则返回 false</returns>
-    public Task<bool> NextResultAsync()
-    {
-      return SqlDataReader.NextResultAsync();
-    }
-
-
-
-    async Task<IDataRecord> IAsyncDbExecuteContext.ReadRecordAsync()
-    {
-      if ( await SqlDataReader.ReadAsync() )
-        return SqlDataReader;
-
-      else
-        return null;
-    }
   }
 }
