@@ -113,10 +113,11 @@
     <Compile Include="Queries\ITemplatePartial.cs" />
     <Compile Include="Queries\TemplateParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlDbUtility.cs" />
-    <Compile Include="SqlServer\SqlDbExecuteContext.cs" />
-    <Compile Include="SqlServer\SqlParameterizedQueryParser.cs" />
-    <Compile Include="SqlServer\SqlDbTensactionContext.cs" />
+    <Compile Include="SqlClient\SqlDbUtility.cs" />
+    <Compile Include="SqlClient\SqlDbExecuteContext.cs" />
+    <Compile Include="SqlClient\SqlParameterizedQueryParser.cs" />
+    <Compile Include="SqlClient\SqlDbTensactionContext.cs" />
+    <Compile Include="SqlServer.cs" />
     <Compile Include="TemplateExtensions.cs" />
     <Compile Include="TransactionExtensions.cs" />
   </ItemGroup>

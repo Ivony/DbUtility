@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Ivony.Data.SqlServer
+namespace Ivony.Data.SqlClient
 {
 
   /// <summary>
