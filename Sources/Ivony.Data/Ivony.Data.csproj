@@ -87,6 +87,7 @@
     </Compile>
     <Compile Include="Db.cs" />
     <Compile Include="DbExecutableQuery.cs" />
+    <Compile Include="DbExecuteContextBase.cs" />
     <Compile Include="DbQueryExecutedContext.cs" />
     <Compile Include="DbQueryExecutingContext.cs" />
     <Compile Include="DynamicExtensions.cs" />

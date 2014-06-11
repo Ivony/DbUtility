@@ -5,6 +5,7 @@ using Ivony.Data.Queries;
 using Ivony.Data.SqlServer;
 using System.Threading.Tasks;
 using Ivony.Logs;
+using System.Data;
 
 namespace Ivony.Data.Test
 {
@@ -119,6 +120,28 @@ CREATE TABLE [dbo].[Test1]
 
       Assert.AreEqual( db.T( "SELECT * FROM Test1" ).ExecuteDynamics().Length, 1, "手动提交事务测试失败" );
 
+
+
+      {
+        Exception exception = null;
+        var transaction = (SqlDbTransactionContext) db.BeginTransaction();
+
+        try
+        {
+          using ( transaction )
+          {
+            transaction.T( "SELECT * FROM Nothing" ).ExecuteNonQuery();
+            transaction.Commit();
+          }
+        }
+        catch ( Exception e )
+        {
+          exception = e;
+        }
+
+        Assert.IsNotNull( exception, "事务中出现异常测试失败" );
+        Assert.AreEqual( transaction.Connection.State, ConnectionState.Closed );
+      }
     }
 
 
@@ -143,8 +166,8 @@ CREATE TABLE [dbo].[Test1]
         db.T( "SELECT * FROM Nothing" ).ExecuteDynamics();
       }
       catch
-      { 
-      
+      {
+
       }
 
       tracing = traceService.Last();

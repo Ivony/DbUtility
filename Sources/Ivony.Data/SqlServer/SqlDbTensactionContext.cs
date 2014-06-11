@@ -75,9 +75,15 @@ namespace Ivony.Data.SqlServer
     {
       lock ( SyncRoot )
       {
-        Transaction.Commit();
-        _completed = true;
-        Connection.Close();
+        try
+        {
+          Transaction.Commit();
+          _completed = true;
+        }
+        finally
+        {
+          Connection.Close();
+        }
       }
     }
 
@@ -89,9 +95,15 @@ namespace Ivony.Data.SqlServer
     {
       lock ( SyncRoot )
       {
-        Transaction.Rollback();
-        _completed = true;
-        Connection.Close();
+        try
+        {
+          Transaction.Rollback();
+          _completed = true;
+        }
+        finally
+        {
+          Connection.Close();
+        }
       }
     }
 
