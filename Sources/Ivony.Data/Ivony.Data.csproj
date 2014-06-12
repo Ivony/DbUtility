@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\BlankTraceService.cs" />
+    <Compile Include="Common\DbTensactionContextBase.cs" />
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="Common\DataTableAdapter.cs">
       <SubType>Component</SubType>
@@ -114,7 +115,7 @@
     <Compile Include="SqlClient\SqlDbUtility.cs" />
     <Compile Include="SqlClient\SqlDbExecuteContext.cs" />
     <Compile Include="SqlClient\SqlParameterizedQueryParser.cs" />
-    <Compile Include="SqlClient\SqlDbTensactionContext.cs" />
+    <Compile Include="SqlClient\SqlDbTransactionContext.cs" />
     <Compile Include="SqlClient\SqlServerVersion.cs" />
     <Compile Include="SqlDbConfiguration.cs" />
     <Compile Include="SqlServer.cs" />
