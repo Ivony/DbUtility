@@ -2,19 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data.SqlClient
+namespace Ivony.Data.Common
 {
 
 
   /// <summary>
-  /// SQL Server 数据库事务上下文对象
+  /// 辅助实现 IDbTransactionContext 的抽象基类
   /// </summary>
-  public class SqlDbTransactionContext : IDbTransactionContext<SqlDbUtility>
+  public abstract class DbTransactionContextBase<TDbExecutor, TDbTransaction> : IDbTransactionContext<TDbExecutor> where TDbTransaction : IDbTransaction
   {
 
 
@@ -23,59 +22,55 @@ namespace Ivony.Data.SqlClient
 
     private object _sync = new object();
 
-    internal SqlDbTransactionContext( string connectionString, SqlDbConfiguration configuration )
-    {
-      Connection = new SqlConnection( connectionString );
-      DbExecutor = new SqlDbUtilityWithTransaction( this, configuration );
-      _sync = new object();
-    }
+
 
 
     /// <summary>
-    /// 获取数据库连接（如果开启了数据库事务）
+    /// 获取数据库事务对象
     /// </summary>
-    public SqlConnection Connection
+    public TDbTransaction Transaction
     {
       get;
       private set;
     }
 
 
-    /// <summary>
-    /// 获取 SQL Server 数据库事务对象
-    /// </summary>
-    public SqlTransaction Transaction
-    {
-      get;
-      private set;
-    }
 
+    private IDbConnection _connection;
 
     /// <summary>
     /// 开启数据库事务
     /// </summary>
-    public void BeginTransaction()
+    public virtual void BeginTransaction()
     {
 
       lock ( SyncRoot )
       {
-        if ( Connection.State == ConnectionState.Closed )
-        {
-          Connection.Open();
-          Transaction = Connection.BeginTransaction();
-        }
+        Transaction = CreateTransaction();
+        _connection = Transaction.Connection;
       }
     }
+
+
+    /// <summary>
+    /// 派生类实现此方法以创建数据库事务对象
+    /// </summary>
+    /// <returns>数据库事务对象</returns>
+    protected abstract TDbTransaction CreateTransaction();
 
 
 
     /// <summary>
     /// 提交事务
     /// </summary>
-    public void Commit()
+    public virtual void Commit()
     {
       lock ( SyncRoot )
       {
+
+        if ( Transaction == null )
+          throw new InvalidOperationException();
+
         try
         {
           Transaction.Commit();
@@ -83,7 +78,8 @@ namespace Ivony.Data.SqlClient
         }
         finally
         {
-          Connection.Close();
+          if ( _connection.State != ConnectionState.Closed )
+            _connection.Close();
         }
       }
     }
@@ -92,7 +88,7 @@ namespace Ivony.Data.SqlClient
     /// <summary>
     /// 回滚事务
     /// </summary>
-    public void Rollback()
+    public virtual void Rollback()
     {
       lock ( SyncRoot )
       {
@@ -103,7 +99,8 @@ namespace Ivony.Data.SqlClient
         }
         finally
         {
-          Connection.Close();
+          if ( _connection.State != ConnectionState.Closed )
+            _connection.Close();
         }
       }
     }
@@ -111,12 +108,11 @@ namespace Ivony.Data.SqlClient
 
 
     /// <summary>
-    /// 获取查询执行器
+    /// 获取在事务中执行查询的执行器
     /// </summary>
-    public SqlDbUtility DbExecutor
+    public abstract TDbExecutor DbExecutor
     {
       get;
-      private set;
     }
 
 
@@ -124,13 +120,13 @@ namespace Ivony.Data.SqlClient
     /// <summary>
     /// 销毁事务对象，若事务尚未提交，则会自动回滚
     /// </summary>
-    public void Dispose()
+    public virtual void Dispose()
     {
 
       lock ( SyncRoot )
       {
         if ( _disposed )
-          throw new ObjectDisposedException( "SqlDbTransactionContext" );
+          throw new ObjectDisposedException( GetType().Name );
 
         if ( _completed )
         {
@@ -146,7 +142,7 @@ namespace Ivony.Data.SqlClient
     /// <summary>
     /// 获取用于同步的对象
     /// </summary>
-    public object SyncRoot
+    public virtual object SyncRoot
     {
       get { return _sync; }
     }

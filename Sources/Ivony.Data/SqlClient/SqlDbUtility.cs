@@ -21,7 +21,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// 用于操作 SQL Server 的数据库访问工具
   /// </summary>
-  public class SqlDbUtility : IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>, IDbTransactionProvider<SqlDbUtility>
+  public class SqlDbUtility : DbExecutorBase, IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>, IDbTransactionProvider<SqlDbUtility>
   {
 
 
@@ -41,6 +41,7 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="connectionString">连接字符串</param>
     public SqlDbUtility( string connectionString, SqlDbConfiguration configuration )
+      : base( configuration )
     {
       if ( connectionString == null )
         throw new ArgumentNullException( "connectionString" );
@@ -52,8 +53,6 @@ namespace Ivony.Data.SqlClient
 
       ConnectionString = connectionString;
       Configuration = configuration;
-
-      TraceService = Configuration.TraceService ?? BlankTraceService.Instance;
     }
 
 
@@ -62,13 +61,6 @@ namespace Ivony.Data.SqlClient
       get;
       private set;
     }
-
-    protected IDbTraceService TraceService
-    {
-      get;
-      private set;
-    }
-
 
 
     /// <summary>
@@ -156,37 +148,14 @@ namespace Ivony.Data.SqlClient
 
 
 
-    /// <summary>
-    /// 尝试执行查询追踪器的一个追踪方法，此方法会自动判断追踪器是否存在以及对调用中出现的异常进行异常屏蔽。
-    /// </summary>
-    /// <param name="tracing">查询追踪器，如果有的话</param>
-    /// <param name="action">要执行的追踪操作</param>
-    protected void TryExecuteTracing( IDbTracing tracing, Action<IDbTracing> action )
-    {
-      if ( tracing == null )
-        return;
-
-      try
-      {
-        action( tracing );
-      }
-      catch
-      {
-
-      }
-    }
-
-
-
-
     IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
-      return Execute( CreateCommand( query ), TraceService.CreateTracing( this, query ) );
+      return Execute( CreateCommand( query ), TryCreateTracing( this, query ) );
     }
 
     Task<IAsyncDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )
     {
-      return ExecuteAsync( CreateCommand( query ), token, TraceService.CreateTracing( this, query ) );
+      return ExecuteAsync( CreateCommand( query ), token, TryCreateTracing( this, query ) );
     }
 
 
@@ -204,12 +173,12 @@ namespace Ivony.Data.SqlClient
 
     IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
     {
-      return Execute( CreateCommand( query ), TraceService.CreateTracing( this, query ) );
+      return Execute( CreateCommand( query ), TryCreateTracing( this, query ) );
     }
 
     Task<IAsyncDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query, CancellationToken token )
     {
-      return ExecuteAsync( CreateCommand( query ), token, TraceService.CreateTracing( this, query ) );
+      return ExecuteAsync( CreateCommand( query ), token, TryCreateTracing( this, query ) );
     }
 
 
@@ -295,8 +264,8 @@ namespace Ivony.Data.SqlClient
         command.Connection = TransactionContext.Connection;
         command.Transaction = TransactionContext.Transaction;
 
-        var reader =  command.ExecuteReader();
-        var context =  new SqlDbExecuteContext( TransactionContext, reader, tracing );
+        var reader = command.ExecuteReader();
+        var context = new SqlDbExecuteContext( TransactionContext, reader, tracing );
 
         TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
 
