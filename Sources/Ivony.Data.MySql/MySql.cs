@@ -25,7 +25,7 @@ namespace Ivony.Data
     /// <param name="name">连接字符串配置名称</param>
     /// <param name="configuration">MySql 配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbUtility FromConfiguration( string name, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor FromConfiguration( string name, MySqlDbConfiguration configuration = null )
     {
       var setting = ConfigurationManager.ConnectionStrings[name];
       if ( setting == null )
@@ -41,9 +41,9 @@ namespace Ivony.Data
     /// <param name="connectionString">连接字符串</param>
     /// <param name="configuration">MySql 配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbUtility Create( string connectionString, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Create( string connectionString, MySqlDbConfiguration configuration = null )
     {
-      return new MySqlDbUtility( connectionString, configuration ?? DefaultConfiguration );
+      return new MySqlDbExecutor( connectionString, configuration ?? DefaultConfiguration );
     }
 
 
@@ -54,7 +54,7 @@ namespace Ivony.Data
     /// <param name="builder">连接字符串构建器</param>
     /// <param name="configuration">MySql 配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbUtility Create( MySqlConnectionStringBuilder builder, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Create( MySqlConnectionStringBuilder builder, MySqlDbConfiguration configuration = null )
     {
       return Create( builder.ConnectionString, configuration );
     }
@@ -71,7 +71,7 @@ namespace Ivony.Data
     /// <param name="pooling">是否启用连接池（默认启用）</param>
     /// <param name="configuration">MySql 数据库配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbUtility Create( string server, string database, string userID, string password, bool pooling = true, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Create( string server, string database, string userID, string password, bool pooling = true, MySqlDbConfiguration configuration = null )
     {
       var builder = new MySqlConnectionStringBuilder()
       {
@@ -91,16 +91,16 @@ namespace Ivony.Data
     /// 通过集成身份验证登陆 MySql 数据库，以创建 MySql 数据库访问器
     /// </summary>
     /// <param name="dataSource">数据库服务器实例名称</param>
-    /// <param name="initialCatalog">数据库名称</param>
+    /// <param name="database">数据库名称</param>
     /// <param name="pooling">是否启用连接池（默认启用）</param>
     /// <param name="configuration">MySql 数据库配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbUtility Create( string dataSource, string initialCatalog, bool pooling = true, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Create( string dataSource, string database, bool pooling = true, MySqlDbConfiguration configuration = null )
     {
       var builder = new MySqlConnectionStringBuilder()
       {
         Server = dataSource,
-        Database = initialCatalog,
+        Database = database,
         IntegratedSecurity = true,
         Pooling = pooling
       };

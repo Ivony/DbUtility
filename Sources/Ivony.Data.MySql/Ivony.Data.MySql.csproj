@@ -45,10 +45,10 @@
   <ItemGroup>
     <Compile Include="MySql.cs" />
     <Compile Include="MySqlClient\MySqlDbConfiguration.cs" />
-    <Compile Include="MySqlClient\MySqlDbUtility.cs" />
+    <Compile Include="MySqlClient\MySqlDbExecutor.cs" />
     <Compile Include="MySqlClient\MySqlExecuteContext.cs" />
     <Compile Include="MySqlClient\MySqlParameterizedQueryParser.cs" />
-    <Compile Include="MySqlClient\MySqlTransactionContext.cs" />
+    <Compile Include="MySqlClient\MySqlDbTransactionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
