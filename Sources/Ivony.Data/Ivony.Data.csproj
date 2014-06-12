@@ -80,7 +80,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlankTraceService.cs" />
     <Compile Include="Common\BlankTraceService.cs" />
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="Common\DataTableAdapter.cs">

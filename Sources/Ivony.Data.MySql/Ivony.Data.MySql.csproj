@@ -34,6 +34,7 @@
       <HintPath>..\packages\MySql.Data.6.8.3\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,9 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MySqlDbUtility.cs" />
-    <Compile Include="MySqlExecuteContext.cs" />
-    <Compile Include="MySqlParameterizedQueryParser.cs" />
+    <Compile Include="MySql.cs" />
+    <Compile Include="MySqlClient\MySqlDbUtility.cs" />
+    <Compile Include="MySqlClient\MySqlExecuteContext.cs" />
+    <Compile Include="MySqlClient\MySqlParameterizedQueryParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

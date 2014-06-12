@@ -1,11 +1,12 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Ivony.Data.Queries;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data
+namespace Ivony.Data.MySqlClient
 {
   public class MySqlParameterizedQueryParser : ParameterizedQueryParser<MySqlCommand, MySqlParameter>
   {
