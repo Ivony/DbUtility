@@ -12,6 +12,10 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
+
+  /// <summary>
+  /// 提供 MySql 数据库支持
+  /// </summary>
   public static class MySql
   {
 
@@ -19,7 +23,7 @@ namespace Ivony.Data
     /// 从配置文件中读取连接字符串并创建 MySql 数据库访问器
     /// </summary>
     /// <param name="name">连接字符串配置名称</param>
-    /// <param name="configuration">MySql配置</param>
+    /// <param name="configuration">MySql 配置</param>
     /// <returns>MySql 数据库访问器</returns>
     public static MySqlDbUtility FromConfiguration( string name, MySqlDbConfiguration configuration = null )
     {
@@ -48,7 +52,7 @@ namespace Ivony.Data
     /// 通过指定的连接字符串构建器创建 MySql 数据库访问器
     /// </summary>
     /// <param name="builder">连接字符串构建器</param>
-    /// <param name="configuration">SQL Server配置</param>
+    /// <param name="configuration">MySql 配置</param>
     /// <returns>MySql 数据库访问器</returns>
     public static MySqlDbUtility Create( MySqlConnectionStringBuilder builder, MySqlDbConfiguration configuration = null )
     {
@@ -105,10 +109,22 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 获取或设置默认配置
+    /// </summary>
     public static MySqlDbConfiguration DefaultConfiguration
     {
       get;
       set;
+    }
+
+
+    /// <summary>
+    /// 获取或设置 MySql 全局设置
+    /// </summary>
+    public static MySqlConfiguration MySqlGlobalSettings
+    {
+      get { return MySqlConfiguration.Settings; }
     }
 
 

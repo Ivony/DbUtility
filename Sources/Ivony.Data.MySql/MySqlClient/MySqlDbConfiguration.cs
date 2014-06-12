@@ -10,16 +10,6 @@ namespace Ivony.Data.MySqlClient
   public class MySqlDbConfiguration : DbConfiguration
   {
 
-    public MySqlDbConfiguration()
-    {
-      MySqlConfiguration = new MySqlConfiguration();
-    }
-
-    public MySqlConfiguration MySqlConfiguration
-    {
-      get;
-      private set;
-    }
-
+    public MySqlDbConfiguration() { }
   }
 }
