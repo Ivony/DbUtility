@@ -51,12 +51,12 @@ namespace Ivony.Data
     /// <summary>
     /// 通过指定的连接字符串构建器创建 SQL Server 数据库访问器
     /// </summary>
-    /// <param name="buildler">连接字符串构建器</param>
+    /// <param name="builder">连接字符串构建器</param>
     /// <param name="configuration">SQL Server配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbUtility Create( SqlConnectionStringBuilder buildler, SqlDbConfiguration configuration = null )
+    public static SqlDbUtility Create( SqlConnectionStringBuilder builder, SqlDbConfiguration configuration = null )
     {
-      return Create( buildler.ConnectionString, configuration );
+      return Create( builder.ConnectionString, configuration );
     }
 
 
