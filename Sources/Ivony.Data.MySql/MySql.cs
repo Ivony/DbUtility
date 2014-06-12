@@ -64,7 +64,7 @@ namespace Ivony.Data
     /// <summary>
     /// 通过指定的用户名和密码登陆 MySql 数据库，以创建 MySql 数据库访问器
     /// </summary>
-    /// <param name="server">数据库服务器名称</param>
+    /// <param name="server">数据库服务器地址</param>
     /// <param name="database">数据库名称</param>
     /// <param name="userID">登录数据库的用户名</param>
     /// <param name="password">登录数据库的密码</param>
@@ -88,24 +88,88 @@ namespace Ivony.Data
 
 
     /// <summary>
+    /// 通过指定的用户名和密码登陆 MySql 数据库，以创建 MySql 数据库访问器
+    /// </summary>
+    /// <param name="server">数据库服务器地址</param>
+    /// <param name="port">数据库服务器端口</param>
+    /// <param name="database">数据库名称</param>
+    /// <param name="userID">登录数据库的用户名</param>
+    /// <param name="password">登录数据库的密码</param>
+    /// <param name="pooling">是否启用连接池（默认启用）</param>
+    /// <param name="configuration">MySql 数据库配置</param>
+    /// <returns>MySql 数据库访问器</returns>
+    public static MySqlDbExecutor Create( string server, uint port, string database, string userID, string password, bool pooling = true, MySqlDbConfiguration configuration = null )
+    {
+      var builder = new MySqlConnectionStringBuilder()
+      {
+        Server = server,
+        Database = database,
+        IntegratedSecurity = false,
+        UserID = userID,
+        Password = password,
+        Pooling = pooling
+      };
+
+      return Create( builder.ConnectionString, configuration );
+    }
+
+
+    /// <summary>
     /// 通过集成身份验证登陆 MySql 数据库，以创建 MySql 数据库访问器
     /// </summary>
-    /// <param name="dataSource">数据库服务器实例名称</param>
+    /// <param name="server">数据库服务器实例名称</param>
     /// <param name="database">数据库名称</param>
     /// <param name="pooling">是否启用连接池（默认启用）</param>
     /// <param name="configuration">MySql 数据库配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbExecutor Create( string dataSource, string database, bool pooling = true, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Create( string server, string database, bool pooling = true, MySqlDbConfiguration configuration = null )
     {
+
       var builder = new MySqlConnectionStringBuilder()
       {
-        Server = dataSource,
+        Server = server,
         Database = database,
         IntegratedSecurity = true,
         Pooling = pooling
       };
 
       return Create( builder.ConnectionString, configuration );
+    }
+
+
+
+
+    /// <summary>
+    /// 通过集成身份验证登陆 MySql 数据库，以创建 MySql 数据库访问器
+    /// </summary>
+    /// <param name="dataSource">数据库服务器地址</param>
+    /// <param name="port">数据库服务器端口</param>
+    /// <param name="database">数据库名称</param>
+    /// <param name="pooling">是否启用连接池（默认启用）</param>
+    /// <param name="configuration">MySql 数据库配置</param>
+    /// <returns>MySql 数据库访问器</returns>
+    public static MySqlDbExecutor Create( string server, uint port, string database, bool pooling = true, MySqlDbConfiguration configuration = null )
+    {
+
+      var builder = new MySqlConnectionStringBuilder()
+      {
+        Server = server,
+        Port = port,
+        Database = database,
+        IntegratedSecurity = true,
+        Pooling = pooling
+      };
+
+      return Create( builder.ConnectionString, configuration );
+    }
+
+
+
+
+
+    static MySql()
+    {
+      DefaultConfiguration = new MySqlDbConfiguration();
     }
 
 
