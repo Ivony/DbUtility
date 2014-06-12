@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data
+namespace Ivony.Data.Common
 {
   /// <summary>
   /// 定义用于填充 DataTable 的 DataAdapter

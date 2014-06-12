@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ivony.Data.Common;
 
 namespace Ivony.Data
 {
@@ -53,7 +54,7 @@ namespace Ivony.Data
 
       if ( integratedSecurity != null )
         builder.IntegratedSecurity = integratedSecurity.Value;
-    
+
       if ( initialCatalog != null )
         builder.InitialCatalog = initialCatalog;
 
@@ -67,12 +68,12 @@ namespace Ivony.Data
         builder.MaxPoolSize = minPoolSize.Value;
 
       if ( attachDbFilename != null )
-      builder.AttachDBFilename = attachDbFilename;
+        builder.AttachDBFilename = attachDbFilename;
 
       return Create( builder.ConnectionString, traceService );
 
 
-    
+
     }
 
 

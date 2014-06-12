@@ -1,6 +1,7 @@
-﻿using Ivony.Data.Queries;
-using System;
-namespace Ivony.Data
+﻿using System;
+
+
+namespace Ivony.Data.Queries
 {
   public interface IParameterizedQueryParser<TCommand>
   {

@@ -14,6 +14,7 @@ using Ivony.Fluent;
 using System.Linq;
 using System.Threading;
 using System.Data.Common;
+using Ivony.Data.Common;
 
 namespace Ivony.Data.SqlClient
 {
@@ -53,14 +54,6 @@ namespace Ivony.Data.SqlClient
     }
 
 
-    /// <summary>
-    /// 创建数据库访问工具
-    /// </summary>
-    /// <param name="name">连接字符串名称</param>
-    /// <returns>数据库访问工具</returns>
-    public static SqlDbUtility Create( string name, IDbTraceService traceService = null )
-    {
-    }
 
 
     /// <summary>

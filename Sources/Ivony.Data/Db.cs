@@ -1,4 +1,5 @@
-﻿using Ivony.Data.Queries;
+﻿using Ivony.Data.Common;
+using Ivony.Data.Queries;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

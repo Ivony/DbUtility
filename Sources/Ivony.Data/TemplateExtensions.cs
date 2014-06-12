@@ -6,6 +6,7 @@ using System.Text;
 using Ivony.Fluent;
 using Ivony.Data.Queries;
 using System.Text.RegularExpressions;
+using Ivony.Data.Common;
 
 namespace Ivony.Data
 {

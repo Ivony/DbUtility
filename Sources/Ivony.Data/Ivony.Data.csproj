@@ -80,32 +80,29 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlankTraceService.cs" />
-    <Compile Include="DatabaseStructure\DataRelation.cs" />
+    <Compile Include="Common\BlankTraceService.cs" />
     <Compile Include="DataSetExtensions.cs" />
-    <Compile Include="DataTableAdapter.cs">
+    <Compile Include="Common\DataTableAdapter.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Db.cs" />
     <Compile Include="DbExecutableQuery.cs" />
-    <Compile Include="DbExecuteContextBase.cs" />
-    <Compile Include="DbQueryExecutedContext.cs" />
-    <Compile Include="DbQueryExecutingContext.cs" />
+    <Compile Include="Common\DbExecuteContextBase.cs" />
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="BasicExecuteExtensions.cs" />
-    <Compile Include="IDbTraceService.cs" />
-    <Compile Include="IDbTracing.cs" />
-    <Compile Include="IDbTransactionProvider.cs" />
+    <Compile Include="Common\IDbTraceService.cs" />
+    <Compile Include="Common\IDbTracing.cs" />
+    <Compile Include="Common\IDbTransactionProvider.cs" />
     <Compile Include="IDbExecutableQuery.cs" />
     <Compile Include="IDbExecuteContext.cs" />
-    <Compile Include="IDbProvider.cs" />
+    <Compile Include="Common\IDbProvider.cs" />
     <Compile Include="IDbQuery.cs" />
-    <Compile Include="IDbTransactionContext.cs" />
-    <Compile Include="IDbQueryContainer.cs" />
-    <Compile Include="IParameterizedQueryParser.cs" />
-    <Compile Include="ParameterizedQueryParser.cs" />
-    <Compile Include="ParameterizedQueryLiteralValueParser.cs" />
+    <Compile Include="Common\IDbTransactionContext.cs" />
+    <Compile Include="Common\IDbQueryContainer.cs" />
+    <Compile Include="Queries\IParameterizedQueryParser.cs" />
+    <Compile Include="Queries\ParameterizedQueryParser.cs" />
+    <Compile Include="Queries\ParameterizedQueryLiteralValueParser.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />
