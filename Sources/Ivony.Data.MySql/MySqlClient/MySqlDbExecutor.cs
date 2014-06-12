@@ -26,7 +26,6 @@ namespace Ivony.Data.MySqlClient
 
       ConnectionString = connectionString;
       Configuration = configuration;
-      TraceService = configuration.TraceService ?? BlankTraceService.Instance;
 
     }
 
@@ -40,12 +39,6 @@ namespace Ivony.Data.MySqlClient
 
 
     protected MySqlDbConfiguration Configuration
-    {
-      get;
-      private set;
-    }
-
-    protected IDbTraceService TraceService
     {
       get;
       private set;
