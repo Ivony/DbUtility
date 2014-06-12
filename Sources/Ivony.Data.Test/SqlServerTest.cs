@@ -2,10 +2,10 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ivony.Data.Queries;
-using Ivony.Data.SqlServer;
 using System.Threading.Tasks;
 using Ivony.Logs;
 using System.Data;
+using Ivony.Data.SqlClient;
 
 namespace Ivony.Data.Test
 {
@@ -14,8 +14,6 @@ namespace Ivony.Data.Test
   {
 
 
-    private static readonly string connectionString = @"Data Source=(local)\SQLEXPRESS;Initial Catalog=TestDatabase;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
-
     private TestTraceService traceService;
     private SqlDbUtility db;
 
@@ -23,7 +21,7 @@ namespace Ivony.Data.Test
     public SqlServerTest()
     {
       traceService = new TestTraceService();
-      db = new SqlDbUtility( connectionString, traceService );
+      db = SqlServer.FromSqlExpress( "TestDatabase", new SqlDbConfiguration() { TraceService = traceService } );
 
 
       db.T( "IF OBJECT_ID(N'[dbo].[Test1]') IS NOT NULL DROP TABLE [dbo].[Test1]" ).ExecuteNonQuery();

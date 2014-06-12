@@ -40,12 +40,28 @@ namespace Ivony.Data.SqlClient
     /// 创建 SqlDbUtility 实例
     /// </summary>
     /// <param name="connectionString">连接字符串</param>
-    public SqlDbUtility( string connectionString, IDbTraceService traceService = null )
+    public SqlDbUtility( string connectionString, SqlDbConfiguration configuration )
     {
+      if ( connectionString == null )
+        throw new ArgumentNullException( "connectionString" );
+
+      if ( configuration == null )
+        throw new ArgumentNullException( "configuration" );
+
+
+
       ConnectionString = connectionString;
-      TraceService = traceService ?? BlankTraceService.Instance;
+      Configuration = configuration;
+
+      TraceService = Configuration.TraceService ?? BlankTraceService.Instance;
     }
 
+
+    protected SqlDbConfiguration Configuration
+    {
+      get;
+      private set;
+    }
 
     protected IDbTraceService TraceService
     {
@@ -55,14 +71,13 @@ namespace Ivony.Data.SqlClient
 
 
 
-
     /// <summary>
     /// 创建数据库事务上下文
     /// </summary>
     /// <returns>数据库事务上下文</returns>
     public SqlDbTransactionContext CreateTransaction()
     {
-      return new SqlDbTransactionContext( ConnectionString, TraceService );
+      return new SqlDbTransactionContext( ConnectionString, Configuration );
     }
 
 
@@ -216,8 +231,8 @@ namespace Ivony.Data.SqlClient
 
   internal class SqlDbUtilityWithTransaction : SqlDbUtility
   {
-    public SqlDbUtilityWithTransaction( SqlDbTransactionContext transaction, IDbTraceService traceService = null )
-      : base( transaction.Connection.ConnectionString, traceService )
+    public SqlDbUtilityWithTransaction( SqlDbTransactionContext transaction, SqlDbConfiguration configuration )
+      : base( transaction.Connection.ConnectionString, configuration )
     {
       TransactionContext = transaction;
     }

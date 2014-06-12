@@ -86,6 +86,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Db.cs" />
+    <Compile Include="DbConfiguration.cs" />
     <Compile Include="DbExecutableQuery.cs" />
     <Compile Include="Common\DbExecuteContextBase.cs" />
     <Compile Include="DynamicExtensions.cs" />
@@ -114,6 +115,8 @@
     <Compile Include="SqlClient\SqlDbExecuteContext.cs" />
     <Compile Include="SqlClient\SqlParameterizedQueryParser.cs" />
     <Compile Include="SqlClient\SqlDbTensactionContext.cs" />
+    <Compile Include="SqlClient\SqlServerVersion.cs" />
+    <Compile Include="SqlDbConfiguration.cs" />
     <Compile Include="SqlServer.cs" />
     <Compile Include="TemplateExtensions.cs" />
     <Compile Include="TransactionExtensions.cs" />

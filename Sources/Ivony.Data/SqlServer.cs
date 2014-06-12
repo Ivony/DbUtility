@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ivony.Data.Common;
+using System.IO;
 
 namespace Ivony.Data
 {
@@ -17,31 +18,170 @@ namespace Ivony.Data
   public static class SqlServer
   {
 
-    public static SqlDbUtility FromConfiguration( string name, IDbTraceService traceService = null )
+
+    /// <summary>
+    /// 从配置文件中读取连接字符串并创建 SQL Server 数据库访问器
+    /// </summary>
+    /// <param name="name">连接字符串配置名称</param>
+    /// <param name="configuration">SQL Server配置</param>
+    /// <returns>SQL Server 数据库访问器</returns>
+    public static SqlDbUtility FromConfiguration( string name, SqlDbConfiguration configuration = null )
     {
       var setting = ConfigurationManager.ConnectionStrings[name];
       if ( setting == null )
         throw new InvalidOperationException();
 
-      return Create( setting.ConnectionString, traceService );
+      return Create( setting.ConnectionString, configuration );
     }
 
 
-    public static SqlDbUtility Create( string connectionString, IDbTraceService traceService = null )
+    /// <summary>
+    /// 通过指定的连接字符串并创建 SQL Server 数据库访问器
+    /// </summary>
+    /// <param name="connectionString">连接字符串</param>
+    /// <param name="configuration">SQL Server配置</param>
+    /// <returns>SQL Server 数据库访问器</returns>
+    public static SqlDbUtility Create( string connectionString, SqlDbConfiguration configuration = null )
     {
-      return new SqlDbUtility( connectionString, traceService ?? DefaultTraceService );
+      return new SqlDbUtility( connectionString, configuration ?? DefaultConfiguration );
     }
 
 
 
-    public static SqlDbUtility Create( SqlConnectionStringBuilder buildler, IDbTraceService traceService = null )
+    /// <summary>
+    /// 通过指定的连接字符串构建器创建 SQL Server 数据库访问器
+    /// </summary>
+    /// <param name="buildler">连接字符串构建器</param>
+    /// <param name="configuration">SQL Server配置</param>
+    /// <returns>SQL Server 数据库访问器</returns>
+    public static SqlDbUtility Create( SqlConnectionStringBuilder buildler, SqlDbConfiguration configuration = null )
     {
-      return Create( buildler.ConnectionString, traceService );
+      return Create( buildler.ConnectionString, configuration );
     }
 
 
 
-    public static SqlDbUtility Create( string dataSource, string initialCatalog = null, bool? integratedSecurity = null, string userID = null, string password = null, string attachDbFilename = null, bool? pooling = null, int? maxPoolSize = null, int? minPoolSize = null, IDbTraceService traceService = null )
+    /// <summary>
+    /// 通过指定的用户名和密码登陆 SQL Server 数据库，以创建 SQL Server 数据库访问器
+    /// </summary>
+    /// <param name="dataSource">数据库服务器实例名称</param>
+    /// <param name="initialCatalog">数据库名称</param>
+    /// <param name="userID">登录数据库的用户名</param>
+    /// <param name="password">登录数据库的密码</param>
+    /// <param name="pooling">是否启用连接池（默认启用）</param>
+    /// <param name="configuration">SQL Server数据库配置</param>
+    /// <returns>SQL Server 数据库访问器</returns>
+    public static SqlDbUtility Create( string dataSource, string initialCatalog, string userID, string password, bool pooling = true, SqlDbConfiguration configuration = null )
+    {
+      var builder = new SqlConnectionStringBuilder()
+      {
+        DataSource = dataSource,
+        InitialCatalog = initialCatalog,
+        IntegratedSecurity = false,
+        UserID = userID,
+        Password = password,
+        Pooling = pooling
+      };
+
+      return Create( builder.ConnectionString, configuration );
+    }
+
+
+    /// <summary>
+    /// 通过集成身份验证登陆 SQL Server 数据库，以创建 SQL Server 数据库访问器
+    /// </summary>
+    /// <param name="dataSource">数据库服务器实例名称</param>
+    /// <param name="initialCatalog">数据库名称</param>
+    /// <param name="pooling">是否启用连接池（默认启用）</param>
+    /// <param name="configuration">SQL Server数据库配置</param>
+    /// <returns>SQL Server 数据库访问器</returns>
+    public static SqlDbUtility Create( string dataSource, string initialCatalog, bool pooling = true, SqlDbConfiguration configuration = null )
+    {
+      var builder = new SqlConnectionStringBuilder()
+      {
+        DataSource = dataSource,
+        InitialCatalog = initialCatalog,
+        IntegratedSecurity = true,
+        Pooling = pooling
+      };
+
+      return Create( builder.ConnectionString, configuration );
+    }
+
+
+
+
+
+    /// <summary>
+    /// 通过连接 SQL Server Express 2012 LocalDB，创建 SQL Server 数据库访问器
+    /// </summary>
+    /// <param name="database">数据库名称或者数据库文件路径</param>
+    /// <param name="instanceName">SQL Server LocalDB 实例名称</param>
+    /// <param name="configuration">SQL Server 配置</param>
+    /// <returns>SQL Server 数据库访问器</returns>
+    public static SqlDbUtility FromLocalDB2012( string database, SqlDbConfiguration configuration = null )
+    {
+
+      return FromSqlExpress( database, "v11.0", configuration );
+
+    }
+
+    /// <summary>
+    /// 通过连接 SQL Server Express 2014 LocalDB，创建 SQL Server 数据库访问器
+    /// </summary>
+    /// <param name="database">数据库名称或者数据库文件路径</param>
+    /// <param name="instanceName">SQL Server LocalDB 实例名称</param>
+    /// <param name="configuration">SQL Server 配置</param>
+    /// <returns>SQL Server 数据库访问器</returns>
+    public static SqlDbUtility FromLocalDB2014( string database, SqlDbConfiguration configuration = null )
+    {
+
+      return FromSqlExpress( database, "MSSQLLocalDB", configuration );
+
+    }
+
+
+    /// <summary>
+    /// 通过连接 SQL Server Express 默认实例，创建 SQL Server 数据库访问器
+    /// </summary>
+    /// <param name="database">数据库名称或者数据库文件路径</param>
+    /// <param name="configuration">SQL Server 配置</param>
+    /// <returns>SQL Server 数据库访问器</returns>
+    public static SqlDbUtility FromSqlExpress( string database, SqlDbConfiguration configuration = null )
+    {
+      return FromSqlExpress( database, "SQLExpress", configuration );
+    }
+
+
+    /// <summary>
+    /// 通过连接 SQL Server Express 指定实例，创建 SQL Server 数据库访问器
+    /// </summary>
+    /// <param name="database">数据库名称或者数据库文件路径</param>
+    /// <param name="instanceName">SQL Server 实例名称</param>
+    /// <param name="configuration">SQL Server 配置</param>
+    /// <returns>SQL Server 数据库访问器</returns>
+    public static SqlDbUtility FromSqlExpress( string database, string instanceName, SqlDbConfiguration configuration = null )
+    {
+      var builder = new SqlConnectionStringBuilder()
+      {
+        DataSource = @"(local)\" + instanceName,
+        IntegratedSecurity = true,
+      };
+
+
+      if ( database.IndexOfAny( Path.GetInvalidPathChars() ) == -1 && Path.IsPathRooted( database ) )
+        builder.AttachDBFilename = database;
+
+      else
+        builder.InitialCatalog = database;
+
+
+      return Create( builder.ConnectionString, configuration );
+    }
+
+
+
+    public static SqlDbUtility Create( string dataSource, string initialCatalog = null, bool? integratedSecurity = null, string userID = null, string password = null, string attachDbFilename = null, bool? pooling = null, int? maxPoolSize = null, int? minPoolSize = null, SqlDbConfiguration configuration = null )
     {
       var builder = new SqlConnectionStringBuilder();
 
@@ -70,17 +210,31 @@ namespace Ivony.Data
       if ( attachDbFilename != null )
         builder.AttachDBFilename = attachDbFilename;
 
-      return Create( builder.ConnectionString, traceService );
+      return Create( builder.ConnectionString, configuration );
 
 
 
     }
 
 
-    public static IDbTraceService DefaultTraceService
+
+
+
+    private static SqlDbConfiguration _defaultConfiguration = new SqlDbConfiguration();
+
+    /// <summary>
+    /// 获取或设置默认配置
+    /// </summary>
+    public static SqlDbConfiguration DefaultConfiguration
     {
-      get;
-      set;
+      get { return _defaultConfiguration; }
+      set
+      {
+        if ( value == null )
+          _defaultConfiguration = new SqlDbConfiguration();
+        else
+          _defaultConfiguration = value;
+      }
     }
 
   }

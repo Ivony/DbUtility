@@ -1,4 +1,5 @@
-﻿using Ivony.Logs;
+﻿using Ivony.Data.Common;
+using Ivony.Logs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
