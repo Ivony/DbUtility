@@ -82,7 +82,7 @@
   <ItemGroup>
     <Compile Include="Common\BlankTraceService.cs" />
     <Compile Include="Common\DbExecutorBase.cs" />
-    <Compile Include="Common\DbTensactionContextBase.cs" />
+    <Compile Include="Common\DbTransactionContextBase.cs" />
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="Common\DataTableAdapter.cs">
       <SubType>Component</SubType>
