@@ -62,7 +62,7 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 通过指定的用户名和密码登陆SQL Server数据库，以创建 SQL Server 数据库访问器
+    /// 通过指定的用户名和密码登陆 SQL Server 数据库，以创建 SQL Server 数据库访问器
     /// </summary>
     /// <param name="dataSource">数据库服务器实例名称</param>
     /// <param name="initialCatalog">数据库名称</param>
@@ -88,7 +88,7 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 通过集成身份验证登陆SQL Server数据库，以创建 SQL Server 数据库访问器
+    /// 通过集成身份验证登陆 SQL Server 数据库，以创建 SQL Server 数据库访问器
     /// </summary>
     /// <param name="dataSource">数据库服务器实例名称</param>
     /// <param name="initialCatalog">数据库名称</param>
@@ -142,7 +142,7 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 通过连接 SQL Server Express，创建 SQL Server 数据库访问器
+    /// 通过连接 SQL Server Express 默认实例，创建 SQL Server 数据库访问器
     /// </summary>
     /// <param name="database">数据库名称或者数据库文件路径</param>
     /// <param name="configuration">SQL Server 配置</param>
@@ -151,6 +151,7 @@ namespace Ivony.Data
     {
       return FromSqlExpress( database, "SQLExpress", configuration );
     }
+
 
     /// <summary>
     /// 通过连接 SQL Server Express 指定实例，创建 SQL Server 数据库访问器
@@ -217,16 +218,23 @@ namespace Ivony.Data
 
 
 
-    static SqlServer()
-    {
-      DefaultConfiguration = new SqlDbConfiguration();
-    }
 
 
+    private static SqlDbConfiguration _defaultConfiguration = new SqlDbConfiguration();
+
+    /// <summary>
+    /// 获取或设置默认配置
+    /// </summary>
     public static SqlDbConfiguration DefaultConfiguration
     {
-      get;
-      set;
+      get { return _defaultConfiguration; }
+      set
+      {
+        if ( value == null )
+          _defaultConfiguration = new SqlDbConfiguration();
+        else
+          _defaultConfiguration = value;
+      }
     }
 
   }
