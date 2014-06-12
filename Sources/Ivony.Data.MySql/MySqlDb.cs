@@ -16,7 +16,7 @@ namespace Ivony.Data
   /// <summary>
   /// 提供 MySql 数据库支持
   /// </summary>
-  public static class MySql
+  public static class MySqlDb
   {
 
     /// <summary>
@@ -167,7 +167,7 @@ namespace Ivony.Data
 
 
 
-    static MySql()
+    static MySqlDb()
     {
       DefaultConfiguration = new MySqlDbConfiguration();
     }
