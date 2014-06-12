@@ -8,9 +8,17 @@ using System.Text;
 
 namespace Ivony.Data.MySqlClient
 {
-  public class MySqlExecuteContext  : AsyncDbExecuteContextBase
+  public class MySqlExecuteContext : AsyncDbExecuteContextBase
   {
-    public MySqlExecuteContext( MySqlConnection connection, MySqlDataReader dataReader ) : base( dataReader, connection )
+
+    public MySqlExecuteContext( MySqlConnection connection, MySqlDataReader dataReader )
+      : base( dataReader, connection )
+    {
+
+    }
+
+    public MySqlExecuteContext( MySqlTransactionContext transaction, MySqlDataReader dataReader )
+      : base( dataReader, null )
     {
 
     }

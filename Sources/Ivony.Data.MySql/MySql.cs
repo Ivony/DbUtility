@@ -15,31 +15,31 @@ namespace Ivony.Data
   public static class MySql
   {
 
-    public static MySqlDbUtility FromConfiguration( string name, IDbTraceService traceService = null )
+    public static MySqlDbUtility FromConfiguration( string name, MySqlDbConfiguration configuration = null )
     {
       var setting = ConfigurationManager.ConnectionStrings[name];
       if ( setting == null )
         throw new InvalidOperationException();
 
-      return Create( setting.ConnectionString, traceService );
+      return Create( setting.ConnectionString, configuration );
     }
 
 
-    public static MySqlDbUtility Create( string connectionString, IDbTraceService traceService = null )
+    public static MySqlDbUtility Create( string connectionString, MySqlDbConfiguration configuration = null )
     {
-      return new MySqlDbUtility( connectionString, traceService ?? DefaultTraceService );
+      return new MySqlDbUtility( connectionString, configuration ?? DefaultConfiguration );
     }
 
 
 
-    public static MySqlDbUtility Create( SqlConnectionStringBuilder buildler, IDbTraceService traceService = null )
+    public static MySqlDbUtility Create( SqlConnectionStringBuilder buildler, MySqlDbConfiguration configuration = null )
     {
-      return Create( buildler.ConnectionString, traceService );
+      return Create( buildler.ConnectionString, configuration );
     }
 
 
 
-    public static MySqlDbUtility Create( string server, string database = null, bool? integratedSecurity = null, string userID = null, string password = null, string attachDbFilename = null, bool? pooling = null, uint? maximunPoolSize = null, uint? minimunPoolSize = null, IDbTraceService traceService = null )
+    public static MySqlDbUtility Create( string server, string database = null, bool? integratedSecurity = null, string userID = null, string password = null, string attachDbFilename = null, bool? pooling = null, uint? maximunPoolSize = null, uint? minimunPoolSize = null, MySqlDbConfiguration configuration = null )
     {
       var builder = new MySqlConnectionStringBuilder();
 
@@ -65,14 +65,14 @@ namespace Ivony.Data
       if ( minimunPoolSize != null )
         builder.MinimumPoolSize = minimunPoolSize.Value;
 
-      return Create( builder.ConnectionString, traceService );
+      return Create( builder.ConnectionString, configuration );
 
 
 
     }
 
 
-    public static IDbTraceService DefaultTraceService
+    public static MySqlDbConfiguration DefaultConfiguration
     {
       get;
       set;

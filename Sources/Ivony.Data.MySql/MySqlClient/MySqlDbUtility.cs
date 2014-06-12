@@ -14,16 +14,31 @@ namespace Ivony.Data.MySqlClient
 
 
 
-    public MySqlDbUtility( string connectionString, IDbTraceService traceService = null )
+    public MySqlDbUtility( string connectionString, MySqlDbConfiguration configuration )
     {
 
+      if ( connectionString == null )
+        throw new ArgumentNullException( "connectionString" );
+
+      if ( configuration == null )
+        throw new ArgumentNullException( "configuration" );
+
       ConnectionString = connectionString;
-      TraceService = traceService ?? BlankTraceService.Instance;
+      Configuration = configuration;
+      TraceService = configuration.TraceService ?? BlankTraceService.Instance;
 
     }
 
 
     protected string ConnectionString
+    {
+      get;
+      private set;
+    }
+
+
+
+    protected MySqlDbConfiguration Configuration
     {
       get;
       private set;
@@ -38,19 +53,19 @@ namespace Ivony.Data.MySqlClient
     public IDbExecuteContext Execute( ParameterizedQuery query )
     {
 
-      var command = CreateCommand( query );
-      var connection = CreateConnection();
-      command.Connection = connection;
+      return Execute( CreateCommand( query ) );
+
+    }
+
+    protected virtual IDbExecuteContext Execute( MySqlCommand command )
+    {
+      var connection = new MySqlConnection( ConnectionString );
       connection.Open();
+      command.Connection = connection;
 
       return new MySqlExecuteContext( connection, command.ExecuteReader() );
-
     }
 
-    protected MySqlConnection CreateConnection()
-    {
-      return new MySqlConnection( ConnectionString );
-    }
 
     private MySqlCommand CreateCommand( ParameterizedQuery query )
     {
