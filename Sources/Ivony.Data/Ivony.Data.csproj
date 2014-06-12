@@ -120,6 +120,7 @@
     <Compile Include="SqlClient\SqlServerVersion.cs" />
     <Compile Include="SqlDbConfiguration.cs" />
     <Compile Include="SqlServer.cs" />
+    <Compile Include="SqlServerExpress.cs" />
     <Compile Include="TemplateExtensions.cs" />
     <Compile Include="TransactionExtensions.cs" />
   </ItemGroup>
