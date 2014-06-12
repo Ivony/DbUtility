@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ivony.Data
+namespace Ivony.Data.Common
 {
   internal interface IDbQueryContainer
   {

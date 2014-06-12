@@ -1,4 +1,6 @@
 ﻿using Ivony.Data;
+using Ivony.Data.Common;
+using Ivony.Data.Queries;
 using Ivony.Fluent;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Ivony.Data.SqlServer
+namespace Ivony.Data.SqlClient
 {
 
   /// <summary>
