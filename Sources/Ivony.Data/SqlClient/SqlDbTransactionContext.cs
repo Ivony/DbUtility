@@ -27,7 +27,7 @@ namespace Ivony.Data.SqlClient
 
 
     /// <summary>
-    /// 获取数据库连接（如果开启了数据库事务）
+    /// 获取数据库连接
     /// </summary>
     public SqlConnection Connection
     {
