@@ -169,17 +169,17 @@ namespace Ivony.Data
     {
 
 
-      var partial = value as ITemplatePartial;
+      var partial = value as IParameterizedQueryPartial;
       if ( partial == null )
       {
         var container = value as IDbQueryContainer;
         if ( container != null )
-          partial = container.Query as ITemplatePartial;
+          partial = container.Query as IParameterizedQueryPartial;
       }
 
       if ( partial != null )
       {
-        partial.Parse( builder );
+        partial.AppendTo( builder );
         return;
       }
 

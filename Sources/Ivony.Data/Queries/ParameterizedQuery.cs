@@ -14,7 +14,7 @@ namespace Ivony.Data.Queries
   /// <summary>
   /// 代表一个参数化查询
   /// </summary>
-  public class ParameterizedQuery : IDbQuery, ITemplatePartial
+  public class ParameterizedQuery : IDbQuery, IParameterizedQueryPartial
   {
 
     /// <summary>
@@ -52,6 +52,13 @@ namespace Ivony.Data.Queries
     /// <param name="values">参数值</param>
     public ParameterizedQuery( string template, object[] values )
     {
+
+      if ( template == null )
+        throw new ArgumentNullException( "template" );
+
+      if ( values == null )
+        throw new ArgumentNullException( "values" );
+
       TextTemplate = template;
       ParameterValues = new object[values.Length];
       values.CopyTo( ParameterValues, 0 );
@@ -62,7 +69,7 @@ namespace Ivony.Data.Queries
     /// 将参数化查询解析为另一个参数化查询的一部分。
     /// </summary>
     /// <param name="builder">参数化查询构建器</param>
-    public void Parse( ParameterizedQueryBuilder builder )
+    public void AppendTo( ParameterizedQueryBuilder builder )
     {
 
       int index = 0;
@@ -128,5 +135,10 @@ namespace Ivony.Data.Queries
       return query1.Concat( query2 );
     }
 
+
+    internal bool IsStartWithWhiteSpace()
+    {
+      return char.IsWhiteSpace( TextTemplate[0] );
+    }
   }
 }

@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 namespace Ivony.Data.Queries
 {
   /// <summary>
-  /// 定义可以作为模板的一部分被嵌入模板的表达式
+  /// 定义可以作为参数化查询的片段的对象
   /// </summary>
-  public interface ITemplatePartial
+  public interface IParameterizedQueryPartial
   {
     /// <summary>
-    /// 解析模版并提供嵌入的 SQL 表达式
+    /// 将该片段添加到正在构建的参数化查询的末尾
     /// </summary>
     /// <param name="builder">参数化查询构建器</param>
-    /// <returns></returns>
-    void Parse( ParameterizedQueryBuilder builder );
+    void AppendTo( ParameterizedQueryBuilder builder );
   }
 }

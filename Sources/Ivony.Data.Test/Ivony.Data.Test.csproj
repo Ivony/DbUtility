@@ -62,7 +62,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DbUtilityTest.cs" />
+    <Compile Include="ParameterizedQueryTest.cs" />
     <Compile Include="IDbTraceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTest.cs" />

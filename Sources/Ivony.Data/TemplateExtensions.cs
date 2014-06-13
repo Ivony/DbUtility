@@ -128,9 +128,14 @@ namespace Ivony.Data
     {
       var builder = new ParameterizedQueryBuilder();
 
-      firstQuery.Parse( builder );
+      firstQuery.AppendTo( builder );
       foreach ( var query in otherQuerys )
-        query.Parse( builder );
+      {
+        if ( !builder.IsEndWithWhiteSpace() && !query.IsStartWithWhiteSpace() && Db.AddWhiteSpaceOnConcat )
+          builder.Append( ' ' );
+
+        query.AppendTo( builder );
+      }
 
       return builder.CreateQuery();
     }

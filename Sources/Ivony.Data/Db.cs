@@ -79,7 +79,7 @@ namespace Ivony.Data
         return null;
 
       var builder = new ParameterizedQueryBuilder();
-      queries[0].Parse( builder );
+      queries[0].AppendTo( builder );
 
       foreach ( var q in queries.Skip( 1 ) )
       {
@@ -89,6 +89,19 @@ namespace Ivony.Data
 
 
       return builder.CreateQuery();
+    }
+
+
+
+    static Db()
+    {
+      AddWhiteSpaceOnConcat = true;
+    }
+
+    public static bool AddWhiteSpaceOnConcat
+    {
+      get;
+      private set;
     }
 
   }
