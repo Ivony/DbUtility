@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ivony.Data</RootNamespace>
-    <AssemblyName>Ivony.Data.SQLite</AssemblyName>
+    <AssemblyName>DbWrench.SQLite</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
