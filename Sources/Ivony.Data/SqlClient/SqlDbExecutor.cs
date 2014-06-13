@@ -21,7 +21,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// 用于操作 SQL Server 的数据库访问工具
   /// </summary>
-  public class SqlDbUtility : DbExecutorBase, IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>, IDbTransactionProvider<SqlDbUtility>
+  public class SqlDbExecutor : DbExecutorBase, IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>, IDbTransactionProvider<SqlDbExecutor>
   {
 
 
@@ -40,7 +40,7 @@ namespace Ivony.Data.SqlClient
     /// 创建 SqlDbUtility 实例
     /// </summary>
     /// <param name="connectionString">连接字符串</param>
-    public SqlDbUtility( string connectionString, SqlDbConfiguration configuration )
+    public SqlDbExecutor( string connectionString, SqlDbConfiguration configuration )
       : base( configuration )
     {
       if ( connectionString == null )
@@ -73,7 +73,7 @@ namespace Ivony.Data.SqlClient
     }
 
 
-    IDbTransactionContext<SqlDbUtility> IDbTransactionProvider<SqlDbUtility>.CreateTransaction()
+    IDbTransactionContext<SqlDbExecutor> IDbTransactionProvider<SqlDbExecutor>.CreateTransaction()
     {
       return CreateTransaction();
     }
@@ -198,9 +198,9 @@ namespace Ivony.Data.SqlClient
 
 
 
-  internal class SqlDbUtilityWithTransaction : SqlDbUtility
+  internal class SqlDbExecutorWithTransaction : SqlDbExecutor
   {
-    public SqlDbUtilityWithTransaction( SqlDbTransactionContext transaction, SqlDbConfiguration configuration )
+    public SqlDbExecutorWithTransaction( SqlDbTransactionContext transaction, SqlDbConfiguration configuration )
       : base( transaction.Connection.ConnectionString, configuration )
     {
       TransactionContext = transaction;

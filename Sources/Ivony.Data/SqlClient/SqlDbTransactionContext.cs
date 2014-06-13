@@ -14,7 +14,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// SQL Server 数据库事务上下文对象
   /// </summary>
-  public class SqlDbTransactionContext : DbTransactionContextBase<SqlDbUtility, SqlTransaction>
+  public class SqlDbTransactionContext : DbTransactionContextBase<SqlDbExecutor, SqlTransaction>
   {
 
 
@@ -22,7 +22,7 @@ namespace Ivony.Data.SqlClient
     internal SqlDbTransactionContext( string connectionString, SqlDbConfiguration configuration )
     {
       Connection = new SqlConnection( connectionString );
-      _executor = new SqlDbUtilityWithTransaction( this, configuration );
+      _executor = new SqlDbExecutorWithTransaction( this, configuration );
     }
 
 
@@ -50,12 +50,12 @@ namespace Ivony.Data.SqlClient
     }
 
 
-    private SqlDbUtilityWithTransaction _executor;
+    private SqlDbExecutorWithTransaction _executor;
 
     /// <summary>
     /// 获取用于在事务中执行查询的 SQL Server 查询执行器
     /// </summary>
-    public override SqlDbUtility DbExecutor
+    public override SqlDbExecutor DbExecutor
     {
       get { return _executor; }
     }

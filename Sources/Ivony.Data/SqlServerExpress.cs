@@ -22,7 +22,7 @@ namespace Ivony.Data
     /// <param name="instanceName">SQL Server LocalDB 实例名称</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbUtility LocalDB2012( string database, SqlDbConfiguration configuration = null )
+    public static SqlDbExecutor LocalDB2012( string database, SqlDbConfiguration configuration = null )
     {
 
       return Create( database, "v11.0", configuration );
@@ -36,7 +36,7 @@ namespace Ivony.Data
     /// <param name="instanceName">SQL Server LocalDB 实例名称</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbUtility LocalDB2014( string database, SqlDbConfiguration configuration = null )
+    public static SqlDbExecutor LocalDB2014( string database, SqlDbConfiguration configuration = null )
     {
 
       return Create( database, "MSSQLLocalDB", configuration );
@@ -50,7 +50,7 @@ namespace Ivony.Data
     /// <param name="database">数据库名称或者数据库文件路径</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbUtility Create( string database, SqlDbConfiguration configuration = null )
+    public static SqlDbExecutor Create( string database, SqlDbConfiguration configuration = null )
     {
       return Create( database, "SQLExpress", configuration );
     }
@@ -63,7 +63,7 @@ namespace Ivony.Data
     /// <param name="instanceName">SQL Server 实例名称</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    private static SqlDbUtility Create( string database, string instanceName, SqlDbConfiguration configuration = null )
+    private static SqlDbExecutor Create( string database, string instanceName, SqlDbConfiguration configuration = null )
     {
       var builder = new SqlConnectionStringBuilder()
       {
