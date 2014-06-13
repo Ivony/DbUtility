@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MySql.cs" />
+    <Compile Include="MySqlDb.cs" />
     <Compile Include="MySqlClient\MySqlDbConfiguration.cs" />
     <Compile Include="MySqlClient\MySqlDbExecutor.cs" />
     <Compile Include="MySqlClient\MySqlExecuteContext.cs" />

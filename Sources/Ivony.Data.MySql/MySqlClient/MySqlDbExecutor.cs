@@ -3,6 +3,7 @@ using Ivony.Data.Queries;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,17 +54,26 @@ namespace Ivony.Data.MySqlClient
 
     protected virtual IDbExecuteContext Execute( MySqlCommand command, IDbTracing tracing )
     {
-      TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
+      try
+      {
+        TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
 
-      var connection = new MySqlConnection( ConnectionString );
-      connection.Open();
-      command.Connection = connection;
 
-      var context = new MySqlExecuteContext( connection, command.ExecuteReader(), tracing );
+        var connection = new MySqlConnection( ConnectionString );
+        connection.Open();
+        command.Connection = connection;
 
-      TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
+        var context = new MySqlExecuteContext( connection, command.ExecuteReader(), tracing );
 
-      return context;
+        TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
+
+        return context;
+      }
+      catch( DbException exception )
+      {
+        TryExecuteTracing( tracing, t => t.OnException( exception ) );
+        throw;
+      }
     }
 
 
