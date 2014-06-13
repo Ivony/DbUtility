@@ -142,9 +142,6 @@ namespace Ivony.Data
         builder.AttachDBFilename = attachDbFilename;
 
       return Create( builder.ConnectionString, configuration );
-
-
-
     }
 
 

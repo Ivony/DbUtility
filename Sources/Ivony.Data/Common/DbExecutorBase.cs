@@ -16,10 +16,15 @@ namespace Ivony.Data.Common
 
     private DbConfiguration _configuration;
 
+
+    /// <summary>
+    /// 初始化 DbExecuterBase 类型
+    /// </summary>
+    /// <param name="configuration">当前要使用的数据库配置</param>
     protected DbExecutorBase( DbConfiguration configuration )
     {
       _configuration = configuration;
-      TraceService = configuration.TraceService ?? BlankTraceService.Instance;
+      TraceService = configuration.TraceService;
     }
 
 

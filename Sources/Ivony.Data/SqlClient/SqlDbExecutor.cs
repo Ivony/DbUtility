@@ -37,9 +37,10 @@ namespace Ivony.Data.SqlClient
 
 
     /// <summary>
-    /// 创建 SqlDbUtility 实例
+    /// 创建 SqlServer 数据库查询执行程序
     /// </summary>
     /// <param name="connectionString">连接字符串</param>
+    /// <param name="configuration">当前要使用的数据库配置信息</param>
     public SqlDbExecutor( string connectionString, SqlDbConfiguration configuration )
       : base( configuration )
     {
@@ -56,6 +57,9 @@ namespace Ivony.Data.SqlClient
     }
 
 
+    /// <summary>
+    /// 当前要使用的数据库配置信息
+    /// </summary>
     protected SqlDbConfiguration Configuration
     {
       get;

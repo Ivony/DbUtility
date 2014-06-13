@@ -24,6 +24,7 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="connection">数据库连接</param>
     /// <param name="reader">数据读取器</param>
+    /// <param name="tracing">用于记录此次查询过程的的查询追踪器</param>
     internal SqlDbExecuteContext( SqlConnection connection, SqlDataReader reader, IDbTracing tracing )
       : base( reader, connection, tracing )
     {
@@ -35,6 +36,7 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="transaction">数据库事务</param>
     /// <param name="reader">数据读取器</param>
+    /// <param name="tracing">用于记录此次查询过程的的查询追踪器</param>
     internal SqlDbExecuteContext( SqlDbTransactionContext transaction, SqlDataReader reader, IDbTracing tracing )
       : base( reader, null, tracing )
     {

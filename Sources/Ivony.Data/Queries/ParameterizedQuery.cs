@@ -92,6 +92,11 @@ namespace Ivony.Data.Queries
     }
 
 
+
+    /// <summary>
+    /// 重写 ToString 方法，输出参数化查询的字符串表达形式
+    /// </summary>
+    /// <returns>字符串表达形式</returns>
     public override string ToString()
     {
       if ( stringExpression == null )
@@ -120,16 +125,34 @@ namespace Ivony.Data.Queries
 
 
 
+    /// <summary>
+    /// 串联两个参数化查询对象
+    /// </summary>
+    /// <param name="query1">第一个参数化查询对象</param>
+    /// <param name="query2">第二个参数化查询对象</param>
+    /// <returns>串联后的参数化查询对象</returns>
     public static ParameterizedQuery operator +( ParameterizedQuery query1, ParameterizedQuery query2 )
     {
       return query1.Concat( query2 );
     }
 
+    /// <summary>
+    /// 串联两个参数化查询对象
+    /// </summary>
+    /// <param name="query1">第一个参数化查询对象</param>
+    /// <param name="query2">第二个参数化查询对象</param>
+    /// <returns>串联后的参数化查询对象</returns>
     public static DbExecutableQuery<ParameterizedQuery> operator +( DbExecutableQuery<ParameterizedQuery> query1, ParameterizedQuery query2 )
     {
       return query1.Concat( query2 );
     }
 
+    /// <summary>
+    /// 串联两个参数化查询对象
+    /// </summary>
+    /// <param name="query1">第一个参数化查询对象</param>
+    /// <param name="query2">第二个参数化查询对象</param>
+    /// <returns>串联后的参数化查询对象</returns>
     public static AsyncDbExecutableQuery<ParameterizedQuery> operator +( AsyncDbExecutableQuery<ParameterizedQuery> query1, ParameterizedQuery query2 )
     {
       return query1.Concat( query2 );

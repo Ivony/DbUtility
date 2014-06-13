@@ -80,7 +80,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\BlankTraceService.cs" />
     <Compile Include="Common\DbExecutorBase.cs" />
     <Compile Include="Common\DbTransactionContextBase.cs" />
     <Compile Include="DataSetExtensions.cs" />

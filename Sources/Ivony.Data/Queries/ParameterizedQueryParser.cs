@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.Queries
 {
+  /// <summary>
+  /// 辅助实现 IParameterizedQueryParser 的基类
+  /// </summary>
+  /// <typeparam name="TCommand">解析完成的命令对象的类型</typeparam>
+  /// <typeparam name="TParameter">命令参数对象的类型</typeparam>
   public abstract class ParameterizedQueryParser<TCommand, TParameter> : IParameterizedQueryParser<TCommand>
   {
 
 
     private object _sync = new object();
 
+    /// <summary>
+    /// 获取用于同步的对象
+    /// </summary>
     public virtual object SyncRoot
     {
       get { return _sync; }

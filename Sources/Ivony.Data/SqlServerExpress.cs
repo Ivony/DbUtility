@@ -19,7 +19,6 @@ namespace Ivony.Data
     /// 通过连接 SQL Server Express 2012 LocalDB，创建 SQL Server 数据库访问器
     /// </summary>
     /// <param name="database">数据库名称或者数据库文件路径</param>
-    /// <param name="instanceName">SQL Server LocalDB 实例名称</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
     public static SqlDbExecutor LocalDB2012( string database, SqlDbConfiguration configuration = null )
@@ -33,7 +32,6 @@ namespace Ivony.Data
     /// 通过连接 SQL Server Express 2014 LocalDB，创建 SQL Server 数据库访问器
     /// </summary>
     /// <param name="database">数据库名称或者数据库文件路径</param>
-    /// <param name="instanceName">SQL Server LocalDB 实例名称</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
     public static SqlDbExecutor LocalDB2014( string database, SqlDbConfiguration configuration = null )

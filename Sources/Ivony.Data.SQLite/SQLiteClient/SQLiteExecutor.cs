@@ -24,5 +24,10 @@ namespace Ivony.Data.SQLiteClient
     }
 
 
+
+    public IDbExecuteContext Execute( ParameterizedQuery query )
+    {
+      throw new NotImplementedException();
+    }
   }
 }

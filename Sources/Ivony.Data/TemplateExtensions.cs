@@ -124,12 +124,18 @@ namespace Ivony.Data
 
 
 
-    public static ParameterizedQuery Concat( this ParameterizedQuery firstQuery, params ParameterizedQuery[] otherQuerys )
+    /// <summary>
+    /// 串联多个参数化查询对象
+    /// </summary>
+    /// <param name="firstQuery">第一个参数化查询对象</param>
+    /// <param name="otherQueries">要串联的其他参数化查询对象</param>
+    /// <returns>串联后的参数化查询对象</returns>
+    public static ParameterizedQuery Concat( this ParameterizedQuery firstQuery, params ParameterizedQuery[] otherQueries )
     {
       var builder = new ParameterizedQueryBuilder();
 
       firstQuery.AppendTo( builder );
-      foreach ( var query in otherQuerys )
+      foreach ( var query in otherQueries )
       {
         if ( !builder.IsEndWithWhiteSpace() && !query.IsStartWithWhiteSpace() && Db.AddWhiteSpaceOnConcat )
           builder.Append( ' ' );
@@ -141,6 +147,12 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 串联多个参数化查询对象
+    /// </summary>
+    /// <param name="firstQuery">第一个参数化查询对象</param>
+    /// <param name="otherQueries">要串联的其他参数化查询对象</param>
+    /// <returns>串联后的参数化查询对象</returns>
     public static DbExecutableQuery<ParameterizedQuery> Concat( this DbExecutableQuery<ParameterizedQuery> firstQuery, params ParameterizedQuery[] otherQueries )
     {
       var query = Concat( firstQuery.Query, otherQueries );
@@ -148,6 +160,12 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 串联多个参数化查询对象
+    /// </summary>
+    /// <param name="firstQuery">第一个参数化查询对象</param>
+    /// <param name="otherQueries">要串联的其他参数化查询对象</param>
+    /// <returns>串联后的参数化查询对象</returns>
     public static AsyncDbExecutableQuery<ParameterizedQuery> Concat( this AsyncDbExecutableQuery<ParameterizedQuery> firstQuery, params ParameterizedQuery[] otherQueries )
     {
       var query = Concat( firstQuery.Query, otherQueries );
@@ -157,12 +175,26 @@ namespace Ivony.Data
 
 
 
+    /// <summary>
+    /// 通过模板产生一个参数化查询对象并串联到现有的参数化查询对象之后
+    /// </summary>
+    /// <param name="firstQuery">需要被串联的参数化查询对象</param>
+    /// <param name="templateText">SQL 命令模版</param>
+    /// <param name="parameters">模版参数列表</param>
+    /// <returns>串联后的参数化查询对象</returns>
     public static DbExecutableQuery<ParameterizedQuery> Concat( this DbExecutableQuery<ParameterizedQuery> firstQuery, string templateText, params object[] parameters )
     {
       return Concat( firstQuery, Db.T( templateText, parameters ) );
     }
 
 
+    /// <summary>
+    /// 通过模板产生一个参数化查询对象并串联到现有的参数化查询对象之后
+    /// </summary>
+    /// <param name="firstQuery">需要被串联的参数化查询对象</param>
+    /// <param name="templateText">SQL 命令模版</param>
+    /// <param name="parameters">模版参数列表</param>
+    /// <returns>串联后的参数化查询对象</returns>
     public static AsyncDbExecutableQuery<ParameterizedQuery> Concat( this AsyncDbExecutableQuery<ParameterizedQuery> firstQuery, string templateText, params object[] parameters )
     {
       return Concat( firstQuery, Db.T( templateText, parameters ) );
