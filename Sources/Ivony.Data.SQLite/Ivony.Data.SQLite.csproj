@@ -45,7 +45,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLite.cs" />
     <Compile Include="SQLiteClient\SQLiteConfiguration.cs" />
+    <Compile Include="SQLiteClient\SQLiteExecuteContext.cs" />
     <Compile Include="SQLiteClient\SQLiteExecutor.cs" />
+    <Compile Include="SQLiteClient\SQLiteParameterizedQueryParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="x64\SQLite.Interop.dll">
