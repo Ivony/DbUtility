@@ -62,6 +62,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="MySqlTest.cs" />
     <Compile Include="ParameterizedQueryTest.cs" />
     <Compile Include="IDbTraceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +70,10 @@
     <Compile Include="TestTraceService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ivony.Data.MySql\Ivony.Data.MySql.csproj">
+      <Project>{297c6a4c-086b-426d-b146-df352410dcf0}</Project>
+      <Name>Ivony.Data.MySql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ivony.Data\Ivony.Data.csproj">
       <Project>{27d46d02-f7bc-42b2-ae3e-33eb5b1fa3f9}</Project>
       <Name>Ivony.Data</Name>
