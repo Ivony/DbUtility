@@ -31,7 +31,7 @@ namespace Ivony.Data
       if ( setting == null )
         throw new InvalidOperationException();
 
-      return Create( setting.ConnectionString, configuration );
+      return Connect( setting.ConnectionString, configuration );
     }
 
 
@@ -41,7 +41,7 @@ namespace Ivony.Data
     /// <param name="connectionString">连接字符串</param>
     /// <param name="configuration">MySql 配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbExecutor Create( string connectionString, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Connect( string connectionString, MySqlDbConfiguration configuration = null )
     {
       return new MySqlDbExecutor( connectionString, configuration ?? DefaultConfiguration );
     }
@@ -54,9 +54,9 @@ namespace Ivony.Data
     /// <param name="builder">连接字符串构建器</param>
     /// <param name="configuration">MySql 配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbExecutor Create( MySqlConnectionStringBuilder builder, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Connect( MySqlConnectionStringBuilder builder, MySqlDbConfiguration configuration = null )
     {
-      return Create( builder.ConnectionString, configuration );
+      return Connect( builder.ConnectionString, configuration );
     }
 
 
@@ -71,7 +71,7 @@ namespace Ivony.Data
     /// <param name="pooling">是否启用连接池（默认启用）</param>
     /// <param name="configuration">MySql 数据库配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbExecutor Create( string server, string database, string userID, string password, bool pooling = true, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Connect( string server, string database, string userID, string password, bool pooling = true, MySqlDbConfiguration configuration = null )
     {
       var builder = new MySqlConnectionStringBuilder()
       {
@@ -83,7 +83,7 @@ namespace Ivony.Data
         Pooling = pooling
       };
 
-      return Create( builder.ConnectionString, configuration );
+      return Connect( builder.ConnectionString, configuration );
     }
 
 
@@ -98,7 +98,7 @@ namespace Ivony.Data
     /// <param name="pooling">是否启用连接池（默认启用）</param>
     /// <param name="configuration">MySql 数据库配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbExecutor Create( string server, uint port, string database, string userID, string password, bool pooling = true, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Connect( string server, uint port, string database, string userID, string password, bool pooling = true, MySqlDbConfiguration configuration = null )
     {
       var builder = new MySqlConnectionStringBuilder()
       {
@@ -110,7 +110,7 @@ namespace Ivony.Data
         Pooling = pooling
       };
 
-      return Create( builder.ConnectionString, configuration );
+      return Connect( builder.ConnectionString, configuration );
     }
 
 
@@ -122,7 +122,7 @@ namespace Ivony.Data
     /// <param name="pooling">是否启用连接池（默认启用）</param>
     /// <param name="configuration">MySql 数据库配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbExecutor Create( string server, string database, bool pooling = true, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Connect( string server, string database, bool pooling = true, MySqlDbConfiguration configuration = null )
     {
 
       var builder = new MySqlConnectionStringBuilder()
@@ -133,7 +133,7 @@ namespace Ivony.Data
         Pooling = pooling
       };
 
-      return Create( builder.ConnectionString, configuration );
+      return Connect( builder.ConnectionString, configuration );
     }
 
 
@@ -148,7 +148,7 @@ namespace Ivony.Data
     /// <param name="pooling">是否启用连接池（默认启用）</param>
     /// <param name="configuration">MySql 数据库配置</param>
     /// <returns>MySql 数据库访问器</returns>
-    public static MySqlDbExecutor Create( string server, uint port, string database, bool pooling = true, MySqlDbConfiguration configuration = null )
+    public static MySqlDbExecutor Connect( string server, uint port, string database, bool pooling = true, MySqlDbConfiguration configuration = null )
     {
 
       var builder = new MySqlConnectionStringBuilder()
@@ -160,7 +160,7 @@ namespace Ivony.Data
         Pooling = pooling
       };
 
-      return Create( builder.ConnectionString, configuration );
+      return Connect( builder.ConnectionString, configuration );
     }
 
 

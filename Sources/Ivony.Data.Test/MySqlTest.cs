@@ -16,7 +16,7 @@ namespace Ivony.Data.Test
         public MySqlTest()
         {
             traceService = new TestTraceService();
-            db = MySqlDb.Create(connectionString, new MySqlDbConfiguration() { TraceService = traceService });
+            db = MySqlDb.Connect(connectionString, new MySqlDbConfiguration() { TraceService = traceService });
             db.T("DROP TABLE IF EXISTS testTable").ExecuteNonQuery();
             db.T(@"
 CREATE TABLE testTable(
