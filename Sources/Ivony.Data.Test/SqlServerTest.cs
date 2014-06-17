@@ -47,7 +47,7 @@ CREATE TABLE [dbo].[Test1]
 
 
     [TestMethod]
-    public void Test1()
+    public void StandardTest1()
     {
       Assert.IsNull( db.T( "SELECT ID FROM Test1" ).ExecuteScalar(), "空数据表查询测试失败" );
       Assert.IsNull( db.T( "SELECT ID FROM Test1" ).ExecuteFirstRow(), "空数据表查询测试失败" );

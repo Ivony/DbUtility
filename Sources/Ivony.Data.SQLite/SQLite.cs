@@ -38,7 +38,10 @@ namespace Ivony.Data
       if ( !File.Exists( filepath ) )
       {
         if ( create )
+        {
+          Directory.CreateDirectory( Path.GetDirectoryName( filepath ) );
           SQLiteConnection.CreateFile( filepath );
+        }
 
         else
           throw new InvalidOperationException( "要连接的数据库文件不存在" );

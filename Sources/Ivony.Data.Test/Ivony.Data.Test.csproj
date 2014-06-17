@@ -42,11 +42,17 @@
       <HintPath>..\packages\Ivony.Logs.1.2\lib\net40\Ivony.Logs.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data">
+      <HintPath>..\packages\MySql.Data.6.8.3\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.92.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
@@ -66,6 +72,7 @@
     <Compile Include="ParameterizedQueryTest.cs" />
     <Compile Include="IDbTraceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLiteTest.cs" />
     <Compile Include="SqlServerTest.cs" />
     <Compile Include="TestTraceService.cs" />
   </ItemGroup>
@@ -74,6 +81,10 @@
       <Project>{297c6a4c-086b-426d-b146-df352410dcf0}</Project>
       <Name>Ivony.Data.MySql</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ivony.Data.SQLite\Ivony.Data.SQLite.csproj">
+      <Project>{7388fd8c-4d38-457f-a5d0-0c006abbf15b}</Project>
+      <Name>Ivony.Data.SQLite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ivony.Data\Ivony.Data.csproj">
       <Project>{27d46d02-f7bc-42b2-ae3e-33eb5b1fa3f9}</Project>
       <Name>Ivony.Data</Name>
@@ -81,6 +92,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
