@@ -91,6 +91,8 @@
     <Compile Include="DbExecutableQuery.cs" />
     <Compile Include="Common\DbExecuteContextBase.cs" />
     <Compile Include="DynamicExtensions.cs" />
+    <Compile Include="Entities\UpdateEntityQuery.cs" />
+    <Compile Include="Entities\EntityQuery.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="BasicExecuteExtensions.cs" />
     <Compile Include="IDbTraceService.cs" />
