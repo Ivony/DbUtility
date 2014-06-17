@@ -170,7 +170,13 @@ namespace Ivony.Data.SqlClient
     /// <returns>SQL 查询命令对象</returns>
     protected SqlCommand CreateCommand( ParameterizedQuery query )
     {
-      return new SqlParameterizedQueryParser().Parse( query );
+      var command = new SqlParameterizedQueryParser().Parse( query );
+
+      if ( Configuration.QueryExecutingTimeout != null )
+        command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+
+
+      return command;
     }
 
 
@@ -196,6 +202,12 @@ namespace Ivony.Data.SqlClient
       var command = new SqlCommand( query.Name );
       command.CommandType = CommandType.StoredProcedure;
       query.Parameters.ForAll( pair => command.Parameters.AddWithValue( pair.Key, pair.Value ) );
+
+      
+      if ( Configuration.QueryExecutingTimeout != null )
+        command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+
+      
       return command;
     }
   }

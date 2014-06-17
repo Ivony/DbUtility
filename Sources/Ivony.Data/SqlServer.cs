@@ -112,41 +112,6 @@ namespace Ivony.Data
 
 
 
-    public static SqlDbExecutor Connect( string dataSource, string initialCatalog = null, bool? integratedSecurity = null, string userID = null, string password = null, string attachDbFilename = null, bool? pooling = null, int? maxPoolSize = null, int? minPoolSize = null, SqlDbConfiguration configuration = null )
-    {
-      var builder = new SqlConnectionStringBuilder();
-
-      builder.DataSource = dataSource;
-      if ( userID != null )
-        builder.UserID = userID;
-
-      if ( password != null )
-        builder.Password = password;
-
-      if ( integratedSecurity != null )
-        builder.IntegratedSecurity = integratedSecurity.Value;
-
-      if ( initialCatalog != null )
-        builder.InitialCatalog = initialCatalog;
-
-      if ( pooling != null )
-        builder.Pooling = pooling.Value;
-
-      if ( maxPoolSize != null )
-        builder.MaxPoolSize = maxPoolSize.Value;
-
-      if ( minPoolSize != null )
-        builder.MaxPoolSize = minPoolSize.Value;
-
-      if ( attachDbFilename != null )
-        builder.AttachDBFilename = attachDbFilename;
-
-      return Connect( builder.ConnectionString, configuration );
-    }
-
-
-
-
 
     private static SqlDbConfiguration _defaultConfiguration = new SqlDbConfiguration();
 
