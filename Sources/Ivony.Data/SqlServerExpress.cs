@@ -9,37 +9,25 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
-  
+
   /// <summary>
   /// 提供 SQL Server Express 支持
   /// </summary>
   public static class SqlServerExpress
   {
     /// <summary>
-    /// 通过连接 SQL Server Express 2012 LocalDB，创建 SQL Server 数据库访问器
+    /// 通过连接 SQL Server Express LocalDB 实例，创建 SQL Server 数据库访问器
     /// </summary>
     /// <param name="database">数据库名称或者数据库文件路径</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbExecutor ConnectLocalDB2012( string database, SqlDbConfiguration configuration = null )
+    public static SqlDbExecutor ConnectLocalDB( string database, SqlDbConfiguration configuration = null )
     {
 
-      return Connect( database, "v11.0", configuration );
+      return Connect( database, @"(LocalDB)\" + configuration.LocalDBInstanceName, configuration );
 
     }
 
-    /// <summary>
-    /// 通过连接 SQL Server Express 2014 LocalDB，创建 SQL Server 数据库访问器
-    /// </summary>
-    /// <param name="database">数据库名称或者数据库文件路径</param>
-    /// <param name="configuration">SQL Server 配置</param>
-    /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbExecutor ConnectLocalDB2014( string database, SqlDbConfiguration configuration = null )
-    {
-
-      return Connect( database, "MSSQLLocalDB", configuration );
-
-    }
 
 
     /// <summary>
@@ -50,7 +38,7 @@ namespace Ivony.Data
     /// <returns>SQL Server 数据库访问器</returns>
     public static SqlDbExecutor Connect( string database, SqlDbConfiguration configuration = null )
     {
-      return Connect( database, "SQLExpress", configuration );
+      return Connect( database, @"(local)\" + configuration.ExpressInstanceName, configuration );
     }
 
 
@@ -58,14 +46,14 @@ namespace Ivony.Data
     /// 通过连接 SQL Server Express 指定实例，创建 SQL Server 数据库访问器
     /// </summary>
     /// <param name="database">数据库名称或者数据库文件路径</param>
-    /// <param name="instanceName">SQL Server 实例名称</param>
+    /// <param name="datasource">SQL Server 实例名称</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    private static SqlDbExecutor Connect( string database, string instanceName, SqlDbConfiguration configuration = null )
+    private static SqlDbExecutor Connect( string database, string datasource, SqlDbConfiguration configuration = null )
     {
       var builder = new SqlConnectionStringBuilder()
       {
-        DataSource = @"(local)\" + instanceName,
+        DataSource = datasource,
         IntegratedSecurity = true,
       };
 

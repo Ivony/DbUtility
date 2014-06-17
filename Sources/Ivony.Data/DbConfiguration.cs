@@ -28,7 +28,8 @@ namespace Ivony.Data
     {
 
       TraceService = configuration.TraceService;
-    
+      QueryExecutingTimeout = configuration.QueryExecutingTimeout;
+
     }
 
 
@@ -40,6 +41,18 @@ namespace Ivony.Data
       get;
       set;
     }
+
+
+
+    /// <summary>
+    /// 获取或设置执行默认的查询超时时间
+    /// </summary>
+    public TimeSpan? QueryExecutingTimeout
+    {
+      get;
+      set;
+    }
+
 
   }
 }

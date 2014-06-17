@@ -42,15 +42,22 @@
       <HintPath>..\packages\Ivony.Logs.1.2\lib\net40\Ivony.Logs.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Mono.Security">
+      <HintPath>..\packages\Npgsql.2.1.3\lib\net45\Mono.Security.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data">
       <HintPath>..\packages\MySql.Data.6.8.3\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\packages\Npgsql.2.1.3\lib\net45\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite">
+    <Reference Include="System.Data.SQLite, Version=1.0.92.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.92.0\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
@@ -71,6 +78,7 @@
     <Compile Include="MySqlTest.cs" />
     <Compile Include="ParameterizedQueryTest.cs" />
     <Compile Include="IDbTraceService.cs" />
+    <Compile Include="PostgreSqlTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLiteTest.cs" />
     <Compile Include="SqlServerTest.cs" />
@@ -80,6 +88,10 @@
     <ProjectReference Include="..\Ivony.Data.MySql\Ivony.Data.MySql.csproj">
       <Project>{297c6a4c-086b-426d-b146-df352410dcf0}</Project>
       <Name>Ivony.Data.MySql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ivony.Data.PostgreSQL\Ivony.Data.PostgreSQL.csproj">
+      <Project>{ad094a3a-e91f-4810-ae70-1e2b038cd98e}</Project>
+      <Name>Ivony.Data.PostgreSQL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ivony.Data.SQLite\Ivony.Data.SQLite.csproj">
       <Project>{7388fd8c-4d38-457f-a5d0-0c006abbf15b}</Project>
