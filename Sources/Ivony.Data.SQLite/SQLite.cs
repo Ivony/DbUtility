@@ -41,7 +41,7 @@ namespace Ivony.Data
           SQLiteConnection.CreateFile( filepath );
 
         else
-          throw new InvalidOperationException( "要连接的数据库文件不存在" );
+          throw new FileNotFoundException( "要连接的数据库文件不存在" );
       }
 
       var builder = new SQLiteConnectionStringBuilder();
