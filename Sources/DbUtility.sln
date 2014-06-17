@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ivony.Data.MySql", "Ivony.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ivony.Data.SQLite", "Ivony.Data.SQLite\Ivony.Data.SQLite.csproj", "{7388FD8C-4D38-457F-A5D0-0C006ABBF15B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ivony.Data.PostgreSQL", "Ivony.Data.PostgreSQL\Ivony.Data.PostgreSQL.csproj", "{AD094A3A-E91F-4810-AE70-1E2B038CD98E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7388FD8C-4D38-457F-A5D0-0C006ABBF15B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7388FD8C-4D38-457F-A5D0-0C006ABBF15B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7388FD8C-4D38-457F-A5D0-0C006ABBF15B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD094A3A-E91F-4810-AE70-1E2B038CD98E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD094A3A-E91F-4810-AE70-1E2B038CD98E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD094A3A-E91F-4810-AE70-1E2B038CD98E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD094A3A-E91F-4810-AE70-1E2B038CD98E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
