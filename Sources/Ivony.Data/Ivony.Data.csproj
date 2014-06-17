@@ -115,7 +115,7 @@
     <Compile Include="SqlClient\SqlDbExecuteContext.cs" />
     <Compile Include="SqlClient\SqlParameterizedQueryParser.cs" />
     <Compile Include="SqlClient\SqlDbTransactionContext.cs" />
-    <Compile Include="SqlDbConfiguration.cs" />
+    <Compile Include="SqlClient\SqlDbConfiguration.cs" />
     <Compile Include="SqlServer.cs" />
     <Compile Include="SqlServerExpress.cs" />
     <Compile Include="TemplateExtensions.cs" />

@@ -165,5 +165,16 @@ namespace Ivony.Data
       }
     }
 
+
+    static SqlServer()
+    {
+      LocalDBInstanceName = "v11.0";
+      ExpressInstanceName = "SQLEXPRESS";
+    }
+
+
+    internal static string LocalDBInstanceName { get; set; }
+    
+    internal static string ExpressInstanceName { get; set; }
   }
 }
