@@ -40,7 +40,7 @@ var db = SqlServer.FromConfiguration( "connection-string-name" );
 ```
 Or
 ```CSharp
-var db = SqlServer.Create( "connection-string" );
+var db = SqlServer.Connect( "connection-string" );
 ```
 
 **database executor** is responsible for createing connection and executing queries.
