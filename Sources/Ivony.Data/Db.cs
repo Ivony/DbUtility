@@ -1,4 +1,5 @@
-﻿using Ivony.Data.Queries;
+﻿using Ivony.Data.Common;
+using Ivony.Data.Queries;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -78,7 +79,7 @@ namespace Ivony.Data
         return null;
 
       var builder = new ParameterizedQueryBuilder();
-      queries[0].Parse( builder );
+      queries[0].AppendTo( builder );
 
       foreach ( var q in queries.Skip( 1 ) )
       {
@@ -88,6 +89,23 @@ namespace Ivony.Data
 
 
       return builder.CreateQuery();
+    }
+
+
+
+    static Db()
+    {
+      AddWhiteSpaceOnConcat = true;
+    }
+
+
+    /// <summary>
+    /// 获取或设置当串联两个参数化查询时，是否应当自动插入空白字符。
+    /// </summary>
+    public static bool AddWhiteSpaceOnConcat
+    {
+      get;
+      private set;
     }
 
   }

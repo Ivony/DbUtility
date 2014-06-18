@@ -2,9 +2,10 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ivony.Data.Queries;
-using Ivony.Data.SqlServer;
 using System.Threading.Tasks;
 using Ivony.Logs;
+using System.Data;
+using Ivony.Data.SqlClient;
 
 namespace Ivony.Data.Test
 {
@@ -13,16 +14,14 @@ namespace Ivony.Data.Test
   {
 
 
-    private static readonly string connectionString = @"Data Source=(local)\SQLEXPRESS;Initial Catalog=TestDatabase;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
-
     private TestTraceService traceService;
-    private SqlDbUtility db;
+    private SqlDbExecutor db;
 
 
     public SqlServerTest()
     {
       traceService = new TestTraceService();
-      db = new SqlDbUtility( connectionString, traceService );
+      db = SqlServerExpress.Connect( "TestDatabase", new SqlDbConfiguration() { TraceService = traceService } );
 
 
       db.T( "IF OBJECT_ID(N'[dbo].[Test1]') IS NOT NULL DROP TABLE [dbo].[Test1]" ).ExecuteNonQuery();
@@ -48,7 +47,7 @@ CREATE TABLE [dbo].[Test1]
 
 
     [TestMethod]
-    public void Test1()
+    public void StandardTest1()
     {
       Assert.IsNull( db.T( "SELECT ID FROM Test1" ).ExecuteScalar(), "空数据表查询测试失败" );
       Assert.IsNull( db.T( "SELECT ID FROM Test1" ).ExecuteFirstRow(), "空数据表查询测试失败" );
@@ -119,6 +118,28 @@ CREATE TABLE [dbo].[Test1]
 
       Assert.AreEqual( db.T( "SELECT * FROM Test1" ).ExecuteDynamics().Length, 1, "手动提交事务测试失败" );
 
+
+
+      {
+        Exception exception = null;
+        var transaction = (SqlDbTransactionContext) db.BeginTransaction();
+
+        try
+        {
+          using ( transaction )
+          {
+            transaction.T( "SELECT * FROM Nothing" ).ExecuteNonQuery();
+            transaction.Commit();
+          }
+        }
+        catch ( Exception e )
+        {
+          exception = e;
+        }
+
+        Assert.IsNotNull( exception, "事务中出现异常测试失败" );
+        Assert.AreEqual( transaction.Connection.State, ConnectionState.Closed );
+      }
     }
 
 
@@ -143,8 +164,8 @@ CREATE TABLE [dbo].[Test1]
         db.T( "SELECT * FROM Nothing" ).ExecuteDynamics();
       }
       catch
-      { 
-      
+      {
+
       }
 
       tracing = traceService.Last();

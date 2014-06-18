@@ -36,11 +36,11 @@ and ```ExecuteFirstRow()``` is called **result definition** <br />
 
 The following code creates a **database executor**
 ```CSharp
-var db = SqlDbUtility.Create( "connection-string-name" );
+var db = SqlServer.FromConfiguration( "connection-string-name" );
 ```
 Or
 ```CSharp
-var db = new SqlDbUtility( "connection-string" );
+var db = SqlServer.Connect( "connection-string" );
 ```
 
 **database executor** is responsible for createing connection and executing queries.

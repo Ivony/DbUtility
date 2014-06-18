@@ -64,7 +64,8 @@ namespace Ivony.Data
     /// 异步将当前结果集数据填充 DataTable 并返回
     /// </summary>
     /// <param name="startRecord">填充的起始记录位置</param>
-    /// <param name="maxRecord">最大要填充的记录条数</param>
+    /// <param name="maxRecords">最大要填充的记录条数</param>
+    /// <param name="token">取消指示</param>
     /// <returns>填充了数据的 DataTable</returns>
     Task<DataTable> LoadDataTableAsync( int startRecord, int maxRecords, CancellationToken token = default( CancellationToken ) );
 

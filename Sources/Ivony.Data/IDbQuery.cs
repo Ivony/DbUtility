@@ -13,4 +13,13 @@ namespace Ivony.Data
   public interface IDbQuery
   {
   }
+
+
+  internal interface IDbQueryContainer
+  {
+
+    IDbQuery Query { get; }
+
+  }
+
 }
