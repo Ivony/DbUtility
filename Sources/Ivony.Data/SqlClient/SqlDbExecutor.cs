@@ -101,6 +101,10 @@ namespace Ivony.Data.SqlClient
         var connection = new SqlConnection( ConnectionString );
         connection.Open();
         command.Connection = connection;
+        
+        if ( Configuration.QueryExecutingTimeout.HasValue )
+          command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+
 
         var reader = command.ExecuteReader();
         var context = new SqlDbExecuteContext( connection, reader, tracing );
@@ -134,6 +138,9 @@ namespace Ivony.Data.SqlClient
         var connection = new SqlConnection( ConnectionString );
         await connection.OpenAsync( token );
         command.Connection = connection;
+        
+        if ( Configuration.QueryExecutingTimeout.HasValue )
+          command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
 
 
         var reader = await command.ExecuteReaderAsync( token );
@@ -170,13 +177,7 @@ namespace Ivony.Data.SqlClient
     /// <returns>SQL 查询命令对象</returns>
     protected SqlCommand CreateCommand( ParameterizedQuery query )
     {
-      var command = new SqlParameterizedQueryParser().Parse( query );
-
-      if ( Configuration.QueryExecutingTimeout != null )
-        command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
-
-
-      return command;
+      return new SqlParameterizedQueryParser().Parse( query );
     }
 
 
@@ -203,11 +204,6 @@ namespace Ivony.Data.SqlClient
       command.CommandType = CommandType.StoredProcedure;
       query.Parameters.ForAll( pair => command.Parameters.AddWithValue( pair.Key, pair.Value ) );
 
-      
-      if ( Configuration.QueryExecutingTimeout != null )
-        command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
-
-      
       return command;
     }
   }
@@ -249,6 +245,10 @@ namespace Ivony.Data.SqlClient
         command.Connection = TransactionContext.Connection;
         command.Transaction = TransactionContext.Transaction;
 
+        if ( Configuration.QueryExecutingTimeout.HasValue )
+          command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+
+
         var reader = await command.ExecuteReaderAsync( token );
         var context = new SqlDbExecuteContext( TransactionContext, reader, tracing );
 
@@ -279,6 +279,10 @@ namespace Ivony.Data.SqlClient
 
         command.Connection = TransactionContext.Connection;
         command.Transaction = TransactionContext.Transaction;
+
+        if ( Configuration.QueryExecutingTimeout.HasValue )
+          command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+
 
         var reader = command.ExecuteReader();
         var context = new SqlDbExecuteContext( TransactionContext, reader, tracing );

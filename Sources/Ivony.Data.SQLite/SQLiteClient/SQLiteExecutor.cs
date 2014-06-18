@@ -22,6 +22,8 @@ namespace Ivony.Data.SQLiteClient
     public SQLiteExecutor( string connectionString, SQLiteConfiguration configuration )
       : base( configuration )
     {
+      Configuration = configuration;
+
       Connection = new SQLiteConnection( connectionString );
       SyncRoot = new object();
     }
@@ -31,6 +33,14 @@ namespace Ivony.Data.SQLiteClient
       get;
       private set;
     }
+
+
+    protected SQLiteConfiguration Configuration
+    {
+      get;
+      private set;
+    }
+
 
 
     public object SyncRoot
@@ -59,6 +69,10 @@ namespace Ivony.Data.SQLiteClient
         if ( Connection.State == ConnectionState.Closed )
           Connection.Open();
         command.Connection = Connection;
+
+        if ( Configuration.QueryExecutingTimeout.HasValue )
+          command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+
 
         var context = new SQLiteExecuteContext( command.ExecuteReader(), tracing, SyncRoot );
 

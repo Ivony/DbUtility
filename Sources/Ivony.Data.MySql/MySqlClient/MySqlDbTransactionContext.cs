@@ -80,6 +80,10 @@ namespace Ivony.Data.MySqlClient
         command.Connection = _transaction.Connection;
         command.Transaction = _transaction.Transaction;
 
+        if ( Configuration.QueryExecutingTimeout.HasValue )
+          command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+
+
         var dataReader = command.ExecuteReader();
         var context = new MySqlExecuteContext( _transaction, dataReader, tracing );
 

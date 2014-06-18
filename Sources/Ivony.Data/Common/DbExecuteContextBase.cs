@@ -25,6 +25,7 @@ namespace Ivony.Data.Common
     /// <param name="dataReader">用于读取数据的 IDataReader 对象</param>
     /// <param name="tracing">用于追踪此次查询过程的追踪器</param>
     /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
+    /// <param name="sync">用于同步的对象，如果有的话</param>
     protected DbExecuteContextBase( IDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null, object sync = null )
     {
 
@@ -180,8 +181,8 @@ namespace Ivony.Data.Common
     /// <param name="dataReader">用于读取数据的 IDataReader 对象</param>
     /// <param name="tracing">用于追踪此次查询过程的追踪器</param>
     /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
-    protected AsyncDbExecuteContextBase( DbDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null, object sync = null )
-      : base( dataReader, tracing, connectionResource, sync )
+    protected AsyncDbExecuteContextBase( DbDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null )
+      : base( dataReader, tracing, connectionResource )
     {
 
       DataReader = dataReader;

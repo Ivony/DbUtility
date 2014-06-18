@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace Ivony.Data.MySqlClient
 {
   /// <summary>
@@ -66,13 +68,16 @@ namespace Ivony.Data.MySqlClient
         connection.Open();
         command.Connection = connection;
 
+        if ( Configuration.QueryExecutingTimeout.HasValue )
+          command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+
         var context = new MySqlExecuteContext( connection, command.ExecuteReader(), tracing );
 
         TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
 
         return context;
       }
-      catch( DbException exception )
+      catch ( DbException exception )
       {
         TryExecuteTracing( tracing, t => t.OnException( exception ) );
         throw;
