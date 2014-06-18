@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle( "DbUtility MySQL Provider" )]
-[assembly: AssemblyDescription( "DbUtility MySQL Provider" )]
+[assembly: AssemblyTitle( "DbWrench MySQL Provider" )]
+[assembly: AssemblyDescription( "DbWrench MySQL Provider" )]
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "" )]
-[assembly: AssemblyProduct( "Ivony.Data.Properties" )]
-[assembly: AssemblyCopyright( "Copyright ©  2014" )]
-[assembly: AssemblyTrademark( "" )]
+[assembly: AssemblyProduct( "DbWrench MySQL" )]
+[assembly: AssemblyCopyright( "Copyright © 2009 Ivony  Licensed under the Apache License, Version 2.0" )]
+[assembly: AssemblyTrademark( "DbWrench" )]
 [assembly: AssemblyCulture( "" )]
 
 // 将 ComVisible 设置为 false 使此程序集中的类型
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      生成号
 //      修订号
 //
-[assembly: AssemblyVersion( "3" )]
-[assembly: AssemblyFileVersion( "3" )]
+[assembly: AssemblyVersion( "1.0.*" )]
+[assembly: AssemblyFileVersion( "1.0" )]
