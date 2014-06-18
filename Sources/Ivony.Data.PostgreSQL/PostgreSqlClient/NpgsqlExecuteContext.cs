@@ -25,7 +25,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 		/// <param name="dataReader">PostgreSql 数据读取器</param>
 		/// <param name="tracing">用于当前查询的追踪器</param>
 		public NpgsqlDbExecuteContext(NpgsqlDbTransactionContext transaction, DbDataReader dataReader, IDbTracing tracing)
-          : base( dataReader, tracing, null, transaction.SyncRoot )
+          : base( dataReader, tracing, null )
 		{
 			this.TransactionContext = transaction;
 			this.NpgsqlDataReader = dataReader;

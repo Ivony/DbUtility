@@ -38,7 +38,7 @@ namespace Ivony.Data.SqlClient
     /// <param name="reader">数据读取器</param>
     /// <param name="tracing">用于记录此次查询过程的的查询追踪器</param>
     internal SqlDbExecuteContext( SqlDbTransactionContext transaction, SqlDataReader reader, IDbTracing tracing )
-      : base( reader, tracing, null, transaction.SyncRoot )
+      : base( reader, tracing, null )
     {
       SqlDataReader = reader;
     }
