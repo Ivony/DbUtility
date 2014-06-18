@@ -16,10 +16,10 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         protected NpgsqlDbConfiguration Configuration { get; private set; }
 
         /// <summary>
-        /// ³õÊ¼»¯ DbExecuterBase ÀàĞÍ
+        /// åˆå§‹åŒ– DbExecuterBase ç±»å‹
         /// </summary>
         /// <param name="connectionString"></param>
-        /// <param name="configuration">µ±Ç°ÒªÊ¹ÓÃµÄÊı¾İ¿âÅäÖÃ</param>
+        /// <param name="configuration">å½“å‰è¦ä½¿ç”¨çš„æ•°æ®åº“é…ç½®</param>
         public NpgsqlDbExecutor(string connectionString, NpgsqlDbConfiguration configuration) : base(configuration)
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
@@ -58,12 +58,12 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         }
 
         /// <summary>
-        /// Òì²½Ö´ĞĞ²éÑ¯ÃüÁî²¢·µ»ØÖ´ĞĞÉÏÏÂÎÄ
+        /// å¼‚æ­¥æ‰§è¡ŒæŸ¥è¯¢å‘½ä»¤å¹¶è¿”å›æ‰§è¡Œä¸Šä¸‹æ–‡
         /// </summary>
-        /// <param name="command">²éÑ¯ÃüÁî</param>
-        /// <param name="token">È¡ÏûÖ¸Ê¾</param>
-        /// <param name="tracing">ÓÃÓÚ×·×Ù²éÑ¯¹ı³ÌµÄ×·×ÙÆ÷</param>
-        /// <returns>²éÑ¯Ö´ĞĞÉÏÏÂÎÄ</returns>
+        /// <param name="command">æŸ¥è¯¢å‘½ä»¤</param>
+        /// <param name="token">å–æ¶ˆæŒ‡ç¤º</param>
+        /// <param name="tracing">ç”¨äºè¿½è¸ªæŸ¥è¯¢è¿‡ç¨‹çš„è¿½è¸ªå™¨</param>
+        /// <returns>æŸ¥è¯¢æ‰§è¡Œä¸Šä¸‹æ–‡</returns>
         protected virtual async Task<IAsyncDbExecuteContext> ExecuteAsync(NpgsqlCommand command, CancellationToken token, IDbTracing tracing = null)
         {
             try
@@ -98,10 +98,10 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         }
 
         /// <summary>
-        /// Í¨¹ı´æ´¢¹ı³Ì²éÑ¯´´½¨ SqlCommand ¶ÔÏó
+        /// é€šè¿‡å­˜å‚¨è¿‡ç¨‹æŸ¥è¯¢åˆ›å»º SqlCommand å¯¹è±¡
         /// </summary>
-        /// <param name="query">´æ´¢¹ı³Ì²éÑ¯¶ÔÏó</param>
-        /// <returns>SQL ²éÑ¯ÃüÁî¶ÔÏó</returns>
+        /// <param name="query">å­˜å‚¨è¿‡ç¨‹æŸ¥è¯¢å¯¹è±¡</param>
+        /// <returns>SQL æŸ¥è¯¢å‘½ä»¤å¯¹è±¡</returns>
         protected NpgsqlCommand CreateCommand(StoredProcedureQuery query)
         {
             var command = new NpgsqlCommand(query.Name){
@@ -115,10 +115,10 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         #region Implementation of IDbExecutor<in ParameterizedQuery>
 
         /// <summary>
-        /// Ö´ĞĞ²éÑ¯
+        /// æ‰§è¡ŒæŸ¥è¯¢
         /// </summary>
-        /// <param name="query">²éÑ¯¶ÔÏó</param>
-        /// <returns>²éÑ¯Ö´ĞĞÉÏÏÂÎÄ</returns>
+        /// <param name="query">æŸ¥è¯¢å¯¹è±¡</param>
+        /// <returns>æŸ¥è¯¢æ‰§è¡Œä¸Šä¸‹æ–‡</returns>
         public IDbExecuteContext Execute(ParameterizedQuery query)
         {
             return this.Execute(this.CreateCommand(query), this.TryCreateTracing(this, query));
@@ -129,11 +129,11 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         #region Implementation of IAsyncDbExecutor<ParameterizedQuery>
 
         /// <summary>
-        /// Òì²½Ö´ĞĞ²éÑ¯
+        /// å¼‚æ­¥æ‰§è¡ŒæŸ¥è¯¢
         /// </summary>
-        /// <param name="query">ÒªÖ´ĞĞµÄ²éÑ¯</param>
-        /// <param name="token">È¡ÏûÖ¸Ê¾</param>
-        /// <returns>²éÑ¯Ö´ĞĞÉÏÏÂÎÄ</returns>
+        /// <param name="query">è¦æ‰§è¡Œçš„æŸ¥è¯¢</param>
+        /// <param name="token">å–æ¶ˆæŒ‡ç¤º</param>
+        /// <returns>æŸ¥è¯¢æ‰§è¡Œä¸Šä¸‹æ–‡</returns>
         public Task<IAsyncDbExecuteContext> ExecuteAsync(ParameterizedQuery query, CancellationToken token)
         {
             return this.ExecuteAsync(this.CreateCommand(query), token, this.TryCreateTracing(this, query));
@@ -144,10 +144,10 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         #region Implementation of IDbExecutor<in StoredProcedureQuery>
 
         /// <summary>
-        /// Ö´ĞĞ²éÑ¯
+        /// æ‰§è¡ŒæŸ¥è¯¢
         /// </summary>
-        /// <param name="query">²éÑ¯¶ÔÏó</param>
-        /// <returns>²éÑ¯Ö´ĞĞÉÏÏÂÎÄ</returns>
+        /// <param name="query">æŸ¥è¯¢å¯¹è±¡</param>
+        /// <returns>æŸ¥è¯¢æ‰§è¡Œä¸Šä¸‹æ–‡</returns>
         public IDbExecuteContext Execute(StoredProcedureQuery query)
         {
             return Execute(CreateCommand(query), TryCreateTracing(this, query));
@@ -158,11 +158,11 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         #region Implementation of IAsyncDbExecutor<StoredProcedureQuery>
 
         /// <summary>
-        /// Òì²½Ö´ĞĞ²éÑ¯
+        /// å¼‚æ­¥æ‰§è¡ŒæŸ¥è¯¢
         /// </summary>
-        /// <param name="query">ÒªÖ´ĞĞµÄ²éÑ¯</param>
-        /// <param name="token">È¡ÏûÖ¸Ê¾</param>
-        /// <returns>²éÑ¯Ö´ĞĞÉÏÏÂÎÄ</returns>
+        /// <param name="query">è¦æ‰§è¡Œçš„æŸ¥è¯¢</param>
+        /// <param name="token">å–æ¶ˆæŒ‡ç¤º</param>
+        /// <returns>æŸ¥è¯¢æ‰§è¡Œä¸Šä¸‹æ–‡</returns>
         public Task<IAsyncDbExecuteContext> ExecuteAsync(StoredProcedureQuery query, CancellationToken token)
         {
             return ExecuteAsync(CreateCommand(query), token, TryCreateTracing(this, query));
@@ -173,9 +173,9 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         #region Implementation of IDbTransactionProvider<out NpgsqlDbExecutor>
 
         /// <summary>
-        /// ´´½¨Ò»¸öÊı¾İ¿âÊÂÎñÉÏÏÂÎÄ
+        /// åˆ›å»ºä¸€ä¸ªæ•°æ®åº“äº‹åŠ¡ä¸Šä¸‹æ–‡
         /// </summary>
-        /// <returns>Êı¾İ¿âÊÂÎñÉÏÏÂÎÄ</returns>
+        /// <returns>æ•°æ®åº“äº‹åŠ¡ä¸Šä¸‹æ–‡</returns>
         public IDbTransactionContext<NpgsqlDbExecutor> CreateTransaction()
         {
             return new NpgsqlDbTransactionContext(this.ConnectionString, this.Configuration);
@@ -194,18 +194,18 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 
 
         /// <summary>
-        /// µ±Ç°Ëù´¦µÄÊÂÎñ
+        /// å½“å‰æ‰€å¤„çš„äº‹åŠ¡
         /// </summary>
         protected NpgsqlDbTransactionContext TransactionContext { get; private set; }
 
 
         /// <summary>
-        /// ÖØĞ´ ExecuteAsync ·½·¨£¬ÔÚÊÂÎñÖĞÒì²½Ö´ĞĞ²éÑ¯
+        /// é‡å†™ ExecuteAsync æ–¹æ³•ï¼Œåœ¨äº‹åŠ¡ä¸­å¼‚æ­¥æ‰§è¡ŒæŸ¥è¯¢
         /// </summary>
-        /// <param name="command">ÒªÖ´ĞĞµÄ²éÑ¯ÃüÁî</param>
-        /// <param name="token">È¡ÏûÖ¸Ê¾</param>
-        /// <param name="tracing">ÓÃÓÚ×·×ÙµÄ×·×ÙÆ÷</param>
-        /// <returns>²éÑ¯Ö´ĞĞÉÏÏÂÎÄ</returns>
+        /// <param name="command">è¦æ‰§è¡Œçš„æŸ¥è¯¢å‘½ä»¤</param>
+        /// <param name="token">å–æ¶ˆæŒ‡ç¤º</param>
+        /// <param name="tracing">ç”¨äºè¿½è¸ªçš„è¿½è¸ªå™¨</param>
+        /// <returns>æŸ¥è¯¢æ‰§è¡Œä¸Šä¸‹æ–‡</returns>
         protected sealed override async Task<IAsyncDbExecuteContext> ExecuteAsync(NpgsqlCommand command, CancellationToken token, IDbTracing tracing = null)
         {
             try
@@ -232,11 +232,11 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 
 
         /// <summary>
-        /// Ö´ĞĞ²éÑ¯ÃüÁî²¢·µ»ØÖ´ĞĞÉÏÏÂÎÄ
+        /// æ‰§è¡ŒæŸ¥è¯¢å‘½ä»¤å¹¶è¿”å›æ‰§è¡Œä¸Šä¸‹æ–‡
         /// </summary>
-        /// <param name="command">²éÑ¯ÃüÁî</param>
-        /// <param name="tracing">ÓÃÓÚ×·×Ù²éÑ¯¹ı³ÌµÄ×·×ÙÆ÷</param>
-        /// <returns>²éÑ¯Ö´ĞĞÉÏÏÂÎÄ</returns>
+        /// <param name="command">æŸ¥è¯¢å‘½ä»¤</param>
+        /// <param name="tracing">ç”¨äºè¿½è¸ªæŸ¥è¯¢è¿‡ç¨‹çš„è¿½è¸ªå™¨</param>
+        /// <returns>æŸ¥è¯¢æ‰§è¡Œä¸Šä¸‹æ–‡</returns>
         protected sealed override IDbExecuteContext Execute(NpgsqlCommand command, IDbTracing tracing = null)
         {
             try

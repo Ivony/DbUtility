@@ -1,43 +1,44 @@
-using Ivony.Data.Queries;
+ï»¿using Ivony.Data.Queries;
 using Npgsql;
 
 namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 {
-	/// <summary>
-	/// ¶¨Òå PostgreSQL ²ÎÊı»¯²éÑ¯½âÎöÆ÷¡£
-	/// </summary>
-	public class NpgsqlParameterizedQueryParser : ParameterizedQueryParser<NpgsqlCommand, NpgsqlParameter>
-	{
-		/// <summary>
-		/// ÅÉÉúÀàÊµÏÖ´Ë·½·¨²úÉúÒ»¸ö²ÎÊı¶ÔÏó£¬²¢Éú³ÉÒ»¶ÎÕ¼Î»·û×Ö·û´®¡£
-		/// </summary>
-		/// <param name="value">²ÎÊıÖµ</param>
-		/// <param name="index">²ÎÊıË÷ÒıÎ»ÖÃ</param>
-		/// <param name="parameter">²ÎÊı¶ÔÏó</param>
-		/// <returns>²ÎÊıÕ¼Î»·û</returns>
-		protected override string GetParameterPlaceholder(object value, int index, out NpgsqlParameter parameter)
-		{
-			var name = "@Param" + index;
-			parameter = new NpgsqlParameter(name, value);
+  /// <summary>
+  /// å®šä¹‰ PostgreSQL å‚æ•°åŒ–æŸ¥è¯¢è§£æå™¨ã€‚
+  /// </summary>
+  public class NpgsqlParameterizedQueryParser : ParameterizedQueryParser<NpgsqlCommand, NpgsqlParameter>
+  {
+    /// <summary>
+    /// æ´¾ç”Ÿç±»å®ç°æ­¤æ–¹æ³•äº§ç”Ÿä¸€ä¸ªå‚æ•°å¯¹è±¡ï¼Œå¹¶ç”Ÿæˆä¸€æ®µå ä½ç¬¦å­—ç¬¦ä¸²ã€‚
+    /// </summary>
+    /// <param name="value">å‚æ•°å€¼</param>
+    /// <param name="index">å‚æ•°ç´¢å¼•ä½ç½®</param>
+    /// <param name="parameter">å‚æ•°å¯¹è±¡</param>
+    /// <returns>å‚æ•°å ä½ç¬¦</returns>
+    protected override string GetParameterPlaceholder( object value, int index, out NpgsqlParameter parameter )
+    {
+      var name = "@Param" + index;
+      parameter = new NpgsqlParameter( name, value );
 
-			return name;
-		}
+      return name;
+    }
 
-		/// <summary>
-		/// ´´½¨ÃüÁî¶ÔÏó
-		/// </summary>
-		/// <param name="commandText">ÃüÁîÎÄ±¾</param>
-		/// <param name="parameters">ÃüÁî²ÎÊı</param>
-		/// <returns>ÃüÁî¶ÔÏó</returns>
-		protected override NpgsqlCommand CreateCommand(string commandText, NpgsqlParameter[] parameters)
-		{
-			var command = new NpgsqlCommand{
-				CommandText = commandText
-			};
+    /// <summary>
+    /// åˆ›å»ºå‘½ä»¤å¯¹è±¡
+    /// </summary>
+    /// <param name="commandText">å‘½ä»¤æ–‡æœ¬</param>
+    /// <param name="parameters">å‘½ä»¤å‚æ•°</param>
+    /// <returns>å‘½ä»¤å¯¹è±¡</returns>
+    protected override NpgsqlCommand CreateCommand( string commandText, NpgsqlParameter[] parameters )
+    {
+      var command = new NpgsqlCommand
+      {
+        CommandText = commandText
+      };
 
-			command.Parameters.AddRange(parameters);
+      command.Parameters.AddRange( parameters );
 
-			return command;
-		}
-	}
+      return command;
+    }
+  }
 }

@@ -1,4 +1,4 @@
-using System.Data;
+ï»¿using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ using Npgsql;
 namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 {
     /// <summary>
-    /// PostgreSql Êı¾İ¿âÊÂÎñÉÏÏÂÎÄ¶ÔÏó
+    /// PostgreSql æ•°æ®åº“äº‹åŠ¡ä¸Šä¸‹æ–‡å¯¹è±¡
     /// </summary>
     public class NpgsqlDbTransactionContext : DbTransactionContextBase<NpgsqlDbExecutor, NpgsqlTransaction> 
     {
@@ -23,9 +23,9 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         #region Overrides of DbTransactionContextBase<NpgsqlDbExecutor,NpgsqlTransaction>
 
         /// <summary>
-        /// ÅÉÉúÀàÊµÏÖ´Ë·½·¨ÒÔ´´½¨Êı¾İ¿âÊÂÎñ¶ÔÏó
+        /// æ´¾ç”Ÿç±»å®ç°æ­¤æ–¹æ³•ä»¥åˆ›å»ºæ•°æ®åº“äº‹åŠ¡å¯¹è±¡
         /// </summary>
-        /// <returns>Êı¾İ¿âÊÂÎñ¶ÔÏó</returns>
+        /// <returns>æ•°æ®åº“äº‹åŠ¡å¯¹è±¡</returns>
         protected override NpgsqlTransaction CreateTransaction()
         {
             if (this.Connection.State == ConnectionState.Closed)
@@ -37,7 +37,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         }
 
         /// <summary>
-        /// »ñÈ¡ÔÚÊÂÎñÖĞÖ´ĞĞ²éÑ¯µÄÖ´ĞĞÆ÷
+        /// è·å–åœ¨äº‹åŠ¡ä¸­æ‰§è¡ŒæŸ¥è¯¢çš„æ‰§è¡Œå™¨
         /// </summary>
         public override NpgsqlDbExecutor DbExecutor
         {
@@ -57,17 +57,17 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
             }
 
             /// <summary>
-            /// µ±Ç°Ëù´¦µÄÊÂÎñ
+            /// å½“å‰æ‰€å¤„çš„äº‹åŠ¡
             /// </summary>
             protected NpgsqlDbTransactionContext TransactionContext { get; private set; }
 
             /// <summary>
-            /// ÖØĞ´ ExecuteAsync ·½·¨£¬ÔÚÊÂÎñÖĞÒì²½Ö´ĞĞ²éÑ¯
+            /// é‡å†™ ExecuteAsync æ–¹æ³•ï¼Œåœ¨äº‹åŠ¡ä¸­å¼‚æ­¥æ‰§è¡ŒæŸ¥è¯¢
             /// </summary>
-            /// <param name="command">ÒªÖ´ĞĞµÄ²éÑ¯ÃüÁî</param>
-            /// <param name="token">È¡ÏûÖ¸Ê¾</param>
-            /// <param name="tracing">ÓÃÓÚ×·×ÙµÄ×·×ÙÆ÷</param>
-            /// <returns>²éÑ¯Ö´ĞĞÉÏÏÂÎÄ</returns>
+            /// <param name="command">è¦æ‰§è¡Œçš„æŸ¥è¯¢å‘½ä»¤</param>
+            /// <param name="token">å–æ¶ˆæŒ‡ç¤º</param>
+            /// <param name="tracing">ç”¨äºè¿½è¸ªçš„è¿½è¸ªå™¨</param>
+            /// <returns>æŸ¥è¯¢æ‰§è¡Œä¸Šä¸‹æ–‡</returns>
             protected sealed override async Task<IAsyncDbExecuteContext> ExecuteAsync(NpgsqlCommand command, CancellationToken token, IDbTracing tracing = null)
             {
                 try
@@ -99,11 +99,11 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 
 
             /// <summary>
-            /// Ö´ĞĞ²éÑ¯ÃüÁî²¢·µ»ØÖ´ĞĞÉÏÏÂÎÄ
+            /// æ‰§è¡ŒæŸ¥è¯¢å‘½ä»¤å¹¶è¿”å›æ‰§è¡Œä¸Šä¸‹æ–‡
             /// </summary>
-            /// <param name="command">²éÑ¯ÃüÁî</param>
-            /// <param name="tracing">ÓÃÓÚ×·×Ù²éÑ¯¹ı³ÌµÄ×·×ÙÆ÷</param>
-            /// <returns>²éÑ¯Ö´ĞĞÉÏÏÂÎÄ</returns>
+            /// <param name="command">æŸ¥è¯¢å‘½ä»¤</param>
+            /// <param name="tracing">ç”¨äºè¿½è¸ªæŸ¥è¯¢è¿‡ç¨‹çš„è¿½è¸ªå™¨</param>
+            /// <returns>æŸ¥è¯¢æ‰§è¡Œä¸Šä¸‹æ–‡</returns>
             protected sealed override IDbExecuteContext Execute(NpgsqlCommand command, IDbTracing tracing = null)
             {
                 try

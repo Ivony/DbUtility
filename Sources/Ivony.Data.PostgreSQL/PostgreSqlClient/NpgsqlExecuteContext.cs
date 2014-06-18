@@ -1,41 +1,41 @@
-using System.Data.Common;
+ï»¿using System.Data.Common;
 using Ivony.Data.Common;
 using Npgsql;
 
 namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 {
-	public class NpgsqlDbExecuteContext : AsyncDbExecuteContextBase
-	{
-		/// <summary>
-		/// ´´½¨ NpgsqlExecuteContext ¶ÔÏó
-		/// </summary>
-		/// <param name="connection">PostgreSql Êı¾İ¿âÁ¬½Ó</param>
-		/// <param name="dataReader">PostgreSql Êı¾İ¶ÁÈ¡Æ÷</param>
-		/// <param name="tracing">ÓÃÓÚµ±Ç°²éÑ¯µÄ×·×ÙÆ÷</param>
-		public NpgsqlDbExecuteContext(NpgsqlConnection connection, DbDataReader dataReader, IDbTracing tracing)
-        : base( dataReader, tracing, connection )
-		{
-			this.NpgsqlDataReader = dataReader;
-		}
+  public class NpgsqlDbExecuteContext : AsyncDbExecuteContextBase
+  {
+    /// <summary>
+    /// åˆ›å»º NpgsqlExecuteContext å¯¹è±¡
+    /// </summary>
+    /// <param name="connection">PostgreSql æ•°æ®åº“è¿æ¥</param>
+    /// <param name="dataReader">PostgreSql æ•°æ®è¯»å–å™¨</param>
+    /// <param name="tracing">ç”¨äºå½“å‰æŸ¥è¯¢çš„è¿½è¸ªå™¨</param>
+    public NpgsqlDbExecuteContext( NpgsqlConnection connection, DbDataReader dataReader, IDbTracing tracing )
+      : base( dataReader, tracing, connection )
+    {
+      this.NpgsqlDataReader = dataReader;
+    }
 
-		/// <summary>
-		/// ´´½¨ NpgsqlExecuteContext ¶ÔÏó
-		/// </summary>
-		/// <param name="transaction">PostgreSql Êı¾İ¿âÊÂÎñÉÏÏÂÎÄ</param>
-		/// <param name="dataReader">PostgreSql Êı¾İ¶ÁÈ¡Æ÷</param>
-		/// <param name="tracing">ÓÃÓÚµ±Ç°²éÑ¯µÄ×·×ÙÆ÷</param>
-		public NpgsqlDbExecuteContext(NpgsqlDbTransactionContext transaction, DbDataReader dataReader, IDbTracing tracing)
-          : base( dataReader, tracing, null )
-		{
-			this.TransactionContext = transaction;
-			this.NpgsqlDataReader = dataReader;
-		}
+    /// <summary>
+    /// åˆ›å»º NpgsqlExecuteContext å¯¹è±¡
+    /// </summary>
+    /// <param name="transaction">PostgreSql æ•°æ®åº“äº‹åŠ¡ä¸Šä¸‹æ–‡</param>
+    /// <param name="dataReader">PostgreSql æ•°æ®è¯»å–å™¨</param>
+    /// <param name="tracing">ç”¨äºå½“å‰æŸ¥è¯¢çš„è¿½è¸ªå™¨</param>
+    public NpgsqlDbExecuteContext( NpgsqlDbTransactionContext transaction, DbDataReader dataReader, IDbTracing tracing )
+      : base( dataReader, tracing, null )
+    {
+      this.TransactionContext = transaction;
+      this.NpgsqlDataReader = dataReader;
+    }
 
-		public DbDataReader NpgsqlDataReader { get; private set; }
+    public DbDataReader NpgsqlDataReader { get; private set; }
 
-		/// <summary>
-		/// Êı¾İ¿âÊÂÎñÉÏÏÂÎÄ£¬Èç¹ûÓĞµÄ»°
-		/// </summary>
-		public NpgsqlDbTransactionContext TransactionContext { get; private set; }
-	}
+    /// <summary>
+    /// æ•°æ®åº“äº‹åŠ¡ä¸Šä¸‹æ–‡ï¼Œå¦‚æœæœ‰çš„è¯
+    /// </summary>
+    public NpgsqlDbTransactionContext TransactionContext { get; private set; }
+  }
 }
