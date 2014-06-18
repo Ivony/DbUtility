@@ -26,7 +26,6 @@ namespace Ivony.Data
     {
       using ( var context = query.Execute() )
       {
-
         return context.LoadDataTable( 0, 0 );
       }
     }

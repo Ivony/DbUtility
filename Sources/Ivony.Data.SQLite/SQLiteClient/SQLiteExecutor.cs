@@ -2,6 +2,7 @@
 using Ivony.Data.Queries;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
@@ -10,16 +11,29 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.SQLiteClient
 {
+
+
+  /// <summary>
+  /// 用于操作 SQLite 的数据库访问工具
+  /// </summary>
   public class SQLiteExecutor : DbExecutorBase, IDbExecutor<ParameterizedQuery>
   {
 
     public SQLiteExecutor( string connectionString, SQLiteConfiguration configuration )
       : base( configuration )
     {
-      ConnectionString = connectionString;
+      Connection = new SQLiteConnection( connectionString );
+      SyncRoot = new object();
     }
 
-    protected string ConnectionString
+    protected SQLiteConnection Connection
+    {
+      get;
+      private set;
+    }
+
+
+    public object SyncRoot
     {
       get;
       private set;
@@ -41,11 +55,12 @@ namespace Ivony.Data.SQLiteClient
       {
         TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
 
-        var connection = new SQLiteConnection( ConnectionString );
-        connection.Open();
-        command.Connection = connection;
 
-        var context = new SQLiteExecuteContext( connection, command.ExecuteReader(), tracing );
+        if ( Connection.State == ConnectionState.Closed )
+          Connection.Open();
+        command.Connection = Connection;
+
+        var context = new SQLiteExecuteContext( command.ExecuteReader(), tracing, SyncRoot );
 
         TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
 

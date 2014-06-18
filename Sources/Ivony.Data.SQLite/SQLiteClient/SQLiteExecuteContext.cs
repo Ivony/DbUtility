@@ -7,10 +7,10 @@ using System.Text;
 
 namespace Ivony.Data.SQLiteClient
 {
-  class SQLiteExecuteContext : AsyncDbExecuteContextBase
+  class SQLiteExecuteContext : DbExecuteContextBase
   {
-    public SQLiteExecuteContext( SQLiteConnection connection, SQLiteDataReader dataReader, IDbTracing tracing )
-      : base( dataReader, connection, tracing )
+    public SQLiteExecuteContext( SQLiteDataReader dataReader, IDbTracing tracing, object sync )
+      : base( dataReader, tracing, sync: sync )
     {
       DataReader = dataReader;
     }

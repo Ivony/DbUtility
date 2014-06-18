@@ -23,21 +23,27 @@ namespace Ivony.Data.Common
     /// 创建数据库查询执行上下文
     /// </summary>
     /// <param name="dataReader">用于读取数据的 IDataReader 对象</param>
-    /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
     /// <param name="tracing">用于追踪此次查询过程的追踪器</param>
-    protected DbExecuteContextBase( IDataReader dataReader, IDisposable connectionResource = null, IDbTracing tracing = null )
+    /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
+    protected DbExecuteContextBase( IDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null, object sync = null )
     {
 
       if ( dataReader == null )
         throw new ArgumentNullException( "dataReader" );
 
+
+      SyncRoot = sync;
+
       DataReader = dataReader;
       ConnectionResource = connectionResource;
       Tracing = tracing;
-      SyncRoot = new object();
 
       DataTableAdapter = new DataTableAdapter();
 
+
+      
+      if ( SyncRoot != null )
+        Monitor.Enter( SyncRoot );
     }
 
 
@@ -74,7 +80,7 @@ namespace Ivony.Data.Common
     /// <summary>
     /// 获取用于同步的对象
     /// </summary>
-    public virtual object SyncRoot
+    public object SyncRoot
     {
       get;
       private set;
@@ -145,6 +151,9 @@ namespace Ivony.Data.Common
       if ( ConnectionResource != null )
         ConnectionResource.Dispose();
 
+      if ( SyncRoot != null )
+        Monitor.Exit( SyncRoot );
+
       DataReader.Dispose();
 
       try
@@ -169,10 +178,10 @@ namespace Ivony.Data.Common
     /// 创建数据库异步查询执行上下文
     /// </summary>
     /// <param name="dataReader">用于读取数据的 IDataReader 对象</param>
-    /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
     /// <param name="tracing">用于追踪此次查询过程的追踪器</param>
-    protected AsyncDbExecuteContextBase( DbDataReader dataReader, IDisposable connectionResource = null, IDbTracing tracing = null )
-      : base( dataReader, connectionResource, tracing )
+    /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
+    protected AsyncDbExecuteContextBase( DbDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null, object sync = null )
+      : base( dataReader, tracing, connectionResource, sync )
     {
 
       DataReader = dataReader;

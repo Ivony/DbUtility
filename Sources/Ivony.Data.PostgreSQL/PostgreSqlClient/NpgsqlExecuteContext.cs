@@ -13,7 +13,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 		/// <param name="dataReader">PostgreSql 数据读取器</param>
 		/// <param name="tracing">用于当前查询的追踪器</param>
 		public NpgsqlDbExecuteContext(NpgsqlConnection connection, DbDataReader dataReader, IDbTracing tracing)
-			: base( dataReader, connection, tracing )
+        : base( dataReader, tracing, connection )
 		{
 			this.NpgsqlDataReader = dataReader;
 		}
@@ -25,7 +25,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 		/// <param name="dataReader">PostgreSql 数据读取器</param>
 		/// <param name="tracing">用于当前查询的追踪器</param>
 		public NpgsqlDbExecuteContext(NpgsqlDbTransactionContext transaction, DbDataReader dataReader, IDbTracing tracing)
-			: base(dataReader, null, tracing)
+          : base( dataReader, tracing, null, transaction.SyncRoot )
 		{
 			this.TransactionContext = transaction;
 			this.NpgsqlDataReader = dataReader;

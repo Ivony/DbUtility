@@ -26,7 +26,7 @@ namespace Ivony.Data.SqlClient
     /// <param name="reader">数据读取器</param>
     /// <param name="tracing">用于记录此次查询过程的的查询追踪器</param>
     internal SqlDbExecuteContext( SqlConnection connection, SqlDataReader reader, IDbTracing tracing )
-      : base( reader, connection, tracing )
+      : base( reader, tracing, connection )
     {
       SqlDataReader = reader;
     }
@@ -38,7 +38,7 @@ namespace Ivony.Data.SqlClient
     /// <param name="reader">数据读取器</param>
     /// <param name="tracing">用于记录此次查询过程的的查询追踪器</param>
     internal SqlDbExecuteContext( SqlDbTransactionContext transaction, SqlDataReader reader, IDbTracing tracing )
-      : base( reader, null, tracing )
+      : base( reader, tracing, null, transaction.SyncRoot )
     {
       SqlDataReader = reader;
     }
@@ -62,23 +62,5 @@ namespace Ivony.Data.SqlClient
       get;
       private set;
     }
-
-
-
-    /// <summary>
-    /// 获取用于同步的对象
-    /// </summary>
-    public override object SyncRoot
-    {
-      get
-      {
-        if ( TransactionContext != null )
-          return TransactionContext.SyncRoot;
-
-        else
-          return base.SyncRoot;
-      }
-    }
-
   }
 }
