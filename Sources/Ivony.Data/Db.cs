@@ -102,10 +102,10 @@ namespace Ivony.Data
     /// <summary>
     /// 获取或设置当串联两个参数化查询时，是否应当自动插入空白字符。
     /// </summary>
-    public static bool AddWhiteSpaceOnConcat
+    internal static bool AddWhiteSpaceOnConcat
     {
       get;
-      private set;
+      set;
     }
 
   }

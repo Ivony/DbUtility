@@ -20,8 +20,8 @@ namespace Ivony.Data.Test
 
     public SqlServerTest()
     {
-      traceService = new TestTraceService();
-      db = SqlServerExpress.Connect( "TestDatabase", new SqlDbConfiguration() { TraceService = traceService } );
+      SqlServerExpress.Configuration.TraceService = traceService = new TestTraceService();
+      db = SqlServerExpress.Connect( "TestDatabase" );
 
 
       db.T( "IF OBJECT_ID(N'[dbo].[Test1]') IS NOT NULL DROP TABLE [dbo].[Test1]" ).ExecuteNonQuery();

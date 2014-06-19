@@ -67,5 +67,14 @@ namespace Ivony.Data
 
       return SqlServer.Connect( builder.ConnectionString, configuration );
     }
+
+
+    /// <summary>
+    /// 获取或修改 SQL Server 默认配置
+    /// </summary>
+    public static SqlDbConfiguration Configuration
+    {
+      get { return SqlServer.Configuration; }
+    }
   }
 }
