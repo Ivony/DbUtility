@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DbExecutorBase.cs" />
+    <Compile Include="DbTracing.cs" />
     <Compile Include="Common\DbTransactionContextBase.cs" />
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="Common\DataTableAdapter.cs">
