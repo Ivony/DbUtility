@@ -223,7 +223,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static T ExecuteScalar<T>( this IDbExecutableQuery query )
     {
-      return ExecuteScalar( query ).ConvertTo<T>();
+      return DbValueConverters.Convert<T>( ExecuteScalar( query ) );
     }
 
     /// <summary>
@@ -235,8 +235,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public async static Task<T> ExecuteScalarAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token = default( CancellationToken ) )
     {
-      var scalar = await ExecuteScalarAsync( query, token );
-      return scalar.ConvertTo<T>();
+      return DbValueConverters.Convert<T>( await ExecuteScalarAsync( query, token ) );
     }
 
   }
