@@ -151,12 +151,14 @@ CREATE TABLE [dbo].[Test1]
 
       var tracing = traceService.Last();
 
-      var logs = tracing.GetLogEntries();
-      Assert.AreEqual( logs.Length, 3 );
+      var events = tracing.TraceEvents;
+      Assert.AreEqual( events.Length, 3 );
 
-      Assert.AreEqual( logs[0].Message, "OnExecuting" );
-      Assert.AreEqual( logs[1].Message, "OnLoadingData" );
-      Assert.AreEqual( logs[2].Message, "OnComplete" );
+      Assert.IsTrue( tracing.QueryTime >= tracing.ExecutionTime );
+
+      Assert.AreEqual( events[0].EventName, "OnExecuting" );
+      Assert.AreEqual( events[1].EventName, "OnLoadingData" );
+      Assert.AreEqual( events[2].EventName, "OnComplete" );
 
 
       try
@@ -170,12 +172,11 @@ CREATE TABLE [dbo].[Test1]
 
       tracing = traceService.Last();
 
-      logs = tracing.GetLogEntries();
-      Assert.AreEqual( logs.Length, 2 );
+      events = tracing.TraceEvents;
+      Assert.AreEqual( events.Length, 2 );
 
-      Assert.AreEqual( logs[0].Message, "OnExecuting" );
-      Assert.AreEqual( logs[1].Message, "OnException" );
+      Assert.AreEqual( events[0].EventName, "OnExecuting" );
+      Assert.AreEqual( events[1].EventName, "OnException" );
     }
-
   }
 }

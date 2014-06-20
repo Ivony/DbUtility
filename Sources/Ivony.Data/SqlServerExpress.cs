@@ -24,6 +24,7 @@ namespace Ivony.Data
     public static SqlDbExecutor ConnectLocalDB( string database, SqlDbConfiguration configuration = null )
     {
 
+      configuration = configuration ?? SqlServerExpress.Configuration;
       return Connect( database, @"(LocalDB)\" + configuration.LocalDBInstanceName, configuration );
 
     }
@@ -38,6 +39,7 @@ namespace Ivony.Data
     /// <returns>SQL Server 数据库访问器</returns>
     public static SqlDbExecutor Connect( string database, SqlDbConfiguration configuration = null )
     {
+      configuration = configuration ?? SqlServerExpress.Configuration;
       return Connect( database, @"(local)\" + configuration.ExpressInstanceName, configuration );
     }
 
