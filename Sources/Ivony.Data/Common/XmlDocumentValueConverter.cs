@@ -10,7 +10,7 @@ namespace Ivony.Data.Common
 {
   public class XmlDocumentValueConverter : IDbValueConverter<XDocument>
   {
-    public XDocument ConvertValueFrom( object dataValue, DbType dbDataType )
+    public XDocument ConvertValueFrom( object dataValue, string dataTypeName )
     {
 
       var text = (string) dataValue;
@@ -18,11 +18,9 @@ namespace Ivony.Data.Common
 
     }
 
-    public object ConvertValueTo( XDocument value, DbType? dbDataType = null )
+    public object ConvertValueTo( object value, string dataTypeName )
     {
-
-      return value.ToString( SaveOptions.DisableFormatting | SaveOptions.OmitDuplicateNamespaces );
-
+      return ((XDocument) value).ToString( SaveOptions.DisableFormatting | SaveOptions.OmitDuplicateNamespaces );
     }
   }
 }

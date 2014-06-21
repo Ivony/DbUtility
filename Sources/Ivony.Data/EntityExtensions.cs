@@ -425,7 +425,7 @@ namespace Ivony.Data
         il.Emit( OpCodes.Ldarg_1 );
         il.Emit( OpCodes.Ldarg_0 );
         il.Emit( OpCodes.Ldstr, name );
-        il.Emit( OpCodes.Call, typeof( DataRowExtensions ).GetMethod( "Field", new[] { typeof( DataRow ), typeof( string ) } ).MakeGenericMethod( p.PropertyType ) );
+        il.Emit( OpCodes.Call, typeof( EntityExtensions ).GetMethod( "FieldValue", new[] { typeof( DataRow ), typeof( string ) } ).MakeGenericMethod( p.PropertyType ) );
         il.Emit( OpCodes.Callvirt, p.GetSetMethod() );
         il.MarkLabel( label );
       }
@@ -438,6 +438,19 @@ namespace Ivony.Data
 
       ConverterCache<T>.Converter = method;
       return method;
+    }
+
+
+    /// <summary>
+    /// 获取指定字段的值
+    /// </summary>
+    /// <typeparam name="T">值类型</typeparam>
+    /// <param name="dataRow">数据行</param>
+    /// <param name="columnName">要返回其值的列名称</param>
+    /// <returns>强类型的值</returns>
+    public static T FieldValue<T>( this DataRow dataRow, string columnName )
+    {
+      return DbValueConverter.ConvertFrom<T>( dataRow[columnName] );
     }
 
 

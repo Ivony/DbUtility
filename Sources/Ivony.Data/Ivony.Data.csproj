@@ -94,7 +94,7 @@
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="DbExecutableQuery.cs" />
     <Compile Include="Common\DbExecuteContextBase.cs" />
-    <Compile Include="DbValueConverters.cs" />
+    <Compile Include="DbValueConverter.cs" />
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
     <Compile Include="BasicExecuteExtensions.cs" />

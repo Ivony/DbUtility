@@ -7,7 +7,7 @@ using Ivony.Data.Queries;
 
 namespace Ivony.Data.Test
 {
-  [TestClass]
+  //[TestClass]
   public class MySqlTest
   {
     private TestTraceService traceService;

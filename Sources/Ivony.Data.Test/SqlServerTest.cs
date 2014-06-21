@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ivony.Logs;
 using System.Data;
 using Ivony.Data.SqlClient;
+using System.Xml.Linq;
 
 namespace Ivony.Data.Test
 {
@@ -31,6 +32,7 @@ CREATE TABLE [dbo].[Test1]
     [ID] INT NOT NULL IDENTITY,
     [Name] NVARCHAR(50) NOT NULL , 
     [Content] NTEXT NULL, 
+    [XmlContent] XML NULL,
     [Index] INT NOT NULL, 
     CONSTRAINT [PK_Test1] PRIMARY KEY ([ID]) 
 )" ).ExecuteNonQuery();
@@ -177,6 +179,28 @@ CREATE TABLE [dbo].[Test1]
 
       Assert.AreEqual( events[0].EventName, "OnExecuting" );
       Assert.AreEqual( events[1].EventName, "OnException" );
+    }
+
+
+    [TestMethod]
+    public void XmlFieldTest()
+    {
+
+      var document = new XDocument( new XDeclaration( "1.0", "utf-8", "yes" ),
+        new XElement( "Root",
+          new XAttribute( "test", "test-value" ),
+          new XElement( "Item" ),
+          new XElement( "Item" ),
+          new XElement( "Item" )
+        ) );
+
+      db.T( "INSERT INTO Test1 ( Name, XmlContent, [Index] ) VALUES ( {...} ) ", "XML content", document, 1 ).ExecuteNonQuery();
+
+      var document1 = db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<XDocument>();
+
+
+      Assert.AreEqual( document.ToString( SaveOptions.OmitDuplicateNamespaces ), document1.ToString( SaveOptions.OmitDuplicateNamespaces ) );
+
     }
   }
 }

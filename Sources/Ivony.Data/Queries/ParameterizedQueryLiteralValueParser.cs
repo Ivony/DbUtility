@@ -32,7 +32,7 @@ namespace Ivony.Data.Queries
       {
         var index = int.Parse( match.Groups["index"].Value );
 
-        return GetLiteralValue( query.ParameterValues[index] );
+        return GetLiteralValue( DbValueConverter.ConvertTo( query.ParameterValues[index], null ) );
 
       } );
 
