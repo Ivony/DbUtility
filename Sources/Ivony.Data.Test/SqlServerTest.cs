@@ -7,6 +7,7 @@ using Ivony.Logs;
 using System.Data;
 using Ivony.Data.SqlClient;
 using System.Xml.Linq;
+using Ivony.Data.Common;
 
 namespace Ivony.Data.Test
 {
@@ -186,6 +187,8 @@ CREATE TABLE [dbo].[Test1]
     public void XmlFieldTest()
     {
 
+      DbValueConverter.Register( new XDocumentValueConverter() );
+
       var document = new XDocument( new XDeclaration( "1.0", "utf-8", "yes" ),
         new XElement( "Root",
           new XAttribute( "test", "test-value" ),
@@ -200,6 +203,9 @@ CREATE TABLE [dbo].[Test1]
 
 
       Assert.AreEqual( document.ToString( SaveOptions.OmitDuplicateNamespaces ), document1.ToString( SaveOptions.OmitDuplicateNamespaces ) );
+
+
+      DbValueConverter.Unregister<XDocument>();
 
     }
   }

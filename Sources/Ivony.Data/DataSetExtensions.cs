@@ -67,7 +67,7 @@ namespace Ivony.Data
     /// <returns></returns>
     public static T[] Column<T>( this DataTable table )
     {
-      return table.Rows.Cast<DataRow>().Select( item => item.Field<T>( 0 ) ).ToArray();
+      return table.Rows.Cast<DataRow>().Select( item => item.FieldValue<T>( 0 ) ).ToArray();
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ namespace Ivony.Data
     /// <returns></returns>
     public static T[] Column<T>( this DataTable table, string columnName )
     {
-      return table.Rows.Cast<DataRow>().Select( item => item.Field<T>( columnName ) ).ToArray();
+      return table.Rows.Cast<DataRow>().Select( item => item.FieldValue<T>( columnName ) ).ToArray();
     }
 
 

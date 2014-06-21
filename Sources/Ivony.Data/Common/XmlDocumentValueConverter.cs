@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Ivony.Data.Common
 {
-  public class XmlDocumentValueConverter : IDbValueConverter<XDocument>
+  public class XDocumentValueConverter : IDbValueConverter<XDocument>
   {
     public XDocument ConvertValueFrom( object dataValue, string dataTypeName )
     {

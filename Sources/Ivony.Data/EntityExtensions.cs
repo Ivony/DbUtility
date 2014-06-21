@@ -446,6 +446,18 @@ namespace Ivony.Data
     /// </summary>
     /// <typeparam name="T">值类型</typeparam>
     /// <param name="dataRow">数据行</param>
+    /// <param name="columnIndex">要返回的列的序号</param>
+    /// <returns>强类型的值</returns>
+    public static T FieldValue<T>( this DataRow dataRow, int columnIndex )
+    {
+      return DbValueConverter.ConvertFrom<T>( dataRow[columnIndex] );
+    }
+
+    /// <summary>
+    /// 获取指定字段的值
+    /// </summary>
+    /// <typeparam name="T">值类型</typeparam>
+    /// <param name="dataRow">数据行</param>
     /// <param name="columnName">要返回其值的列名称</param>
     /// <returns>强类型的值</returns>
     public static T FieldValue<T>( this DataRow dataRow, string columnName )
