@@ -34,7 +34,7 @@ namespace Ivony.Data.Queries
     {
 
 
-      var length = query.ParameterValues.Length;
+      var length = query.Parameters.Length;
 
       TParameter[] parameters = new TParameter[length];
       string[] parameterPlaceholders = new string[length];
@@ -52,7 +52,7 @@ namespace Ivony.Data.Queries
 
           var placeholder = parameterPlaceholders[index];
           if ( placeholder == null )
-            placeholder = parameterPlaceholders[index] = GetParameterPlaceholder( DbValueConverter.ConvertTo( query.ParameterValues[index], null ), index, out parameters[index] );
+            placeholder = parameterPlaceholders[index] = GetParameterPlaceholder( DbValueConverter.ConvertTo( query.Parameters[index], null ), index, out parameters[index] );
 
           return placeholder;
         } );

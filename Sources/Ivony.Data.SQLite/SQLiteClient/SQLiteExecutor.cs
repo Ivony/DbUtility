@@ -20,13 +20,13 @@ namespace Ivony.Data.SQLiteClient
   {
 
     public SQLiteExecutor( string connectionString, SQLiteConfiguration configuration )
-      : base( configuration )
     {
       Configuration = configuration;
 
       Connection = new SQLiteConnection( connectionString );
       SyncRoot = new object();
     }
+
 
     protected SQLiteConnection Connection
     {
@@ -49,6 +49,15 @@ namespace Ivony.Data.SQLiteClient
       private set;
     }
 
+
+
+    /// <summary>
+    /// 获取追踪数据库查询过程的追踪服务
+    /// </summary>
+    protected override IDbTraceService TraceService
+    {
+      get { return Configuration.TraceService; }
+    }
 
 
     public IDbExecuteContext Execute( ParameterizedQuery query )

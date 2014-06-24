@@ -8,9 +8,10 @@ using System.Xml.Linq;
 
 namespace Ivony.Data.Common
 {
+
   public class XDocumentValueConverter : IDbValueConverter<XDocument>
   {
-    public XDocument ConvertValueFrom( object dataValue, string dataTypeName )
+    XDocument IDbValueConverter<XDocument>.ConvertValueFrom( object dataValue, string dataTypeName )
     {
 
       var text = (string) dataValue;
@@ -18,7 +19,7 @@ namespace Ivony.Data.Common
 
     }
 
-    public object ConvertValueTo( object value, string dataTypeName )
+    object IDbValueConverter<XDocument>.ConvertValueTo( object value, string dataTypeName )
     {
       return ((XDocument) value).ToString( SaveOptions.DisableFormatting | SaveOptions.OmitDuplicateNamespaces );
     }

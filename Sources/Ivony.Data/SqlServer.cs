@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ivony.Data.Common;
 using System.IO;
+using System.Data;
 
 namespace Ivony.Data
 {
@@ -134,5 +135,8 @@ namespace Ivony.Data
     internal static string LocalDBInstanceName { get; set; }
 
     internal static string ExpressInstanceName { get; set; }
+
+
+
   }
 }

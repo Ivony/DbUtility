@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Ivony.Data.Common;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +17,7 @@ namespace Ivony.Data.Queries
 
     private StringBuilder textBuilder = new StringBuilder();
 
-    private List<object> values = new List<object>();
+    private List<DbParameter> parameters = new List<DbParameter>();
 
 
     private object _sync = new object();
@@ -71,10 +73,43 @@ namespace Ivony.Data.Queries
 
       lock ( _sync )
       {
-        values.Add( value );
-        textBuilder.AppendFormat( "#{0}#", values.Count - 1 );
+
+        var p = value as DbParameter;
+        if ( p != null )
+          AppendParameter( p );
+
+        else
+          AppendParameter( CreateParameter( value ) );
       }
     }
+
+
+    /// <summary>
+    /// 添加一个查询参数
+    /// </summary>
+    /// <param name="parameter">查询参数</param>
+    public void AppendParameter( DbParameter parameter )
+    {
+      lock ( _sync )
+      {
+        parameters.Add( parameter );
+        textBuilder.AppendFormat( "#{0}#", parameters.Count - 1 );
+      }
+    }
+
+
+
+    private static DbParameter CreateParameter( object value )
+    {
+      var dbValue = DbValueConverter.ConvertTo( value );
+      var type = DbDataType.GetType( dbValue );
+
+
+      return new DbParameter( null, dbValue, type, ParameterDirection.Input );
+
+    }
+
+
 
 
     /// <summary>
@@ -85,7 +120,7 @@ namespace Ivony.Data.Queries
     {
       lock ( _sync )
       {
-        return new ParameterizedQuery( textBuilder.ToString(), values.ToArray() );
+        return new ParameterizedQuery( textBuilder.ToString(), parameters.ToArray() );
       }
     }
 

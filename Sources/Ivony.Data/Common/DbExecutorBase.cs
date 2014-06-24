@@ -14,27 +14,21 @@ namespace Ivony.Data.Common
   {
 
 
-    private DbConfiguration _configuration;
-
-
     /// <summary>
     /// 初始化 DbExecuterBase 类型
     /// </summary>
     /// <param name="configuration">当前要使用的数据库配置</param>
-    protected DbExecutorBase( DbConfiguration configuration )
+    protected DbExecutorBase()
     {
-      _configuration = configuration;
-      TraceService = configuration.TraceService;
     }
 
 
     /// <summary>
-    /// 获取在追踪数据库查询过程的追踪服务
+    /// 获取追踪数据库查询过程的追踪服务
     /// </summary>
-    protected IDbTraceService TraceService
+    protected virtual IDbTraceService TraceService
     {
-      get;
-      private set;
+      get { return null; }
     }
 
 

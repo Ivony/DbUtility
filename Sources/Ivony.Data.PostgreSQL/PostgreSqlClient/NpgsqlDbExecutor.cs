@@ -20,7 +20,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         /// </summary>
         /// <param name="connectionString"></param>
         /// <param name="configuration">当前要使用的数据库配置</param>
-        public NpgsqlDbExecutor(string connectionString, NpgsqlDbConfiguration configuration) : base(configuration)
+        public NpgsqlDbExecutor(string connectionString, NpgsqlDbConfiguration configuration)
         {
             if (connectionString == null) throw new ArgumentNullException("connectionString");
             if (configuration == null) throw new ArgumentNullException("configuration");
@@ -28,6 +28,17 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
             this.ConnectionString = connectionString;
             this.Configuration = configuration;
         }
+
+
+      
+      /// <summary>
+        /// 获取追踪数据库查询过程的追踪服务
+        /// </summary>
+        protected override IDbTraceService TraceService
+        {
+          get { return Configuration.TraceService; }
+        }
+
 
         protected virtual IDbExecuteContext Execute(NpgsqlCommand command, IDbTracing tracing)
         {

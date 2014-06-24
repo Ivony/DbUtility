@@ -37,7 +37,7 @@ namespace Ivony.Data.Queries
     /// <summary>
     /// 获取参数值
     /// </summary>
-    public object[] ParameterValues
+    public DbParameter[] Parameters
     {
       get;
       private set;
@@ -49,19 +49,19 @@ namespace Ivony.Data.Queries
     /// 构建参数化查询对象
     /// </summary>
     /// <param name="template">查询文本模板</param>
-    /// <param name="values">参数值</param>
-    public ParameterizedQuery( string template, object[] values )
+    /// <param name="parameters">参数值</param>
+    public ParameterizedQuery( string template, DbParameter[] parameters )
     {
 
       if ( template == null )
         throw new ArgumentNullException( "template" );
 
-      if ( values == null )
+      if ( parameters == null )
         throw new ArgumentNullException( "values" );
 
       TextTemplate = template;
-      ParameterValues = new object[values.Length];
-      values.CopyTo( ParameterValues, 0 );
+      Parameters = new DbParameter[parameters.Length];
+      parameters.CopyTo( Parameters, 0 );
     }
 
 
@@ -83,7 +83,7 @@ namespace Ivony.Data.Queries
 
 
         var parameterIndex = int.Parse( match.Groups["index"].Value );
-        builder.AppendParameter( ParameterValues[parameterIndex] );
+        builder.AppendParameter( Parameters[parameterIndex] );
 
         index = match.Index + match.Length;
       }
@@ -114,9 +114,9 @@ namespace Ivony.Data.Queries
       writer.WriteLine( "\"" + TextTemplate.Replace( "\"", "\"\"" ) + "\"" );
       writer.WriteLine();
 
-      for ( int i = 0; i < this.ParameterValues.Length; i++ )
+      for ( int i = 0; i < this.Parameters.Length; i++ )
       {
-        writer.WriteLine( "#{0}#: {1}", i, ParameterValues[i] );
+        writer.WriteLine( "#{0}#: {1}", i, Parameters[i] );
       }
 
       return writer.ToString();

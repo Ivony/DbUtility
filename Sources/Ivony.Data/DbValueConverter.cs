@@ -81,6 +81,24 @@ namespace Ivony.Data
     }
 
 
+    internal static object ConvertTo( object value, string dataTypeName = null )
+    {
+      var type = value.GetType();
+
+      lock ( sync )
+      {
+
+        foreach ( var _type in converterDictionary.Keys )
+        {
+          if ( _type.IsAssignableFrom( type ) )
+            return converterDictionary[_type]( value, dataTypeName );
+        }
+      }
+
+      return value;
+    }
+
+
     internal static T ConvertFrom<T>( object value, string dataTypeName = null )
     {
       var converter = GetConverter<T>();
@@ -145,21 +163,5 @@ namespace Ivony.Data
 
 
 
-    internal static object ConvertTo( object value, string dataTypeName = null )
-    {
-      var type = value.GetType();
-
-      lock ( sync )
-      {
-
-        foreach ( var _type in converterDictionary.Keys )
-        {
-          if ( _type.IsAssignableFrom( type ) )
-            return converterDictionary[_type]( value, dataTypeName );
-        }
-      }
-
-      return value;
-    }
   }
 }

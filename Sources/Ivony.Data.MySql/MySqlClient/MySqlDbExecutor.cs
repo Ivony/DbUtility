@@ -21,7 +21,6 @@ namespace Ivony.Data.MySqlClient
 
 
     public MySqlDbExecutor( string connectionString, MySqlDbConfiguration configuration )
-      : base( configuration )
     {
 
       if ( connectionString == null )
@@ -49,6 +48,16 @@ namespace Ivony.Data.MySqlClient
       get;
       private set;
     }
+
+
+    /// <summary>
+    /// 获取追踪数据库查询过程的追踪服务
+    /// </summary>
+    protected override IDbTraceService TraceService
+    {
+      get { return Configuration.TraceService; }
+    }
+
 
     public IDbExecuteContext Execute( ParameterizedQuery query )
     {

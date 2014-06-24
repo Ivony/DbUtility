@@ -42,7 +42,6 @@ namespace Ivony.Data.SqlClient
     /// <param name="connectionString">连接字符串</param>
     /// <param name="configuration">当前要使用的数据库配置信息</param>
     public SqlDbExecutor( string connectionString, SqlDbConfiguration configuration )
-      : base( configuration )
     {
       if ( connectionString == null )
         throw new ArgumentNullException( "connectionString" );
@@ -85,6 +84,16 @@ namespace Ivony.Data.SqlClient
 
 
     /// <summary>
+    /// 获取追踪数据库查询过程的追踪服务
+    /// </summary>
+    protected override IDbTraceService TraceService
+    {
+      get { return Configuration.TraceService; }
+    }
+
+
+
+    /// <summary>
     /// 执行查询命令并返回执行上下文
     /// </summary>
     /// <param name="command">查询命令</param>
@@ -101,7 +110,7 @@ namespace Ivony.Data.SqlClient
         var connection = new SqlConnection( ConnectionString );
         connection.Open();
         command.Connection = connection;
-        
+
         if ( Configuration.QueryExecutingTimeout.HasValue )
           command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
 
@@ -138,7 +147,7 @@ namespace Ivony.Data.SqlClient
         var connection = new SqlConnection( ConnectionString );
         await connection.OpenAsync( token );
         command.Connection = connection;
-        
+
         if ( Configuration.QueryExecutingTimeout.HasValue )
           command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
 
