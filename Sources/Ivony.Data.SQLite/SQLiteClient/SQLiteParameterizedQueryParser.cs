@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ivony.Data.Queries;
 using System.Data.SQLite;
+using Ivony.Data.Common;
 
 namespace Ivony.Data.SQLiteClient
 {
@@ -15,10 +16,10 @@ namespace Ivony.Data.SQLiteClient
   /// </summary>
   public class SQLiteParameterizedQueryParser : ParameterizedQueryParser<SQLiteCommand, SQLiteParameter>
   {
-    protected override string GetParameterPlaceholder( object value, int index, out SQLiteParameter parameter )
+    protected override string GetParameterPlaceholder( DbParameterDescriptor descriptor, out SQLiteParameter parameter )
     {
-      var name = ":Param" + index;
-      parameter = new SQLiteParameter( name, value );
+      var name = ":" + descriptor.Name;
+      parameter = new SQLiteParameter( name, descriptor.Value );
       return name;
 
     }

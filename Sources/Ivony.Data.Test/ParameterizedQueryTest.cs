@@ -19,24 +19,24 @@ namespace Ivony.Data.Test
 
       query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID = {0}", 123 );
       Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID = #0#", "单参数模板解析测试失败" );
-      Assert.AreEqual( query.Parameters.Length, 1, "单参数模板解析测试失败" );
+      Assert.AreEqual( query.Parameters.Count, 1, "单参数模板解析测试失败" );
       Assert.AreEqual( query.Parameters[0], 123, "单参数模板解析测试失败" );
 
       query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID = {0..0}", 123 );
       Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID = #0#", "单参数列表模板解析测试失败" );
-      Assert.AreEqual( query.Parameters.Length, 1, "单参数列表模板解析测试失败" );
+      Assert.AreEqual( query.Parameters.Count, 1, "单参数列表模板解析测试失败" );
       Assert.AreEqual( query.Parameters[0], 123, "单参数列表模板解析测试失败" );
 
       query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID IN ( {0..2} )", 1, 2, 3 );
       Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#,#1#,#2# )", "参数列表模板解析测试失败" );
-      Assert.AreEqual( query.Parameters.Length, 3, "参数列表模板解析测试失败" );
+      Assert.AreEqual( query.Parameters.Count, 3, "参数列表模板解析测试失败" );
       Assert.AreEqual( query.Parameters[0], 1, "参数列表模板解析测试失败" );
       Assert.AreEqual( query.Parameters[1], 2, "参数列表模板解析测试失败" );
       Assert.AreEqual( query.Parameters[2], 3, "参数列表模板解析测试失败" );
 
       query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID IN ( {0..2}, {1} )", 1, 2, 3 );
       Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#,#1#,#2#, #3# )", "混合参数列表模板解析测试失败" );
-      Assert.AreEqual( query.Parameters.Length, 4, "混合参数列表模板解析测试失败" );
+      Assert.AreEqual( query.Parameters.Count, 4, "混合参数列表模板解析测试失败" );
       Assert.AreEqual( query.Parameters[0], 1, "混合参数列表模板解析测试失败" );
       Assert.AreEqual( query.Parameters[1], 2, "混合参数列表模板解析测试失败" );
       Assert.AreEqual( query.Parameters[2], 3, "混合参数列表模板解析测试失败" );
@@ -48,19 +48,19 @@ namespace Ivony.Data.Test
 
       query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID = {{{0}}}", 1 );
       Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID = {#0#}", "花括号混合转义测试失败" );
-      Assert.AreEqual( query.Parameters.Length, 1, "花括号混合转义测试失败" );
+      Assert.AreEqual( query.Parameters.Count, 1, "花括号混合转义测试失败" );
       Assert.AreEqual( query.Parameters[0], 1, "花括号混合转义测试失败" );
 
 
       query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID = ( {0} )", Db.T( "SELECT ID FROM Users WHERE Username = {0}", "Ivony" ) );
       Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID = ( SELECT ID FROM Users WHERE Username = #0# )", "一个参数化查询作为另一个参数化查询参数测试失败" );
-      Assert.AreEqual( query.Parameters.Length, 1, "一个参数化查询作为另一个参数化查询参数测试失败" );
+      Assert.AreEqual( query.Parameters.Count, 1, "一个参数化查询作为另一个参数化查询参数测试失败" );
       Assert.AreEqual( query.Parameters[0], "Ivony", "一个参数化查询作为另一个参数化查询参数测试失败" );
 
 
       query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID = ( {1} ) AND Status = {0}", 3, Db.T( "SELECT ID FROM Users WHERE Username = {0}", "Ivony" ) );
       Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID = ( SELECT ID FROM Users WHERE Username = #0# ) AND Status = #1#", "一个参数化查询作为另一个参数化查询参数测试失败" );
-      Assert.AreEqual( query.Parameters.Length, 2, "一个参数化查询作为另一个参数化查询参数测试失败" );
+      Assert.AreEqual( query.Parameters.Count, 2, "一个参数化查询作为另一个参数化查询参数测试失败" );
       Assert.AreEqual( query.Parameters[0], "Ivony", "一个参数化查询作为另一个参数化查询参数测试失败" );
       Assert.AreEqual( query.Parameters[1], 3, "一个参数化查询作为另一个参数化查询参数测试失败" );
 

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Ivony.Data.Queries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data.Queries
+namespace Ivony.Data.Common
 {
   /// <summary>
   /// 辅助实现 IParameterizedQueryParser 的基类
@@ -34,7 +35,7 @@ namespace Ivony.Data.Queries
     {
 
 
-      var length = query.Parameters.Length;
+      var length = query.Parameters.Count;
 
       TParameter[] parameters = new TParameter[length];
       string[] parameterPlaceholders = new string[length];
@@ -52,7 +53,10 @@ namespace Ivony.Data.Queries
 
           var placeholder = parameterPlaceholders[index];
           if ( placeholder == null )
-            placeholder = parameterPlaceholders[index] = GetParameterPlaceholder( DbValueConverter.ConvertTo( query.Parameters[index], null ), index, out parameters[index] );
+          {
+            var descriptor = CreateParameterDescriptor( query.Parameters[index] );
+            placeholder = parameterPlaceholders[index] = GetParameterPlaceholder( descriptor, out parameters[index] );
+          }
 
           return placeholder;
         } );
@@ -62,15 +66,20 @@ namespace Ivony.Data.Queries
       }
     }
 
+    private DbParameterDescriptor CreateParameterDescriptor( DbParameterDescriptor dbParameterDescrptor )
+    {
+      throw new NotImplementedException();
+    }
+
 
     /// <summary>
     /// 派生类实现此方法产生一个参数对象，并生成一段占位符字符串。
     /// </summary>
-    /// <param name="value">参数值</param>
+    /// <param name="descriptor">参数值</param>
     /// <param name="index">参数索引位置</param>
     /// <param name="parameter">参数对象</param>
     /// <returns>参数占位符</returns>
-    protected abstract string GetParameterPlaceholder( object value, int index, out TParameter parameter );
+    protected abstract string GetParameterPlaceholder( DbParameterDescriptor descriptor, out TParameter parameter );
 
 
     /// <summary>

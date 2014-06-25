@@ -17,7 +17,7 @@ namespace Ivony.Data.Queries
 
     private StringBuilder textBuilder = new StringBuilder();
 
-    private List<DbParameter> parameters = new List<DbParameter>();
+    private List<DbParameterDescriptor> parameters = new List<DbParameterDescriptor>();
 
 
     private object _sync = new object();
@@ -74,12 +74,12 @@ namespace Ivony.Data.Queries
       lock ( _sync )
       {
 
-        var p = value as DbParameter;
+        var p = value as DbParameterDescriptor;
         if ( p != null )
           AppendParameter( p );
 
         else
-          AppendParameter( CreateParameter( value ) );
+          AppendParameter( new DbParameterDescriptor( null, DbValueConverter.ConvertTo( value ), null, ParameterDirection.Input ) );
       }
     }
 
@@ -88,25 +88,13 @@ namespace Ivony.Data.Queries
     /// 添加一个查询参数
     /// </summary>
     /// <param name="parameter">查询参数</param>
-    public void AppendParameter( DbParameter parameter )
+    public void AppendParameter( DbParameterDescriptor parameter )
     {
       lock ( _sync )
       {
         parameters.Add( parameter );
         textBuilder.AppendFormat( "#{0}#", parameters.Count - 1 );
       }
-    }
-
-
-
-    private static DbParameter CreateParameter( object value )
-    {
-      var dbValue = DbValueConverter.ConvertTo( value );
-      var type = DbDataType.GetType( dbValue );
-
-
-      return new DbParameter( null, dbValue, type, ParameterDirection.Input );
-
     }
 
 

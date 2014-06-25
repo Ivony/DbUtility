@@ -1,4 +1,5 @@
-﻿using Ivony.Data.Queries;
+﻿using Ivony.Data.Common;
+using Ivony.Data.Queries;
 using Npgsql;
 
 namespace Ivony.Data.PostgreSQL.PostgreSqlClient
@@ -15,10 +16,10 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
     /// <param name="index">参数索引位置</param>
     /// <param name="parameter">参数对象</param>
     /// <returns>参数占位符</returns>
-    protected override string GetParameterPlaceholder( object value, int index, out NpgsqlParameter parameter )
+    protected override string GetParameterPlaceholder( DbParameterDescriptor descriptor, out NpgsqlParameter parameter )
     {
-      var name = "@Param" + index;
-      parameter = new NpgsqlParameter( name, value );
+      var name = "@" + descriptor.Name;
+      parameter = new NpgsqlParameter( name, descriptor.Value );
 
       return name;
     }

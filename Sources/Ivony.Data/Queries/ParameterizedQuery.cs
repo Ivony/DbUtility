@@ -37,7 +37,7 @@ namespace Ivony.Data.Queries
     /// <summary>
     /// 获取参数值
     /// </summary>
-    public DbParameter[] Parameters
+    public IReadOnlyList<DbParameterDescriptor> Parameters
     {
       get;
       private set;
@@ -50,7 +50,7 @@ namespace Ivony.Data.Queries
     /// </summary>
     /// <param name="template">查询文本模板</param>
     /// <param name="parameters">参数值</param>
-    public ParameterizedQuery( string template, DbParameter[] parameters )
+    public ParameterizedQuery( string template, DbParameterDescriptor[] parameters )
     {
 
       if ( template == null )
@@ -59,9 +59,19 @@ namespace Ivony.Data.Queries
       if ( parameters == null )
         throw new ArgumentNullException( "values" );
 
+
+      var conflict = parameters.Select( p => p.Name ).Where( name => name != null )
+        .GroupBy( name => name, StringComparer.OrdinalIgnoreCase )
+        .FirstOrDefault( g => g.Count() > 1 );
+
+      if ( conflict != null )
+        throw new ArgumentException( string.Format( "出现多个名为 \"{0}\" 的参数", conflict ), "parameters" );
+
+
       TextTemplate = template;
-      Parameters = new DbParameter[parameters.Length];
-      parameters.CopyTo( Parameters, 0 );
+      var array =  new DbParameterDescriptor[parameters.Length];
+      parameters.CopyTo( array, 0 );
+      Parameters = array;
     }
 
 
@@ -114,7 +124,7 @@ namespace Ivony.Data.Queries
       writer.WriteLine( "\"" + TextTemplate.Replace( "\"", "\"\"" ) + "\"" );
       writer.WriteLine();
 
-      for ( int i = 0; i < this.Parameters.Length; i++ )
+      for ( int i = 0; i < this.Parameters.Count; i++ )
       {
         writer.WriteLine( "#{0}#: {1}", i, Parameters[i] );
       }

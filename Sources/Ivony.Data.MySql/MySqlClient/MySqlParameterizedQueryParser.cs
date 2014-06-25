@@ -1,4 +1,5 @@
-﻿using Ivony.Data.Queries;
+﻿using Ivony.Data.Common;
+using Ivony.Data.Queries;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,10 @@ namespace Ivony.Data.MySqlClient
 {
   public class MySqlParameterizedQueryParser : ParameterizedQueryParser<MySqlCommand, MySqlParameter>
   {
-    protected override string GetParameterPlaceholder( object value, int index, out MySqlParameter parameter )
+    protected override string GetParameterPlaceholder( DbParameterDescriptor descriptor, out MySqlParameter parameter )
     {
-      var name = "?Param" + index;
-      parameter = new MySqlParameter( name, value );
+      var name = "?" + descriptor.Name;
+      parameter = new MySqlParameter( name, descriptor.Value );
 
       return name;
     }

@@ -105,6 +105,7 @@ namespace Ivony.Data.Common
         return Decimal( 17, 4 );
       }
 
+      throw new InvalidOperationException( "不支持的数据类型" );
     }
 
 

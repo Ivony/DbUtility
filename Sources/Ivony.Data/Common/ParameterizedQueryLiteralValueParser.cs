@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Ivony.Data.Queries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data.Queries
+namespace Ivony.Data.Common
 {
 
   /// <summary>
@@ -32,7 +33,7 @@ namespace Ivony.Data.Queries
       {
         var index = int.Parse( match.Groups["index"].Value );
 
-        return GetLiteralValue( DbValueConverter.ConvertTo( query.Parameters[index], null ) );
+        return GetLiteralValue( query.Parameters[index] );
 
       } );
 
@@ -53,7 +54,7 @@ namespace Ivony.Data.Queries
     /// </summary>
     /// <param name="value">参数值</param>
     /// <returns>该参数值在查询命令中的字面表达方式</returns>
-    protected abstract string GetLiteralValue( object value );
+    protected abstract string GetLiteralValue( DbParameterDescriptor value );
 
   }
 }

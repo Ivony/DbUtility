@@ -25,14 +25,14 @@ namespace Ivony.Data.SqlClient
     /// <summary>
     /// 创建参数并获取参数占位符
     /// </summary>
-    /// <param name="value">参数值</param>
+    /// <param name="descriptor">参数描述符</param>
     /// <param name="index">在模板中参数的位置顺序</param>
     /// <param name="parameter">创建的参数对象</param>
     /// <returns>参数占位符</returns>
-    protected override string GetParameterPlaceholder( object value, int index, out SqlParameter parameter )
+    protected override string GetParameterPlaceholder( DbParameterDescriptor descriptor, out SqlParameter parameter )
     {
-      var name = "@Param" + index;
-      parameter = new SqlParameter( name, value );
+      var name = "@" + descriptor.Name;
+      parameter = new SqlParameter( name, descriptor.Value );
 
       return name;
     }

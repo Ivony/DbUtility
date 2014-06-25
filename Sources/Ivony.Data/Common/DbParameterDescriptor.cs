@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.Common
 {
-  public sealed class DbParameter
+
+
+  /// <summary>
+  /// 定义一个参数化查询的参数描述符
+  /// </summary>
+  public sealed class DbParameterDescriptor
   {
 
 
-    public DbParameter( string name, object value, DbDataType type, ParameterDirection direction )
+    public DbParameterDescriptor( string name, object value, DbDataType type, ParameterDirection direction )
     {
       Name = name;
       Value = value;
