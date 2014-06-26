@@ -22,7 +22,6 @@ namespace Ivony.Data.Common
       Value = value;
       DbType = type;
       Direction = direction;
-
     }
 
 
