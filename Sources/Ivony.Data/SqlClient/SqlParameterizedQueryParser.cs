@@ -32,7 +32,15 @@ namespace Ivony.Data.SqlClient
     protected override string GetParameterPlaceholder( DbParameterDescriptor descriptor, out SqlParameter parameter )
     {
       var name = "@" + descriptor.Name;
+
       parameter = new SqlParameter( name, descriptor.Value );
+      if ( descriptor.DbType != null )
+      {
+        parameter.DbType = descriptor.DbType.DbType;
+        parameter.Size = descriptor.DbType.Size;
+        parameter.Scale = descriptor.DbType.Scale;
+        parameter.Direction = descriptor.Direction;
+      }
 
       return name;
     }
