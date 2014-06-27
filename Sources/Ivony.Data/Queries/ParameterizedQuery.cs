@@ -173,5 +173,31 @@ namespace Ivony.Data.Queries
     {
       return char.IsWhiteSpace( TextTemplate[0] );
     }
+
+
+
+    private object _sync = new object();
+
+    /// <summary>
+    /// 设置输出参数的值
+    /// </summary>
+    /// <param name="values">输出参数的值列表</param>
+    public void SetOutputParameterValue( IDictionary<string, object> values )
+    {
+      lock ( _sync )
+      {
+
+        var parameters = Parameters.Where( p => p.Direction == ParameterDirection.InputOutput || p.Direction == ParameterDirection.Output )
+          .ToDictionary( p => p.Name, p => p );
+
+        var names = new HashSet<string>( parameters.Keys );
+        if ( !names.SetEquals( values.Keys ) )
+          throw new ArgumentException( "要设置的参数列表，与参数化查询中的输出参数列表不匹配", "values" );
+
+
+        foreach ( var pair in values )
+          parameters[pair.Key].SetValue( pair.Value );
+      }
+    }
   }
 }

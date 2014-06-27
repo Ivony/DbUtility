@@ -170,7 +170,24 @@ namespace Ivony.Data.SqlClient
 
     IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
-      return Execute( CreateCommand( query ), TryCreateTracing( this, query ) );
+      var command = CreateCommand( query );
+      var context = Execute( command, TryCreateTracing( this, query ) );
+
+      var outputParameters = command.Parameters.Cast<SqlParameter>()
+        .Where( parameter => parameter.Direction == ParameterDirection.Output || parameter.Direction == ParameterDirection.Output )
+        .ToDictionary( p => p.ParameterName.Substring( 1 ), p => p.Value );
+
+      try
+      {
+        query.SetOutputParameterValue( outputParameters );
+      }
+      catch
+      {
+        context.Dispose();
+        throw;
+      }
+
+      return context;
     }
 
     Task<IAsyncDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )

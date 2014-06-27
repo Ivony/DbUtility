@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,6 +98,28 @@ namespace Ivony.Data.Common
       }
     }
 
+
+
+    protected TContext TryExecute<TCommand, TContext>( TCommand command, Func<TCommand, TContext> executor, IDbTracing tracing = null ) where TCommand : DbCommand
+    {
+      var context = executor( command, tracing );
+
+      var outputParameters = command.Parameters.Cast<SqlParameter>()
+        .Where( parameter => parameter.Direction == ParameterDirection.Output || parameter.Direction == ParameterDirection.Output )
+        .ToDictionary( p => p.ParameterName.Substring( 1 ), p => p.Value );
+
+      try
+      {
+        query.SetOutputParameterValue( outputParameters );
+      }
+      catch
+      {
+        context.Dispose();
+        throw;
+      }
+
+      return context;
+    }
 
   }
 }
