@@ -54,7 +54,7 @@ namespace Ivony.Data.Common
           var placeholder = parameterPlaceholders[index];
           if ( placeholder == null )
           {
-            var descriptor = CreateParameterDescriptor( query.Parameters[index] );
+            var descriptor = CreateParameterDescriptor( query.Parameters[index], index );
             placeholder = parameterPlaceholders[index] = GetParameterPlaceholder( descriptor, out parameters[index] );
           }
 
@@ -66,9 +66,13 @@ namespace Ivony.Data.Common
       }
     }
 
-    private DbParameterDescriptor CreateParameterDescriptor( DbParameterDescriptor dbParameterDescrptor )
+    protected virtual DbParameterDescriptor CreateParameterDescriptor( DbParameterDescriptor descriptor, int index )
     {
-      throw new NotImplementedException();
+      if ( descriptor.Name == null )
+        return new DbParameterDescriptor( "Param" + index, descriptor.Value, descriptor.DbDataType, descriptor.Direction, descriptor.Callback );
+
+      else
+        return descriptor;
     }
 
 

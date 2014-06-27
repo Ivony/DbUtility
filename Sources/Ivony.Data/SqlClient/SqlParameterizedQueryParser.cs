@@ -34,11 +34,11 @@ namespace Ivony.Data.SqlClient
       var name = "@" + descriptor.Name;
 
       parameter = new SqlParameter( name, descriptor.Value );
-      if ( descriptor.DbType != null )
+      if ( descriptor.DbDataType != null )
       {
-        parameter.DbType = descriptor.DbType.DbType;
-        parameter.Size = descriptor.DbType.Size;
-        parameter.Scale = descriptor.DbType.Scale;
+        parameter.DbType = descriptor.DbDataType.DbType;
+        parameter.Size = descriptor.DbDataType.Size;
+        parameter.Scale = descriptor.DbDataType.Scale;
         parameter.Direction = descriptor.Direction;
       }
 

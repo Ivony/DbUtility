@@ -9,6 +9,9 @@ using System.Xml.Linq;
 namespace Ivony.Data.Common
 {
 
+  /// <summary>
+  /// 辅助实现 XDocumen 类型对象到数据库类型的双向类型转换器
+  /// </summary>
   public class XDocumentValueConverter : IDbValueConverter<XDocument>
   {
     XDocument IDbValueConverter<XDocument>.ConvertValueFrom( object dataValue, string dataTypeName )

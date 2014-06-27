@@ -40,20 +40,20 @@ namespace Ivony.Data.Common
       {
         if ( value == null )
           value = DBNull.Value;
+
       }
 
+      Value = value;
 
 
       if ( direction == ParameterDirection.InputOutput || direction == ParameterDirection.Output )
       {
 
-        callback = valueChangedCallback;//设置参数值回调
+        Callback = valueChangedCallback;//设置参数值回调
       }
     }
 
 
-
-    private Action<DbParameterDescriptor, object> callback;
 
 
     /// <summary>
@@ -93,6 +93,12 @@ namespace Ivony.Data.Common
       private set;
     }
 
+    internal Action<DbParameterDescriptor, object> Callback
+    {
+      get;
+      private set;
+    }
+
     /// <summary>
     /// 设置参数值
     /// </summary>
@@ -102,7 +108,7 @@ namespace Ivony.Data.Common
       Contract.Assert( Direction == ParameterDirection.InputOutput || Direction == ParameterDirection.Output );
 
       Value = value;
-      callback( this, value );
+      Callback( this, value );
     }
   }
 }

@@ -99,35 +99,18 @@ namespace Ivony.Data.SqlClient
     /// <param name="command">查询命令</param>
     /// <param name="tracing">用于追踪查询过程的追踪器</param>
     /// <returns>查询执行上下文</returns>
-    protected virtual IDbExecuteContext Execute( SqlCommand command, IDbTracing tracing = null )
+    protected virtual IDbExecuteContext ExecuteCommand( SqlCommand command, IDbTracing tracing = null )
     {
+      var connection = new SqlConnection( ConnectionString );
+      connection.Open();
+      command.Connection = connection;
 
-      try
-      {
-        TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
-
-
-        var connection = new SqlConnection( ConnectionString );
-        connection.Open();
-        command.Connection = connection;
-
-        if ( Configuration.QueryExecutingTimeout.HasValue )
-          command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+      if ( Configuration.QueryExecutingTimeout.HasValue )
+        command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
 
 
-        var reader = command.ExecuteReader();
-        var context = new SqlDbExecuteContext( connection, reader, tracing );
-
-        TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
-
-        return context;
-
-      }
-      catch ( DbException exception )
-      {
-        TryExecuteTracing( tracing, t => t.OnException( exception ) );
-        throw;
-      }
+      var reader = command.ExecuteReader();
+      return new SqlDbExecuteContext( connection, reader, tracing );
     }
 
 
@@ -138,84 +121,42 @@ namespace Ivony.Data.SqlClient
     /// <param name="token">取消指示</param>
     /// <param name="tracing">用于追踪查询过程的追踪器</param>
     /// <returns>查询执行上下文</returns>
-    protected virtual async Task<IAsyncDbExecuteContext> ExecuteAsync( SqlCommand command, CancellationToken token, IDbTracing tracing = null )
+    protected virtual async Task<IAsyncDbExecuteContext> ExecuteCommandAsync( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) )
     {
-      try
-      {
-        TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
+      var connection = new SqlConnection( ConnectionString );
+      await connection.OpenAsync( token );
+      command.Connection = connection;
 
-        var connection = new SqlConnection( ConnectionString );
-        await connection.OpenAsync( token );
-        command.Connection = connection;
-
-        if ( Configuration.QueryExecutingTimeout.HasValue )
-          command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
+      if ( Configuration.QueryExecutingTimeout.HasValue )
+        command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
 
 
-        var reader = await command.ExecuteReaderAsync( token );
-        var context = new SqlDbExecuteContext( connection, reader, tracing );
+      var reader = await command.ExecuteReaderAsync( token );
+      var context = new SqlDbExecuteContext( connection, reader, tracing );
 
-        TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
-
-        return context;
-      }
-      catch ( DbException exception )
-      {
-        TryExecuteTracing( tracing, t => t.OnException( exception ) );
-        throw;
-      }
+      return context;
     }
 
 
 
     IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
-      var command = CreateCommand( query );
-      var context = Execute( command, TryCreateTracing( this, query ) );
-
-      var outputParameters = command.Parameters.Cast<SqlParameter>()
-        .Where( parameter => parameter.Direction == ParameterDirection.Output || parameter.Direction == ParameterDirection.Output )
-        .ToDictionary( p => p.ParameterName.Substring( 1 ), p => p.Value );
-
-      try
-      {
-        query.SetOutputParameterValue( outputParameters );
-      }
-      catch
-      {
-        context.Dispose();
-        throw;
-      }
-
-      return context;
+      return ExecuteQuery( query, new SqlParameterizedQueryParser(), ExecuteCommand );
     }
 
     Task<IAsyncDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )
     {
-      return ExecuteAsync( CreateCommand( query ), token, TryCreateTracing( this, query ) );
+      return ExecuteQuery( query, new SqlParameterizedQueryParser(), ExecuteCommandAsync );
     }
-
-
-    /// <summary>
-    /// 从参数化查询创建查询命令对象
-    /// </summary>
-    /// <param name="query">参数化查询对象</param>
-    /// <returns>SQL 查询命令对象</returns>
-    protected SqlCommand CreateCommand( ParameterizedQuery query )
-    {
-      return new SqlParameterizedQueryParser().Parse( query );
-    }
-
-
 
     IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
     {
-      return Execute( CreateCommand( query ), TryCreateTracing( this, query ) );
+      return ExecuteQuery( query, CreateCommand, ExecuteCommand );
     }
 
     Task<IAsyncDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query, CancellationToken token )
     {
-      return ExecuteAsync( CreateCommand( query ), token, TryCreateTracing( this, query ) );
+      return ExecuteQuery( query, CreateCommand, ExecuteCommandAsync );
     }
 
 

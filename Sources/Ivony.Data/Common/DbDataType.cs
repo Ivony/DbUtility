@@ -15,6 +15,12 @@ namespace Ivony.Data.Common
   {
 
 
+    /// <summary>
+    /// 获取数据库类型描述符
+    /// </summary>
+    /// <param name="type">数据类型</param>
+    /// <param name="size">最大数据大小</param>
+    /// <param name="scale">数据精度</param>
     public DbDataType( DbType type, int size, byte scale )
     {
       DbType = type;
