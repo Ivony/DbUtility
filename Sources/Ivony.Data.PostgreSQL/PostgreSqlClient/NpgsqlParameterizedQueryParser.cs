@@ -16,7 +16,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
     /// <param name="index">参数索引位置</param>
     /// <param name="parameter">参数对象</param>
     /// <returns>参数占位符</returns>
-    protected override string GetParameterPlaceholder( DbParameterDescriptor descriptor, out NpgsqlParameter parameter )
+    protected override string GetParameterPlaceholder( ParameterDescriptor descriptor, out NpgsqlParameter parameter )
     {
       var name = "@" + descriptor.Name;
       parameter = new NpgsqlParameter( name, descriptor.Value );

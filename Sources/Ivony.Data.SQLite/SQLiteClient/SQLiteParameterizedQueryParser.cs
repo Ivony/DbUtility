@@ -16,7 +16,7 @@ namespace Ivony.Data.SQLiteClient
   /// </summary>
   public class SQLiteParameterizedQueryParser : ParameterizedQueryParser<SQLiteCommand, SQLiteParameter>
   {
-    protected override string GetParameterPlaceholder( DbParameterDescriptor descriptor, out SQLiteParameter parameter )
+    protected override string GetParameterPlaceholder( ParameterDescriptor descriptor, out SQLiteParameter parameter )
     {
       var name = ":" + descriptor.Name;
       parameter = new SQLiteParameter( name, descriptor.Value );

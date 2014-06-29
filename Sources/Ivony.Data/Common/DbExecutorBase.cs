@@ -102,106 +102,6 @@ namespace Ivony.Data.Common
 
 
 
-    /// <summary>
-    /// 辅助实现执行参数化查询
-    /// </summary>
-    /// <typeparam name="TCommand">命令对象类型</typeparam>
-    /// <typeparam name="TContext">查询上下文对象类型</typeparam>
-    /// <param name="query">要执行的查询对象</param>
-    /// <param name="parser">参数化查询解析器</param>
-    /// <param name="executor">执行命令的方法</param>
-    /// <returns>查询上下文</returns>
-    protected TContext ExecuteQuery<TCommand, TContext>( ParameterizedQuery query, IParameterizedQueryParser<TCommand> parser, Func<TCommand, IDbTracing, TContext> executor )
-      where TCommand : DbCommand
-      where TContext : IDbExecuteContext
-    {
-
-      var tracing = TryCreateTracing( query );
-      var command = parser.Parse( query );
-
-
-      TContext context;
-      TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
-
-      try
-      {
-        context = executor( command, tracing );
-      }
-      catch ( DbException exception )
-      {
-        TryExecuteTracing( tracing, t => t.OnException( exception ) );
-        throw;
-      }
-
-      try
-      {
-        var outputParameters = command.Parameters.Cast<DbParameter>()
-        .Where( parameter => parameter.Direction == ParameterDirection.Output || parameter.Direction == ParameterDirection.Output )
-        .ToDictionary( p => p.ParameterName.Substring( 1 ), p => p.Value );
-
-        query.SetOutputParameterValue( outputParameters );
-      }
-      catch
-      {
-        context.Dispose();
-        throw;
-      }
-
-      TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
-      return context;
-    }
-
-
-    /// <summary>
-    /// 辅助实现异步执行参数化查询
-    /// </summary>
-    /// <typeparam name="TCommand">命令对象类型</typeparam>
-    /// <typeparam name="TContext">查询上下文对象类型</typeparam>
-    /// <param name="query">要执行的查询对象</param>
-    /// <param name="parser">参数化查询解析器</param>
-    /// <param name="asyncExecutor">异步执行命令的方法</param>
-    /// <param name="token">取消标识</param>
-    /// <returns>返回一个 Task ，其封装了异步查询过程</returns>
-    protected async Task<TContext> ExecuteQuery<TCommand, TContext>( ParameterizedQuery query, IParameterizedQueryParser<TCommand> parser, Func<TCommand, IDbTracing, CancellationToken, Task<TContext>> asyncExecutor, CancellationToken token = default( CancellationToken ) )
-      where TCommand : DbCommand
-      where TContext : IDbExecuteContext
-    {
-
-      var tracing = TryCreateTracing( query );
-      var command = parser.Parse( query );
-
-      TContext context;
-      TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
-
-      try
-      {
-        context = await asyncExecutor( command, tracing, token );
-      }
-      catch ( DbException exception )
-      {
-        TryExecuteTracing( tracing, t => t.OnException( exception ) );
-        throw;
-      }
-
-      try
-      {
-        var outputParameters = command.Parameters.Cast<DbParameter>()
-        .Where( parameter => parameter.Direction == ParameterDirection.Output || parameter.Direction == ParameterDirection.Output )
-        .ToDictionary( p => p.ParameterName.Substring( 1 ), p => p.Value );
-
-        query.SetOutputParameterValue( outputParameters );
-      }
-      catch
-      {
-        context.Dispose();
-        throw;
-      }
-
-      TryExecuteTracing( tracing, t => t.OnLoadingData( context ) );
-      return context;
-    }
-
-
 
     /// <summary>
     /// 辅助实现执行查询
@@ -213,7 +113,7 @@ namespace Ivony.Data.Common
     /// <param name="commandCreator">创建命令对象的方法</param>
     /// <param name="executor">执行命令的方法</param>
     /// <returns>查询执行上下文</returns>
-    protected TContext ExecuteQuery<TQuery, TCommand, TContext>( TQuery query, Func<TQuery, TCommand> commandCreator, Func<TCommand, IDbTracing, TContext> executor )
+    protected TContext ExecuteQuery<TQuery, TCommand, TContext>( TQuery query, Func<TQuery, TCommand> commandCreator, Func<TQuery, TCommand, IDbTracing, TContext> executor )
       where TQuery : IDbQuery
       where TContext : IDbExecuteContext
     {
@@ -225,7 +125,7 @@ namespace Ivony.Data.Common
       TryTraceOnExecuting( tracing, command );
       try
       {
-        context = executor( command, tracing );
+        context = executor( query, command, tracing );
       }
       catch ( DbException exception )
       {
@@ -248,8 +148,9 @@ namespace Ivony.Data.Common
     /// <param name="query">查询对象</param>
     /// <param name="asyncCommandCreator">异步创建命令对象的方法</param>
     /// <param name="asyncExecutor">异步执行命令的方法</param>
+    /// <param name="token">取消标识</param>
     /// <returns>查询执行上下文</returns>
-    protected async Task<TContext> ExecuteQuery<TQuery, TCommand, TContext>( TQuery query, Func<TQuery, CancellationToken, Task<TCommand>> asyncCommandCreator, Func<TCommand, IDbTracing, CancellationToken, Task<TContext>> asyncExecutor, CancellationToken token = default(CancellationToken) )
+    protected async Task<TContext> ExecuteQuery<TQuery, TCommand, TContext>( TQuery query, Func<TQuery, CancellationToken, Task<TCommand>> asyncCommandCreator, Func<TQuery, TCommand, IDbTracing, CancellationToken, Task<TContext>> asyncExecutor, CancellationToken token = default(CancellationToken) )
       where TQuery : IDbQuery
       where TContext : IAsyncDbExecuteContext
     {
@@ -261,7 +162,7 @@ namespace Ivony.Data.Common
       TryTraceOnExecuting( tracing, command );
       try
       {
-        context = await asyncExecutor( command, tracing, token );
+        context = await asyncExecutor( query, command, tracing, token );
       }
       catch ( DbException exception )
       {
@@ -283,8 +184,9 @@ namespace Ivony.Data.Common
     /// <param name="query">查询对象</param>
     /// <param name="commandCreator">创建命令对象的方法</param>
     /// <param name="asyncExecutor">异步执行命令的方法</param>
+    /// <param name="token">取消标识</param>
     /// <returns>查询执行上下文</returns>
-    protected async Task<TContext> ExecuteQuery<TQuery, TCommand, TContext>( TQuery query, Func<TQuery, TCommand> commandCreator, Func<TCommand, IDbTracing, CancellationToken, Task<TContext>> asyncExecutor, CancellationToken token = default(CancellationToken) )
+    protected async Task<TContext> ExecuteQuery<TQuery, TCommand, TContext>( TQuery query, Func<TQuery, TCommand> commandCreator, Func<TQuery, TCommand, IDbTracing, CancellationToken, Task<TContext>> asyncExecutor, CancellationToken token = default(CancellationToken) )
       where TQuery : IDbQuery
       where TContext : IAsyncDbExecuteContext
     {
@@ -296,7 +198,7 @@ namespace Ivony.Data.Common
       TryTraceOnExecuting( tracing, command );
       try
       {
-        context = await asyncExecutor( command, tracing, token );
+        context = await asyncExecutor( query, command, tracing, token );
       }
       catch ( DbException exception )
       {

@@ -11,7 +11,7 @@ namespace Ivony.Data.MySqlClient
 {
   public class MySqlParameterizedQueryParser : ParameterizedQueryParser<MySqlCommand, MySqlParameter>
   {
-    protected override string GetParameterPlaceholder( DbParameterDescriptor descriptor, out MySqlParameter parameter )
+    protected override string GetParameterPlaceholder( ParameterDescriptor descriptor, out MySqlParameter parameter )
     {
       var name = "?" + descriptor.Name;
       parameter = new MySqlParameter( name, descriptor.Value );

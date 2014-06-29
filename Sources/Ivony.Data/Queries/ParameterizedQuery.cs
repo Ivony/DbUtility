@@ -37,7 +37,7 @@ namespace Ivony.Data.Queries
     /// <summary>
     /// 获取参数值
     /// </summary>
-    public IReadOnlyList<DbParameterDescriptor> Parameters
+    public IReadOnlyList<ParameterDescriptor> Parameters
     {
       get;
       private set;
@@ -50,7 +50,7 @@ namespace Ivony.Data.Queries
     /// </summary>
     /// <param name="template">查询文本模板</param>
     /// <param name="parameters">参数值</param>
-    public ParameterizedQuery( string template, DbParameterDescriptor[] parameters )
+    public ParameterizedQuery( string template, ParameterDescriptor[] parameters )
     {
 
       if ( template == null )
@@ -69,7 +69,7 @@ namespace Ivony.Data.Queries
 
 
       TextTemplate = template;
-      var array =  new DbParameterDescriptor[parameters.Length];
+      var array =  new ParameterDescriptor[parameters.Length];
       parameters.CopyTo( array, 0 );
       Parameters = array;
     }

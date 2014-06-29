@@ -107,7 +107,7 @@
     <Compile Include="IDbQuery.cs" />
     <Compile Include="IDbTransactionContext.cs" />
     <Compile Include="Common\DbDataType.cs" />
-    <Compile Include="Common\DbParameterDescriptor.cs" />
+    <Compile Include="Queries\DbParameterDescriptor.cs" />
     <Compile Include="Common\IParameterizedQueryParser.cs" />
     <Compile Include="Common\ParameterizedQueryParser.cs" />
     <Compile Include="Common\ParameterizedQueryLiteralValueParser.cs" />

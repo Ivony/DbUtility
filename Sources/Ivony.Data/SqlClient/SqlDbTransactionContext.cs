@@ -86,11 +86,12 @@ namespace Ivony.Data.SqlClient
       /// <summary>
       /// 重写 ExecuteAsync 方法，在事务中异步执行查询
       /// </summary>
+      /// <param name="query">正在执行的查询对象</param>
       /// <param name="command">要执行的查询命令</param>
       /// <param name="token">取消指示</param>
       /// <param name="tracing">用于追踪的追踪器</param>
       /// <returns>查询执行上下文</returns>
-      protected sealed override async Task<IAsyncDbExecuteContext> ExecuteCommandAsync( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default(CancellationToken ) )
+      protected sealed override async Task<IAsyncDbExecuteContext> ExecuteCommandAsync<TQuery>( TQuery query, SqlCommand command, IDbTracing tracing = null, CancellationToken token = default(CancellationToken ) )
       {
         TryExecuteTracing( tracing, t => t.OnExecuting( command ) );
 
@@ -113,10 +114,11 @@ namespace Ivony.Data.SqlClient
       /// <summary>
       /// 执行查询命令并返回执行上下文
       /// </summary>
+      /// <param name="query">正在执行的查询对象</param>
       /// <param name="command">查询命令</param>
       /// <param name="tracing">用于追踪查询过程的追踪器</param>
       /// <returns>查询执行上下文</returns>
-      protected sealed override IDbExecuteContext ExecuteCommand( SqlCommand command, IDbTracing tracing = null )
+      protected sealed override IDbExecuteContext ExecuteCommand<TQuery>( TQuery query, SqlCommand command, IDbTracing tracing = null )
       {
         command.Connection = TransactionContext.Connection;
         command.Transaction = TransactionContext.Transaction;

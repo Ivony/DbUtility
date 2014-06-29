@@ -61,6 +61,11 @@ namespace Ivony.Data.Common
 
 
 
+    /// <summary>
+    /// 根据数据对象获取对应的数据类型
+    /// </summary>
+    /// <param name="value">要从中获取类型信息的数据对象</param>
+    /// <returns>数据类型描述符</returns>
     public static DbDataType GetType( object value )
     {
 

@@ -96,10 +96,11 @@ namespace Ivony.Data.SqlClient
     /// <summary>
     /// 执行查询命令并返回执行上下文
     /// </summary>
+    /// <param name="query">正在执行的查询对象</param>
     /// <param name="command">查询命令</param>
     /// <param name="tracing">用于追踪查询过程的追踪器</param>
     /// <returns>查询执行上下文</returns>
-    protected virtual IDbExecuteContext ExecuteCommand( SqlCommand command, IDbTracing tracing = null )
+    protected virtual IDbExecuteContext ExecuteCommand<TQuery>( TQuery query, SqlCommand command, IDbTracing tracing = null ) where TQuery : IDbQuery
     {
       var connection = new SqlConnection( ConnectionString );
       connection.Open();
@@ -108,8 +109,10 @@ namespace Ivony.Data.SqlClient
       if ( Configuration.QueryExecutingTimeout.HasValue )
         command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
 
-
       var reader = command.ExecuteReader();
+
+#warning 尚未将返回参数值与查询对象绑定。
+
       return new SqlDbExecuteContext( connection, reader, tracing );
     }
 
@@ -117,11 +120,12 @@ namespace Ivony.Data.SqlClient
     /// <summary>
     /// 异步执行查询命令并返回执行上下文
     /// </summary>
+    /// <param name="query">正在执行的查询对象</param>
     /// <param name="command">查询命令</param>
     /// <param name="token">取消指示</param>
     /// <param name="tracing">用于追踪查询过程的追踪器</param>
     /// <returns>查询执行上下文</returns>
-    protected virtual async Task<IAsyncDbExecuteContext> ExecuteCommandAsync( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) )
+    protected virtual async Task<IAsyncDbExecuteContext> ExecuteCommandAsync<TQuery>( TQuery query, SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) ) where TQuery : IDbQuery
     {
       var connection = new SqlConnection( ConnectionString );
       await connection.OpenAsync( token );
@@ -141,12 +145,12 @@ namespace Ivony.Data.SqlClient
 
     IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
-      return ExecuteQuery( query, new SqlParameterizedQueryParser(), ExecuteCommand );
+      return ExecuteQuery( query, q => new SqlParameterizedQueryParser().Parse( q ), ExecuteCommand );
     }
 
     Task<IAsyncDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )
     {
-      return ExecuteQuery( query, new SqlParameterizedQueryParser(), ExecuteCommandAsync );
+      return ExecuteQuery( query, q => new SqlParameterizedQueryParser().Parse( q ), ExecuteCommandAsync );
     }
 
     IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
@@ -169,7 +173,7 @@ namespace Ivony.Data.SqlClient
     {
       var command = new SqlCommand( query.Name );
       command.CommandType = CommandType.StoredProcedure;
-      query.Parameters.ForAll( pair => command.Parameters.AddWithValue( pair.Key, pair.Value ) );
+      query.Parameters.ForAll( parameter => command.Parameters.AddWithValue( parameter.Name, parameter.Value ) );
 
       return command;
     }

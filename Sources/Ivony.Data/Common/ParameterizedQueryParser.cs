@@ -34,6 +34,7 @@ namespace Ivony.Data.Common
     public TCommand Parse( ParameterizedQuery query )
     {
 
+      //TODO 将 ParameterizedQuery 对象与命令对象进行绑定。
 
       var length = query.Parameters.Count;
 
@@ -54,6 +55,7 @@ namespace Ivony.Data.Common
           var placeholder = parameterPlaceholders[index];
           if ( placeholder == null )
           {
+
             var descriptor = CreateParameterDescriptor( query.Parameters[index], index );
             placeholder = parameterPlaceholders[index] = GetParameterPlaceholder( descriptor, out parameters[index] );
           }
@@ -66,10 +68,11 @@ namespace Ivony.Data.Common
       }
     }
 
-    protected virtual DbParameterDescriptor CreateParameterDescriptor( DbParameterDescriptor descriptor, int index )
+
+    protected virtual ParameterDescriptor CreateParameterDescriptor( ParameterDescriptor descriptor, int index )
     {
       if ( descriptor.Name == null )
-        return new DbParameterDescriptor( "Param" + index, descriptor.Value, descriptor.DbDataType, descriptor.Direction, descriptor.Callback );
+        return new ParameterDescriptor( "Param" + index, descriptor.Value, descriptor.DbDataType, descriptor.Direction, descriptor.Callback );
 
       else
         return descriptor;
@@ -80,10 +83,9 @@ namespace Ivony.Data.Common
     /// 派生类实现此方法产生一个参数对象，并生成一段占位符字符串。
     /// </summary>
     /// <param name="descriptor">参数值</param>
-    /// <param name="index">参数索引位置</param>
     /// <param name="parameter">参数对象</param>
     /// <returns>参数占位符</returns>
-    protected abstract string GetParameterPlaceholder( DbParameterDescriptor descriptor, out TParameter parameter );
+    protected abstract string GetParameterPlaceholder( ParameterDescriptor descriptor, out TParameter parameter );
 
 
     /// <summary>

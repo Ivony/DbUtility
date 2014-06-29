@@ -54,7 +54,7 @@ namespace Ivony.Data.Common
     /// </summary>
     /// <param name="value">参数值</param>
     /// <returns>该参数值在查询命令中的字面表达方式</returns>
-    protected abstract string GetLiteralValue( DbParameterDescriptor value );
+    protected abstract string GetLiteralValue( ParameterDescriptor value );
 
   }
 }

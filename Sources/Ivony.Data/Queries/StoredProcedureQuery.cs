@@ -15,26 +15,7 @@ namespace Ivony.Data.Queries
   {
 
     private string _name;
-    private IDictionary<string, object> _parameters;
-
-    /// <summary>
-    /// 创建 StoredProcedureExpression 对象
-    /// </summary>
-    /// <param name="name">存储过程名称</param>
-    public StoredProcedureQuery( string name ) : this( name, new Dictionary<string, object>() ) { }
-
-    /// <summary>
-    /// 创建 StoredProcedureExpression 对象
-    /// </summary>
-    /// <param name="name">存储过程名称</param>
-    /// <param name="parameters">存储过程参数列表</param>
-    public StoredProcedureQuery( string name, IDictionary<string, object> parameters )
-    {
-
-      _name = name;
-      _parameters = parameters;
-
-    }
+    private ParameterDescriptor[] _parameters;
 
 
     /// <summary>
@@ -48,7 +29,7 @@ namespace Ivony.Data.Queries
     /// <summary>
     /// 存储过程参数列表
     /// </summary>
-    public IDictionary<string, object> Parameters
+    public IReadOnlyList<ParameterDescriptor> Parameters
     {
       get { return _parameters; }
     }

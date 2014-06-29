@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ivony.Data.Common;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Contracts;
@@ -6,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data.Common
+namespace Ivony.Data.Queries
 {
 
 
   /// <summary>
-  /// 定义一个参数化查询的参数描述符
+  /// 定义一个查询参数描述符
   /// </summary>
-  public sealed class DbParameterDescriptor
+  public sealed class ParameterDescriptor
   {
 
 
@@ -25,7 +26,7 @@ namespace Ivony.Data.Common
     /// <param name="type">参数数据类型</param>
     /// <param name="direction">参数传输方向</param>
     /// <param name="valueChangedCallback">当输出参数值改变时应当回调的通知方法</param>
-    public DbParameterDescriptor( string name, object value, DbDataType type, ParameterDirection direction, Action<DbParameterDescriptor, object> valueChangedCallback = null )
+    public ParameterDescriptor( string name, object value, DbDataType type, ParameterDirection direction, Action<ParameterDescriptor, object> valueChangedCallback = null )
     {
       Name = name;
       DbDataType = type;
@@ -93,7 +94,7 @@ namespace Ivony.Data.Common
       private set;
     }
 
-    internal Action<DbParameterDescriptor, object> Callback
+    internal Action<ParameterDescriptor, object> Callback
     {
       get;
       private set;
