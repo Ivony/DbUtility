@@ -18,7 +18,7 @@ namespace Ivony.Data.Test
 
     public IDbTracing CreateTracing<TQuery>( IDbExecutor<TQuery> executor, TQuery query ) where TQuery : IDbQuery
     {
-      var tracing = new DbTracing();
+      var tracing = new DbTracing( query );
       _list.Add( tracing );
       return tracing;
 
@@ -37,42 +37,4 @@ namespace Ivony.Data.Test
       return _list.GetEnumerator();
     }
   }
-
-
-  public class DbTracing : IDbTracing
-  {
-
-    private LogCollection logger = new LogCollection();
-
-    public void OnExecuting( object commandObject )
-    {
-      Assert.IsNotNull( commandObject );
-      logger.LogInfo( "OnExecuting" );
-    }
-
-    public void OnLoadingData( IDbExecuteContext context )
-    {
-      Assert.IsNotNull( context );
-      logger.LogInfo( "OnLoadingData" );
-    }
-
-    public void OnComplete()
-    {
-      logger.LogInfo( "OnComplete" );
-    }
-
-    public void OnException( Exception exception )
-    {
-      Assert.IsNotNull( exception );
-      logger.LogInfo( "OnException" );
-    }
-
-
-    public LogEntry[] GetLogEntries()
-    {
-      return logger.ToArray();
-    }
-
-  }
-
 }

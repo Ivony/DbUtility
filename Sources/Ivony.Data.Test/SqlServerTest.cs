@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Ivony.Logs;
 using System.Data;
 using Ivony.Data.SqlClient;
+using System.Xml.Linq;
+using Ivony.Data.Common;
 
 namespace Ivony.Data.Test
 {
@@ -20,8 +22,8 @@ namespace Ivony.Data.Test
 
     public SqlServerTest()
     {
-      traceService = new TestTraceService();
-      db = SqlServerExpress.Connect( "TestDatabase", new SqlDbConfiguration() { TraceService = traceService } );
+      SqlServerExpress.Configuration.TraceService = traceService = new TestTraceService();
+      db = SqlServerExpress.Connect( "TestDatabase" );
 
 
       db.T( "IF OBJECT_ID(N'[dbo].[Test1]') IS NOT NULL DROP TABLE [dbo].[Test1]" ).ExecuteNonQuery();
@@ -31,6 +33,7 @@ CREATE TABLE [dbo].[Test1]
     [ID] INT NOT NULL IDENTITY,
     [Name] NVARCHAR(50) NOT NULL , 
     [Content] NTEXT NULL, 
+    [XmlContent] XML NULL,
     [Index] INT NOT NULL, 
     CONSTRAINT [PK_Test1] PRIMARY KEY ([ID]) 
 )" ).ExecuteNonQuery();
@@ -151,12 +154,14 @@ CREATE TABLE [dbo].[Test1]
 
       var tracing = traceService.Last();
 
-      var logs = tracing.GetLogEntries();
-      Assert.AreEqual( logs.Length, 3 );
+      var events = tracing.TraceEvents;
+      Assert.AreEqual( events.Length, 3 );
 
-      Assert.AreEqual( logs[0].Message, "OnExecuting" );
-      Assert.AreEqual( logs[1].Message, "OnLoadingData" );
-      Assert.AreEqual( logs[2].Message, "OnComplete" );
+      Assert.IsTrue( tracing.QueryTime >= tracing.ExecutionTime );
+
+      Assert.AreEqual( events[0].EventName, "OnExecuting" );
+      Assert.AreEqual( events[1].EventName, "OnLoadingData" );
+      Assert.AreEqual( events[2].EventName, "OnComplete" );
 
 
       try
@@ -170,12 +175,38 @@ CREATE TABLE [dbo].[Test1]
 
       tracing = traceService.Last();
 
-      logs = tracing.GetLogEntries();
-      Assert.AreEqual( logs.Length, 2 );
+      events = tracing.TraceEvents;
+      Assert.AreEqual( events.Length, 2 );
 
-      Assert.AreEqual( logs[0].Message, "OnExecuting" );
-      Assert.AreEqual( logs[1].Message, "OnException" );
+      Assert.AreEqual( events[0].EventName, "OnExecuting" );
+      Assert.AreEqual( events[1].EventName, "OnException" );
     }
 
+
+    [TestMethod]
+    public void XmlFieldTest()
+    {
+
+      DbValueConverter.Register( new XDocumentValueConverter() );
+
+      var document = new XDocument( new XDeclaration( "1.0", "utf-8", "yes" ),
+        new XElement( "Root",
+          new XAttribute( "test", "test-value" ),
+          new XElement( "Item" ),
+          new XElement( "Item" ),
+          new XElement( "Item" )
+        ) );
+
+      db.T( "INSERT INTO Test1 ( Name, XmlContent, [Index] ) VALUES ( {...} ) ", "XML content", document, 1 ).ExecuteNonQuery();
+
+      var document1 = db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<XDocument>();
+
+
+      Assert.AreEqual( document.ToString( SaveOptions.OmitDuplicateNamespaces ), document1.ToString( SaveOptions.OmitDuplicateNamespaces ) );
+
+
+      DbValueConverter.Unregister<XDocument>();
+
+    }
   }
 }

@@ -43,7 +43,7 @@ namespace Ivony.Data
     /// <returns>SQL Server 数据库访问器</returns>
     public static SqlDbExecutor Connect( string connectionString, SqlDbConfiguration configuration = null )
     {
-      return new SqlDbExecutor( connectionString, configuration ?? DefaultConfiguration );
+      return new SqlDbExecutor( connectionString, configuration ?? Configuration );
     }
 
 
@@ -118,16 +118,9 @@ namespace Ivony.Data
     /// <summary>
     /// 获取或设置默认配置
     /// </summary>
-    public static SqlDbConfiguration DefaultConfiguration
+    public static SqlDbConfiguration Configuration
     {
       get { return _defaultConfiguration; }
-      set
-      {
-        if ( value == null )
-          _defaultConfiguration = new SqlDbConfiguration();
-        else
-          _defaultConfiguration = value;
-      }
     }
 
 
@@ -139,7 +132,7 @@ namespace Ivony.Data
 
 
     internal static string LocalDBInstanceName { get; set; }
-    
+
     internal static string ExpressInstanceName { get; set; }
   }
 }

@@ -12,7 +12,7 @@ using Npgsql;
 
 namespace Ivony.Data.Test
 {
-    [TestClass]
+    //[TestClass]
     public class PostgreSqlTests
     {
         private NpgsqlDbExecutor _db;

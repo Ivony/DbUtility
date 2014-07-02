@@ -52,7 +52,7 @@ namespace Ivony.Data.Queries
 
           var placeholder = parameterPlaceholders[index];
           if ( placeholder == null )
-            placeholder = parameterPlaceholders[index] = GetParameterPlaceholder( query.ParameterValues[index], index, out parameters[index] );
+            placeholder = parameterPlaceholders[index] = GetParameterPlaceholder( DbValueConverter.ConvertTo( query.ParameterValues[index], null ), index, out parameters[index] );
 
           return placeholder;
         } );

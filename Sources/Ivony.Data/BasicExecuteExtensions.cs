@@ -1,5 +1,4 @@
 ﻿using Ivony.Data.Common;
-using Ivony.Fluent;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -223,7 +222,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static T ExecuteScalar<T>( this IDbExecutableQuery query )
     {
-      return ExecuteScalar( query ).ConvertTo<T>();
+      return DbValueConverter.ConvertFrom<T>( ExecuteScalar( query ) );
     }
 
     /// <summary>
@@ -235,8 +234,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public async static Task<T> ExecuteScalarAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token = default( CancellationToken ) )
     {
-      var scalar = await ExecuteScalarAsync( query, token );
-      return scalar.ConvertTo<T>();
+      return DbValueConverter.ConvertFrom<T>( await ExecuteScalarAsync( query, token ) );
     }
 
   }

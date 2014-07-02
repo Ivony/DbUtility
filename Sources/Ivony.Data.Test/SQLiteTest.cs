@@ -35,7 +35,7 @@ CREATE TABLE [Test1]
     {
       Assert.IsNull( db.T( "SELECT Name FROM Test1" ).ExecuteScalar(), "空数据表查询测试失败" );
       Assert.IsNull( db.T( "SELECT Name FROM Test1" ).ExecuteFirstRow(), "空数据表查询测试失败" );
-      Assert.AreEqual( db.T( "SELECT COUNT(*) FROM Test1" ).ExecuteScalar<int>(), 0, "空数据表查询测试失败" );
+      Assert.AreEqual( db.T( "SELECT COUNT(*) FROM Test1" ).ExecuteScalar<long>(), 0, "空数据表查询测试失败" );
       Assert.AreEqual( db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )", "Ivony", "Test", 1 ).ExecuteNonQuery(), 1, "插入数据测试失败" );
       Assert.AreEqual( db.T( "SELECT * FROM Test1" ).ExecuteDynamics().Length, 1, "插入数据后查询测试失败" );
       Assert.IsNotNull( db.T( "SELECT Name FROM Test1" ).ExecuteFirstRow(), "插入数据后查询测试失败" );
