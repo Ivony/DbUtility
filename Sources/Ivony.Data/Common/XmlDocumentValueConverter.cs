@@ -8,9 +8,13 @@ using System.Xml.Linq;
 
 namespace Ivony.Data.Common
 {
+
+  /// <summary>
+  /// 用于对 XDocument 类型对象和数据对象进行双向转换的转换器
+  /// </summary>
   public class XDocumentValueConverter : IDbValueConverter<XDocument>
   {
-    public XDocument ConvertValueFrom( object dataValue, string dataTypeName )
+    XDocument IDbValueConverter<XDocument>.ConvertValueFrom( object dataValue, string dataTypeName )
     {
 
       var text = (string) dataValue;
@@ -18,7 +22,7 @@ namespace Ivony.Data.Common
 
     }
 
-    public object ConvertValueTo( object value, string dataTypeName )
+    object IDbValueConverter<XDocument>.ConvertValueTo( object value, string dataTypeName )
     {
       return ((XDocument) value).ToString( SaveOptions.DisableFormatting | SaveOptions.OmitDuplicateNamespaces );
     }
