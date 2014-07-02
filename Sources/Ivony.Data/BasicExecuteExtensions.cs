@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Ivony.Data.Common;
+using Ivony.Fluent;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Ivony.Fluent;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
@@ -25,7 +26,6 @@ namespace Ivony.Data
     {
       using ( var context = query.Execute() )
       {
-
         return context.LoadDataTable( 0, 0 );
       }
     }
@@ -41,7 +41,7 @@ namespace Ivony.Data
       using ( var context = await query.ExecuteAsync( token ) )
       {
 
-        return context.LoadDataTable( 0, 0 );
+        return await context.LoadDataTableAsync( 0, 0, token );
 
       }
     }
@@ -65,7 +65,7 @@ namespace Ivony.Data
         do
         {
           dataTables.Add( context.LoadDataTable( 0, 0 ) );
-        } while ( context.DataReader.NextResult() );
+        } while ( context.NextResult() );
       }
 
       return dataTables.ToArray();
@@ -89,7 +89,7 @@ namespace Ivony.Data
         {
           dataTables.Add( context.LoadDataTable( 0, 0 ) );
 
-        } while ( context.DataReader.NextResult() );
+        } while ( await context.NextResultAsync() );
       }
 
       return dataTables.ToArray();
@@ -108,8 +108,9 @@ namespace Ivony.Data
     {
       using ( var context = query.Execute() )
       {
-        if ( context.DataReader.Read() && context.DataReader.FieldCount > 0 )
-          return context.DataReader[0];
+        var record = context.ReadRecord();
+        if ( record != null && record.FieldCount > 0 )
+          return record[0];
 
         else
           return null;
@@ -126,8 +127,10 @@ namespace Ivony.Data
     {
       using ( var context = await query.ExecuteAsync( token ) )
       {
-        if ( context.DataReader.Read() && context.DataReader.FieldCount > 0 )
-          return context.DataReader[0];
+
+        var record = await context.ReadRecordAsync();
+        if ( record != null && record.FieldCount > 0 )
+          return record[0];
 
         else
           return null;
@@ -147,7 +150,7 @@ namespace Ivony.Data
     {
       using ( var context = query.Execute() )
       {
-        return context.DataReader.RecordsAffected;
+        return context.RecordsAffected;
       }
     }
 
@@ -161,7 +164,7 @@ namespace Ivony.Data
     {
       using ( var context = await query.ExecuteAsync( token ) )
       {
-        return context.DataReader.RecordsAffected;
+        return context.RecordsAffected;
       }
     }
 
@@ -220,7 +223,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static T ExecuteScalar<T>( this IDbExecutableQuery query )
     {
-      return ExecuteScalar( query ).ConvertTo<T>();
+      return DbValueConverter.ConvertFrom<T>( ExecuteScalar( query ) );
     }
 
     /// <summary>
@@ -232,8 +235,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public async static Task<T> ExecuteScalarAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token = default( CancellationToken ) )
     {
-      var scalar = await ExecuteScalarAsync( query, token );
-      return scalar.ConvertTo<T>();
+      return DbValueConverter.ConvertFrom<T>( await ExecuteScalarAsync( query, token ) );
     }
 
   }

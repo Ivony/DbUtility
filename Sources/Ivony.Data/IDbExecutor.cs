@@ -14,7 +14,7 @@ namespace Ivony.Data
   /// 定义可以同步执行某类型查询的数据库查询执行程序所需要实现的接口
   /// </summary>
   /// <typeparam name="T">查询类型</typeparam>
-  public interface IDbExecutor<T> where T : IDbQuery
+  public interface IDbExecutor<in T> where T : IDbQuery
   {
 
     /// <summary>

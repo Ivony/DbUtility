@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ivony.Data.Common;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -122,6 +123,7 @@ namespace Ivony.Data
     /// 同步执行查询
     /// </summary>
     /// <returns>查询执行上下文</returns>
+    [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Advanced )]
     public IDbExecuteContext Execute()
     {
       return Executor.Execute( Query );
@@ -131,6 +133,7 @@ namespace Ivony.Data
     /// 异步执行查询
     /// </summary>
     /// <returns>异步查询执行上下文</returns>
+    [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Advanced )]
     public Task<IAsyncDbExecuteContext> ExecuteAsync( CancellationToken token = default( CancellationToken ) )
     {
       return Executor.ExecuteAsync( Query, token );
