@@ -24,7 +24,7 @@ namespace Ivony.Data.DatabaseStructure
 
     private Type _fieldType;
 
-    public override Type ValueType { get { return _fieldType; } }
+    public Type ValueType { get { return _fieldType; } }
 
 
     public string FieldName { get; private set; }

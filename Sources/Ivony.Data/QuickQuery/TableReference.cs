@@ -8,16 +8,14 @@ namespace Ivony.Data.QuickQuery
 {
 
   /// <summary>
-  /// 子查询定义
+  /// 表示一个数据表的引用
   /// </summary>
-  public class SubQueryDefinition : TableReference
+  public class TableReference
   {
 
-    public Ivony.Data.Queries.QuickQuery Query { get; private set; }
+    public string TableAlias { get; set; }
 
-    public string Alias { get; private set; }
-
-
+    public string TableDefinition { get; set; }
 
   }
 }

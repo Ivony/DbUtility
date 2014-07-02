@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.QuickQuery
 {
-  public struct SelectClause
+  public class SelectClause
   {
 
 

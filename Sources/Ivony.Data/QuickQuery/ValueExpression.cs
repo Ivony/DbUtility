@@ -8,7 +8,7 @@ namespace Ivony.Data.QuickQuery
 {
   public abstract class ValueExpression : Expression
   {
-    public virtual Type ValueType
+    public override Type ValueType
     {
       get { return typeof( object ); }
     }

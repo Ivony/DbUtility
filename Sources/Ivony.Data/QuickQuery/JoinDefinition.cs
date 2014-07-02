@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.QuickQuery
 {
-  
-  
+
+
   /// <summary>
   /// 表之间的连接运算定义
   /// </summary>
@@ -15,6 +15,34 @@ namespace Ivony.Data.QuickQuery
   {
 
 
+    public JoinType JoinType
+    {
+      get;
+      private set;
+    }
 
+
+    public TableReference LeftTable
+    {
+      get;
+      private set;
+    }
+
+    public TableReference RightTable
+    {
+      get;
+      private set;
+    }
+
+
+  }
+
+  public enum JoinType
+  {
+    InnerJoin,
+    LeftOuterJoin,
+    RightOuterJoin,
+    FullOuterJoin,
+    CrossJoin
   }
 }
