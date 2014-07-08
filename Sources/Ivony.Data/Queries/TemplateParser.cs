@@ -193,7 +193,8 @@ namespace Ivony.Data
           builder.AppendText( "," );
         }
 
-        AddParameter( builder, array.GetValue( array.Length ) );
+        AddParameter( builder, array.GetValue( array.Length - 1 ) );
+        return;
       }
 
 

@@ -64,6 +64,14 @@ namespace Ivony.Data.Test
       Assert.AreEqual( query.ParameterValues[0], "Ivony", "一个参数化查询作为另一个参数化查询参数测试失败" );
       Assert.AreEqual( query.ParameterValues[1], 3, "一个参数化查询作为另一个参数化查询参数测试失败" );
 
+
+      query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID IN ( {0} )", new[] { 1, 2, 3 } );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#,#1#,#2# )", "以列表作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues.Length, 3, "以列表作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues[0], 1, "以列表作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues[1], 2, "以列表作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues[2], 3, "以列表作为参数测试失败" );
+
     }
 
     [TestMethod]
