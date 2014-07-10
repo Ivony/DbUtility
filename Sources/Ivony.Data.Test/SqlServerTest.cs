@@ -208,5 +208,35 @@ CREATE TABLE [dbo].[Test1]
       DbValueConverter.Unregister<XDocument>();
 
     }
+
+
+    [TestMethod]
+    public void ConvertExceptionTest()
+    {
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES( {...} )", "Test", "TestContent", 1 ).ExecuteNonQuery();
+
+      Exception exception = null;
+      try
+      {
+        db.T( "SELECT [Index] FROM Test1" ).ExecuteEntity<TestEntity>();
+      }
+      catch ( InvalidCastException e )
+      {
+        exception = e;
+      }
+
+      Assert.IsNotNull( exception, "转换异常测试失败" );
+      Assert.IsNotNull( exception.Data["DataColumnName"], "转换异常测试失败" );
+
+
+    }
+
+    private class TestEntity
+    {
+      public string Name { get; set; }
+      public string Content { get; set; }
+      public string Index { get; set; }
+    }
+
   }
 }

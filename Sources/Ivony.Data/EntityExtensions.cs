@@ -441,6 +441,7 @@ namespace Ivony.Data
     }
 
 
+
     /// <summary>
     /// 获取指定字段的值
     /// </summary>
@@ -450,7 +451,8 @@ namespace Ivony.Data
     /// <returns>强类型的值</returns>
     public static T FieldValue<T>( this DataRow dataRow, int columnIndex )
     {
-      return DbValueConverter.ConvertFrom<T>( dataRow[columnIndex] );
+
+      return FieldValue<T>( dataRow, dataRow.Table.Columns[columnIndex] );
     }
 
     /// <summary>
@@ -462,7 +464,29 @@ namespace Ivony.Data
     /// <returns>强类型的值</returns>
     public static T FieldValue<T>( this DataRow dataRow, string columnName )
     {
-      return DbValueConverter.ConvertFrom<T>( dataRow[columnName] );
+      return FieldValue<T>( dataRow, dataRow.Table.Columns[columnName] );
+    }
+
+
+
+    private static T FieldValue<T>( this DataRow dataRow, DataColumn column )
+    {
+      if ( dataRow == null )
+        throw new ArgumentNullException( "dataRow" );
+
+      if ( column == null )
+        throw new ArgumentNullException( "column" );
+
+
+      try
+      {
+        return DbValueConverter.ConvertFrom<T>( dataRow[column] );
+      }
+      catch ( Exception e )
+      {
+        e.Data.Add( "DataColumnName", column.ColumnName );
+        throw;
+      }
     }
 
 
