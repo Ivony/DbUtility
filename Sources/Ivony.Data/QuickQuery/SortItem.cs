@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.QuickQuery
 {
-  public struct SortClause
+  public class SortItem
   {
 
     public ValueExpression SortField { get; private set; }

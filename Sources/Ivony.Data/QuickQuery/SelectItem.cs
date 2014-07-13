@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.QuickQuery
 {
-  public class SelectClause
+  public class SelectItem
   {
 
 
-    public SelectClause( ValueExpression expression, string alias = null )
+    public SelectItem( ValueExpression expression, string alias = null )
     {
       Expression = expression;
       Alias = alias;

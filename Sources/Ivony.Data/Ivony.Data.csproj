@@ -65,7 +65,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ivony.Core">
-      <HintPath>..\packages\Ivony.Core.1.0.0\lib\Ivony.Core.dll</HintPath>
+      <HintPath>..\packages\Ivony.Core.1.1.0\lib\Ivony.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -82,7 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseStructure\DataBase.cs" />
-    <Compile Include="DatabaseStructure\DataRelation.cs" />
     <Compile Include="DatabaseStructure\DataField.cs" />
     <Compile Include="DatabaseStructure\DataTable.cs" />
     <Compile Include="IDbValueConverter.cs" />
@@ -110,15 +109,13 @@
     <Compile Include="Common\IDbProvider.cs" />
     <Compile Include="IDbQuery.cs" />
     <Compile Include="IDbTransactionContext.cs" />
-    <Compile Include="IDbQueryContainer.cs" />
-    <Compile Include="IParameterizedQueryParser.cs" />
-    <Compile Include="ParameterizedQueryParser.cs" />
-    <Compile Include="ParameterizedQueryLiteralValueParser.cs" />
     <Compile Include="QuickQuery\ComparisonExpresion.cs" />
-    <Compile Include="QuickQuery\FieldDefinition.cs" />
+    <Compile Include="QuickQuery\FieldAliasDefinition.cs" />
     <Compile Include="QuickQuery\LogicalExpression.cs" />
     <Compile Include="QuickQuery\ParameterExpression.cs" />
-    <Compile Include="QuickQuery\SelectClause.cs" />
+    <Compile Include="QuickQuery\Query.cs" />
+    <Compile Include="QuickQuery\QuickQueryTokenizer.cs" />
+    <Compile Include="QuickQuery\SelectItemExpression.cs" />
     <Compile Include="QuickQuery\FieldExpression.cs" />
     <Compile Include="QuickQuery\FilterExpression.cs" />
     <Compile Include="QuickQuery\BooleanExpression.cs" />
@@ -129,23 +126,19 @@
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\QuickQuery.cs" />
-    <Compile Include="QuickQuery\SortClause.cs" />
+    <Compile Include="QuickQuery\SortExpression.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />
     <Compile Include="IDbExecutor.cs" />
-    <Compile Include="Queries\ITemplatePartial.cs" />
     <Compile Include="QuickQuery\SubQueryDefinition.cs" />
     <Compile Include="Queries\TemplateParser.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuickQuery\TableDefinition.cs" />
     <Compile Include="QuickQuery\JoinDefinition.cs" />
     <Compile Include="QuickQuery\TableReference.cs" />
+    <Compile Include="QuickQuery\Tokens\ExpressionToken.cs" />
+    <Compile Include="QuickQuery\Tokens\FieldToken.cs" />
+    <Compile Include="QuickQuery\Tokens\FilterToken.cs" />
     <Compile Include="QuickQuery\ValueExpression.cs" />
-    <Compile Include="SqlDbUtility.cs" />
-    <Compile Include="SqlServer\SqlDbExecuteContext.cs" />
-    <Compile Include="SqlServer\SqlParameterizedQueryParser.cs" />
-    <Compile Include="SqlServer\SqlDbTensactionContext.cs" />
     <Compile Include="Queries\IParameterizedQueryPartial.cs" />
-    <Compile Include="Queries\TemplateParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlClient\SqlDbExecutor.cs" />
     <Compile Include="SqlClient\SqlDbExecuteContext.cs" />
@@ -173,6 +166,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

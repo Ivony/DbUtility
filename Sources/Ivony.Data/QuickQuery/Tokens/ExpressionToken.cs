@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data.QuickQuery
+namespace Ivony.Data.QuickQuery.Tokens
 {
-  class FilterExpression
+  class ExpressionToken
   {
   }
 }

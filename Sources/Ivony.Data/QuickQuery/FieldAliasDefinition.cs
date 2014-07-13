@@ -10,7 +10,7 @@ namespace Ivony.Data.QuickQuery
   /// <summary>
   /// 字段别名定义
   /// </summary>
-  public class FieldDefinition
+  public class FieldAliasDefinition
   {
     public FieldExpression Field { get; private set; }
 
