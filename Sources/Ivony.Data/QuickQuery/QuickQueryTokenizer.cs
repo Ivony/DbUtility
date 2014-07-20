@@ -8,7 +8,10 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.QuickQuery
 {
-  public class QuickQueryTokenizer : TokenizerBase
+
+#if false
+
+  public class QuickQueryTokenizer : ParserBase
   {
 
     public QuickQueryTokenizer( string text )
@@ -18,12 +21,12 @@ namespace Ivony.Data.QuickQuery
 
     public object NextToken()
     {
-      Match( WhiteSpace );
+      TryMatch( WhiteSpace );
 
-      if ( Match( '?' ).HasValue )
+      if ( TryMatch( '?' ).HasValue )
         return MatchFilterExpression();
 
-      if ( Match( '$' ).HasValue )
+      if ( TryMatch( '$' ).HasValue )
         return MatchSortExpression();
 
       var field = MatchField();
@@ -45,16 +48,16 @@ namespace Ivony.Data.QuickQuery
 
     private FieldToken? MatchField()
     {
-      var nameMatch = Match( CName );
+      var nameMatch = TryMatch( CName );
       if ( nameMatch.Success )
       {
-        Match( WhiteSpace );
+        TryMatch( WhiteSpace );
 
-        if ( !Match( '.' ).HasValue )
+        if ( !TryMatch( '.' ).HasValue )
         {
-          Match( WhiteSpace );
+          TryMatch( WhiteSpace );
 
-          var fieldNameMatch = Match( CName );
+          var fieldNameMatch = TryMatch( CName );
           if ( !fieldNameMatch.Success )
             throw FormatError();
 
@@ -72,4 +75,5 @@ namespace Ivony.Data.QuickQuery
 
     }
   }
+#endif
 }
