@@ -187,6 +187,11 @@ namespace Ivony.Data
       var array = value as Array;
       if ( array != null )
       {
+
+        if ( array.Length == 0 )
+          return;
+
+
         for ( int i = 0; i < array.Length - 1; i++ )
         {
           AddParameter( builder, array.GetValue( i ) );
