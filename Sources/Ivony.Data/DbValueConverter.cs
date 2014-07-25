@@ -103,7 +103,7 @@ namespace Ivony.Data
 
       if ( type.IsGenericType && !type.IsGenericTypeDefinition && typeof( Nullable<> ) == type.GetGenericTypeDefinition() )
       {
-        var methodInfo = typeof( DbValueConverter ).GetMethod( "NullableConverter", BindingFlags.Static | BindingFlags.NonPublic ).MakeGenericMethod( new Type[] { type.GetGenericArguments()[0] } );
+        var methodInfo = typeof( DbValueConverter ).GetMethod( "ConvertNullable", BindingFlags.Static | BindingFlags.NonPublic ).MakeGenericMethod( new Type[] { type.GetGenericArguments()[0] } );
         return (Converter<object, T>) Delegate.CreateDelegate( typeof( Converter<object, T> ), methodInfo );
       }
 

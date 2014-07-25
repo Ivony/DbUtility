@@ -211,6 +211,12 @@ CREATE TABLE [dbo].[Test1]
 
 
     [TestMethod]
+    public void NullableConvertTest()
+    {
+      db.T( "SELECT [Index] FROM Test1" ).ExecuteScalar<int?>();
+    }
+
+    [TestMethod]
     public void ConvertExceptionTest()
     {
       db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES( {...} )", "Test", "TestContent", 1 ).ExecuteNonQuery();
