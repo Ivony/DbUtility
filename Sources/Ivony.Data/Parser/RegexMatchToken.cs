@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Ivony.Parser
 {
-  public sealed class RegexMatchToken : ITextToken
+  public struct RegexMatchToken : ITextToken
   {
 
     private string _text;
