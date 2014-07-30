@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,6 +18,12 @@ namespace Ivony.Data
   public static class DbValueConverter
   {
 
+
+
+    /// <summary>
+    /// 是否禁用 Convertible 对象转换（原生对象之间的转换）
+    /// </summary>
+    public static bool DisableConvertible { get; set; }
 
     private static class ConverterCache<T>
     {
@@ -121,15 +128,51 @@ namespace Ivony.Data
     private static T ConvertObject<T>( object value )
     {
       if ( value == null || Convert.IsDBNull( value ) )
-        return default(T);
+        return default( T );
 
       else
+      {
+        if ( !DisableConvertible && typeof( T ) == typeof( string ) && value != null )
+          value = value.ToString();
+
         return (T) value;
+      }
 
     }
 
     private static T ConvertValueType<T>( object value )
     {
+
+
+      if ( value == null || Convert.IsDBNull( value ) )
+        throw new InvalidCastException();
+
+      var convertible = value as IConvertible;
+      if ( !DisableConvertible && convertible != null )
+      {
+        var typeCode = Type.GetTypeCode( typeof( T ) );
+
+        switch ( typeCode )
+        {
+          case TypeCode.Boolean:
+          case TypeCode.Byte:
+          case TypeCode.Char:
+          case TypeCode.DateTime:
+          case TypeCode.Decimal:
+          case TypeCode.Double:
+          case TypeCode.Int16:
+          case TypeCode.Int32:
+          case TypeCode.Int64:
+          case TypeCode.SByte:
+          case TypeCode.Single:
+          case TypeCode.UInt16:
+          case TypeCode.UInt32:
+          case TypeCode.UInt64:
+            return (T) convertible.ToType( typeof( T ), CultureInfo.InvariantCulture );
+        }
+      }
+
+
       return (T) value;
     }
 
@@ -140,7 +183,7 @@ namespace Ivony.Data
         return null;
 
       else
-        return new T?( (T) value );
+        return new T?( ConvertValueType<T>( value ) );
     }
 
 
