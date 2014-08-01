@@ -278,11 +278,11 @@ CREATE TABLE [dbo].[Test1]
 
     }
 
-    private class TestEntity
+    public class TestEntity
     {
       public string Name { get; set; }
       public string Content { get; set; }
-      public string Index { get; set; }
+      public TimeSpan Index { get; set; }
     }
 
   }
