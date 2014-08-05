@@ -80,8 +80,25 @@ namespace Ivony.Data.Test
       query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID IN ( {0} )", new int[0] );
       Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN (  )", "以空列表作为参数测试失败" );
       Assert.AreEqual( query.ParameterValues.Length, 0, "以空列表作为参数测试失败" );
-
     }
+
+
+    [TestMethod]
+    public void TemplateParseNullTest()
+    {
+      var query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID = {0} AND Username = {1}", null, null );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID = #0# AND Username = #1#", "以多个 null 值作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues.Length, 2, "以多个 null 值作为参数测试失败" );
+      Assert.IsNull( query.ParameterValues[0], "以多个 null 值作为参数测试失败" );
+      Assert.IsNull( query.ParameterValues[1], "以多个 null 值作为参数测试失败" );
+
+
+      query = TemplateParser.ParseTemplate( "SELECT * FROM Users WHERE ID = {0}", null );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID = #0#", "以 null 作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues.Length, 1, "以 null 作为参数测试失败" );
+      Assert.IsNull( query.ParameterValues[0], "以 null 作为参数测试失败" );
+    }
+
 
     [TestMethod]
     public void ConcatTest()

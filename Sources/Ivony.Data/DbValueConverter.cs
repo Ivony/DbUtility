@@ -88,6 +88,13 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 从数据类型转换为目标类型
+    /// </summary>
+    /// <typeparam name="T">目标类型</typeparam>
+    /// <param name="value">数据值</param>
+    /// <param name="dataTypeName">数据类型名称</param>
+    /// <returns>类型转换后的结果</returns>
     internal static T ConvertFrom<T>( object value, string dataTypeName = null )
     {
       var converter = GetConverter<T>();
@@ -187,9 +194,18 @@ namespace Ivony.Data
     }
 
 
-
+    /// <summary>
+    /// 将值转换为数据库可以接受的类型
+    /// </summary>
+    /// <param name="value">所需要转换的值对象</param>
+    /// <param name="dataTypeName">数据库类型名称</param>
+    /// <returns>数据库可接受的类型</returns>
     internal static object ConvertTo( object value, string dataTypeName = null )
     {
+      if ( value == null )
+        return DBNull.Value;
+
+
       var type = value.GetType();
 
       lock ( sync )

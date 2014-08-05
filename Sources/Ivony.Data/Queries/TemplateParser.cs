@@ -46,6 +46,9 @@ namespace Ivony.Data
     public static ParameterizedQuery ParseTemplate( ParameterizedQueryBuilder builder, string templateText, params object[] parameters )
     {
 
+      if ( parameters == null )
+        parameters = new object[] { null };
+
       lock ( builder.SyncRoot )
       {
 
