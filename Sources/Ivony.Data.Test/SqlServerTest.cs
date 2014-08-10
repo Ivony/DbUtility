@@ -258,6 +258,19 @@ CREATE TABLE [dbo].[Test1]
       Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<float>(), (float) 100 );
       Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<string>(), "100" );
 
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<long?>(), 100L );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<int?>(), 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<short?>(), (short) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<byte?>(), (byte) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<ulong?>(), (ulong) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<uint?>(), 100u );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<ushort?>(), (ushort) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<sbyte?>(), (sbyte) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<char?>(), (char) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<decimal?>(), (decimal) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<double?>(), (double) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<float?>(), (float) 100 );
+
       Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<long>(), 5 );
       Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<int>(), 5 );
       Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<short>(), (short) 5 );
@@ -274,7 +287,26 @@ CREATE TABLE [dbo].[Test1]
       Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<decimal>(), (decimal) 0.9m );
       Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<double>(), (double) 0.9 );
       Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<float>(), (float) 0.9 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<decimal?>(), (decimal) 0.9m );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<double?>(), (double) 0.9 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<float?>(), (float) 0.9 );
       Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<string>(), "0.9" );
+
+
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<long?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<int?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<short?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<byte?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<ulong?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<uint?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<ushort?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<sbyte?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<char?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<decimal?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<double?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<float?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<string>(), null );
+
 
     }
 
