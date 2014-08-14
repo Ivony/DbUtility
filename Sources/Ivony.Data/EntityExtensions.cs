@@ -497,20 +497,20 @@ namespace Ivony.Data
     /// <summary>
     /// 获取指定属性上的特性
     /// </summary>
-    /// <param name="p">要获取特性的属性</param>
+    /// <param name="property">要获取特性的属性</param>
     /// <returns>属性上所设置的特性</returns>
-    private static object[] GetAttributes( PropertyInfo p )
+    private static object[] GetAttributes( PropertyInfo property )
     {
       lock ( sync )
       {
         object[] attributes;
 
-        if ( _propertyAttributesCache.TryGetValue( p, out attributes ) )
+        if ( _propertyAttributesCache.TryGetValue( property, out attributes ) )
           return attributes;
 
-        attributes = p.GetCustomAttributes( false );
+        attributes = property.GetCustomAttributes( false );
 
-        _propertyAttributesCache[p] = attributes;
+        _propertyAttributesCache[property] = attributes;
 
         return attributes;
       }
