@@ -246,6 +246,10 @@ CREATE TABLE [dbo].[Test1]
 
       db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteEntity<CorrectEntity>();
       db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteEntities<CorrectEntity>();
+
+      var entity = (CorrectEntity) db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteDynamicObject();
+      var entities = db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteDynamics().Select( item => (CorrectEntity) item ).ToArray();
+
     }
 
 
@@ -333,8 +337,8 @@ CREATE TABLE [dbo].[Test1]
     {
       public string Name { get; set; }
       public string Content { get; set; }
-      
-      [FieldName("Index")]
+
+      [FieldName( "Index" )]
       public long OrderIndex { get; set; }
 
       [NonField]

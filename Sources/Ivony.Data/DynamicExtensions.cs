@@ -199,7 +199,7 @@ namespace Ivony.Data
           result = _dataRow[0];
 
         else
-          return base.TryConvert( binder, out result );
+          result = EntityExtensions.ToEntity( _dataRow, binder.ReturnType );
 
         return true;
       }

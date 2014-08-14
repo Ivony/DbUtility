@@ -289,6 +289,10 @@ namespace Ivony.Data
 
 
 
+    public static T ToEntity<T>( this DataRow dataItem ) where T : new()
+    {
+      return ToEntity<T>( dataItem, null );
+    }
 
     /// <summary>
     /// 将 DataRow 转换为实体
@@ -297,7 +301,7 @@ namespace Ivony.Data
     /// <param name="dataItem">包含数据的 DataRow</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体</returns>
-    public static T ToEntity<T>( this DataRow dataItem, IEntityConverter<T> converter = null ) where T : new()
+    public static T ToEntity<T>( this DataRow dataItem, IEntityConverter<T> converter ) where T : new()
     {
       if ( dataItem == null )
       {
@@ -332,6 +336,34 @@ namespace Ivony.Data
       entityConverter.Convert( dataItem, entity );
       return entity;
     }
+
+
+
+    private static Dictionary<Type, Func<DataRow, object>> entityConverterDictionary = new Dictionary<Type, Func<DataRow, object>>();
+
+
+    internal static object ToEntity( this DataRow dataItem, Type entityType )
+    {
+      return GetToEntityMethod( entityType )( dataItem );
+    }
+
+
+    private static Func<DataRow, object> GetToEntityMethod( Type entityType )
+    {
+      lock ( sync )
+      {
+        if ( entityConverterDictionary.ContainsKey( entityType ) )
+          return entityConverterDictionary[entityType];
+
+
+        var method = typeof( EntityExtensions )
+          .GetMethod( "ToEntity", new[] { typeof( DataRow ) } )
+          .MakeGenericMethod( entityType );
+
+        return entityConverterDictionary[entityType] = (Func<DataRow, object>) Delegate.CreateDelegate( typeof( Func<DataRow, object> ), method );
+      }
+    }
+
 
 
     /// <summary>
