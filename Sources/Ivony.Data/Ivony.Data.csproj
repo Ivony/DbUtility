@@ -78,6 +78,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultConverter.cs" />
     <Compile Include="IDbValueConverter.cs" />
     <Compile Include="Common\DbExecutorBase.cs" />
     <Compile Include="DbTracing.cs" />
