@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultConverter.cs" />
+    <Compile Include="EntityConvertAttribute.cs" />
     <Compile Include="IDbValueConverter.cs" />
     <Compile Include="Common\DbExecutorBase.cs" />
     <Compile Include="DbTracing.cs" />
