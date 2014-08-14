@@ -318,22 +318,7 @@ namespace Ivony.Data
       }
 
 
-      var convertType = converter ?? ConvertTypeCache<T>.Converter;
-
-      if ( convertType == null )
-      {
-        var type = typeof( T );
-        var attribute = type.GetCustomAttributes( typeof( EntityConvertAttribute ), false ).OfType<EntityConvertAttribute>().FirstOrDefault();
-
-        if ( attribute != null )
-          convertType = attribute.CreateConverter<T>();
-        else
-          convertType = new DefaultEntityConverter<T>();
-
-
-        if ( convertType.IsReusable )
-          ConvertTypeCache<T>.Converter = convertType;
-      }
+      var convertType = converter ?? EntityConverterCache<T>.GetConverter();
 
 
       var entity = new T();
@@ -536,11 +521,38 @@ namespace Ivony.Data
       public static Action<DataRow, T> Converter { get; set; }
     }
 
-    private static class ConvertTypeCache<T>
-    {
-      public static IEntityConverter<T> Converter { get; set; }
-    }
 
+
+
+    private static class EntityConverterCache<T>
+    {
+      private static IEntityConverter<T> converterInstacne;
+
+      public static IEntityConverter<T> GetConverter()
+      {
+        var instance = converterInstacne;
+
+
+        if ( instance != null && instance.IsReusable )
+          return instance;
+
+
+        var type = typeof( T );
+        var attribute = type.GetCustomAttributes( typeof( EntityConvertAttribute ), false ).OfType<EntityConvertAttribute>().FirstOrDefault();
+
+        if ( attribute != null )
+          instance = attribute.CreateConverter<T>();
+        else
+          instance = new DefaultEntityConverter<T>();
+
+
+
+        if ( instance.IsReusable )
+          converterInstacne = instance;
+
+        return instance;
+      }
+    }
   }
 
   /// <summary>
