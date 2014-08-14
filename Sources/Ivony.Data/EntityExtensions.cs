@@ -530,33 +530,34 @@ namespace Ivony.Data
 
       private static Func<IEntityConverter<T>> createConverter;
 
-      public static IEntityConverter<T> GetConverter()
+
+      static EntityConverterCache()
       {
-        var instance = converterInstacne;
-
-
-        if ( instance != null && instance.IsReusable )
-          return instance;
-
-
         var type = typeof( T );
         var attribute = type.GetCustomAttributes( typeof( EntityConvertAttribute ), false ).OfType<EntityConvertAttribute>().FirstOrDefault();
 
         if ( attribute != null )
-          instance = attribute.CreateConverter<T>();
+          createConverter = () => attribute.CreateConverter<T>();   //缓存创建实例的方法
         else
-          instance = new DefaultEntityConverter<T>();
+          createConverter = () => new DefaultEntityConverter<T>();
 
 
+        var instance = createConverter();
 
         if ( instance.IsReusable )
-          converterInstacne = instance;
+          converterInstacne = instance;                             //缓存可复用的实例
+      }
 
-        return instance;
+
+      public static IEntityConverter<T> GetConverter()
+      {
+
+        if ( converterInstacne != null && converterInstacne.IsReusable )//如果有缓存的可复用的实例，则返回
+          return converterInstacne;
+
+
+        return createConverter();
       }
     }
   }
-
-
-
 }

@@ -224,7 +224,7 @@ CREATE TABLE [dbo].[Test1]
       Exception exception = null;
       try
       {
-        db.T( "SELECT [Index] FROM Test1" ).ExecuteEntity<TestEntity>();
+        db.T( "SELECT [Index] FROM Test1" ).ExecuteEntity<WrongEntity>();
       }
       catch ( InvalidCastException e )
       {
@@ -235,6 +235,17 @@ CREATE TABLE [dbo].[Test1]
       Assert.IsNotNull( exception.Data["DataColumnName"], "转换异常测试失败" );
 
 
+    }
+
+
+    [TestMethod]
+    public void EntityTest()
+    {
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES( {...} )", "Test", "TestContent", 1 ).ExecuteNonQuery();
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES( {...} )", "Test", "TestContent", 2 ).ExecuteNonQuery();
+
+      db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteEntity<CorrectEntity>();
+      db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteEntities<CorrectEntity>();
     }
 
 
@@ -310,11 +321,24 @@ CREATE TABLE [dbo].[Test1]
 
     }
 
-    public class TestEntity
+    public class WrongEntity
     {
       public string Name { get; set; }
       public string Content { get; set; }
       public TimeSpan Index { get; set; }
+    }
+
+
+    public class CorrectEntity
+    {
+      public string Name { get; set; }
+      public string Content { get; set; }
+      
+      [FieldName("Index")]
+      public long OrderIndex { get; set; }
+
+      [NonField]
+      public object NonDataField { get; set; }
     }
 
   }
