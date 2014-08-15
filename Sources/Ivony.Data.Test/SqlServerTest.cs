@@ -201,8 +201,10 @@ CREATE TABLE [dbo].[Test1]
 
       var document1 = db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<XDocument>();
 
-
       Assert.AreEqual( document.ToString( SaveOptions.OmitDuplicateNamespaces ), document1.ToString( SaveOptions.OmitDuplicateNamespaces ) );
+
+      db.T( "UPDATE Test1 SET XmlContent = {0} ", null ).ExecuteNonQuery();
+      Assert.IsNull( db.T( "SELECT XmlContent FROM Test1 " ).ExecuteScalar<XDocument>() );
 
 
       DbValueConverter.Unregister<XDocument>();
