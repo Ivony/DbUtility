@@ -288,7 +288,12 @@ namespace Ivony.Data
 
 
 
-
+    /// <summary>
+    /// 将 DataRow 转换为实体
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dataItem">包含数据的 DataRow</param>
+    /// <returns>实体</returns>
     public static T ToEntity<T>( this DataRow dataItem ) where T : new()
     {
       return ToEntity<T>( dataItem, null );
@@ -361,6 +366,36 @@ namespace Ivony.Data
           .MakeGenericMethod( entityType );
 
         return entityConverterDictionary[entityType] = (Func<DataRow, object>) Delegate.CreateDelegate( typeof( Func<DataRow, object> ), method );
+      }
+    }
+
+
+
+
+
+
+    private static Dictionary<Type, Func<DataRow, DataColumn, object>> dbValueConverterDictionary = new Dictionary<Type, Func<DataRow, DataColumn, object>>();
+
+
+    internal static object FieldValue( this DataRow dataItem, DataColumn column, Type valueType )
+    {
+      return GetFieldValueMethod( valueType )( dataItem, column );
+    }
+
+
+    private static Func<DataRow, DataColumn, object> GetFieldValueMethod( Type valueType )
+    {
+      lock ( sync )
+      {
+        if ( dbValueConverterDictionary.ContainsKey( valueType ) )
+          return dbValueConverterDictionary[valueType];
+
+
+        var method = typeof( EntityExtensions )
+          .GetMethod( "FieldValue", new[] { typeof( DataRow ), typeof( DataColumn ) } )
+          .MakeGenericMethod( valueType );
+
+        return dbValueConverterDictionary[valueType] = (Func<DataRow, DataColumn, object>) Delegate.CreateDelegate( typeof( Func<DataRow, DataColumn, object> ), method );
       }
     }
 

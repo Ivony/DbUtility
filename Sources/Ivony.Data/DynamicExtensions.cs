@@ -115,9 +115,16 @@ namespace Ivony.Data
       {
         var name = binder.Name;
         var column = _columns[name];
-        if ( column != null && binder.ReturnType.IsAssignableFrom( column.DataType ) )
+        if ( column != null )
         {
-          result = _dataRow[column];
+
+          if ( binder.ReturnType.IsAssignableFrom( column.DataType ) )
+            result = _dataRow[column];
+
+          else
+            result = _dataRow.FieldValue( column, binder.ReturnType );
+
+
           return true;
         }
 
