@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ivony.Data;
+using Ivony.Data.Queries;
 
 namespace Ivony.Data.Test
 {
@@ -118,6 +119,55 @@ namespace Ivony.Data.Test
 
       Assert.AreEqual( (query + query + query).TextTemplate, "SELECT * FROM Users WHERE UserID = #0#; SELECT * FROM Users WHERE UserID = #1#; SELECT * FROM Users WHERE UserID = #2#;", "多个带参数模板连接测试失败" );
       Assert.AreEqual( query.Concat( query, query ).TextTemplate, "SELECT * FROM Users WHERE UserID = #0#; SELECT * FROM Users WHERE UserID = #1#; SELECT * FROM Users WHERE UserID = #2#;", "多个带参数模板连接测试失败" );
+
+
+      query += null;
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE UserID = #0#;", "参数化查询对象连接一个 null 值失败" );
+
+
+      query += "";
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE UserID = #0#;", "参数化查询对象连接一个 null 值失败" );
+    }
+
+
+
+    [TestMethod]
+    public void JoinTest()
+    {
+      var query = Db.T( "SELECT * FROM Users" );
+      query += "WHERE";
+      query += Db.Join( "AND", new[] { Db.T( "UserID <> {0}", 0 ), Db.T( "Username = {0}", "Ivony" ) } );
+
+
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE UserID <> #0# AND Username = #1#" );
+      Assert.AreEqual( query.ParameterValues.Length, 2 );
+      Assert.AreEqual( query.ParameterValues[0], 0 );
+      Assert.AreEqual( query.ParameterValues[1], "Ivony" );
+
+
+
+      query = Db.T( "SELECT * FROM Users" );
+      query += "WHERE";
+      query += Db.Join( "AND", new ParameterizedQuery[0] );
+
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE" );
+
+
+      query = Db.T( "SELECT * FROM Users" );
+      query += "WHERE";
+      query += Db.Join( "AND", new ParameterizedQuery[] { null } );
+
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE" );
+
+
+      query = Db.T( "SELECT * FROM Users" );
+      query += "WHERE";
+      query += Db.Join( "AND", new ParameterizedQuery[] { Db.T( "UserID <> {0}", 0 ), null, Db.T( "Username = {0}", "Ivony" ) } );
+
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE UserID <> #0# AND Username = #1#" );
+      Assert.AreEqual( query.ParameterValues.Length, 2 );
+      Assert.AreEqual( query.ParameterValues[0], 0 );
+      Assert.AreEqual( query.ParameterValues[1], "Ivony" );
 
 
     }

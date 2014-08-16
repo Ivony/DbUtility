@@ -75,6 +75,11 @@ namespace Ivony.Data
     public static ParameterizedQuery Join( this string sperator, params ParameterizedQuery[] queries )
     {
 
+      if ( queries == null )
+        throw new ArgumentNullException( "queries" );
+
+
+      queries = queries.Where( i => i != null ).ToArray();//去除所有为 null 的参数化查询对象
       if ( !queries.Any() )
         return null;
 
@@ -83,7 +88,14 @@ namespace Ivony.Data
 
       foreach ( var q in queries.Skip( 1 ) )
       {
+        if ( !builder.IsEndWithWhiteSpace() && !char.IsWhiteSpace( sperator[0] ) && Db.AddWhiteSpaceOnConcat )
+          builder.Append( ' ' );
+
         builder.AppendText( sperator );
+
+        if ( !builder.IsEndWithWhiteSpace() && !q.IsStartWithWhiteSpace() && Db.AddWhiteSpaceOnConcat )
+          builder.Append( ' ' );
+
         builder.AppendPartial( q );
       }
 

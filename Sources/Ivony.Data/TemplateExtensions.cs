@@ -136,6 +136,10 @@ namespace Ivony.Data
       firstQuery.AppendTo( builder );
       foreach ( var query in otherQueries )
       {
+
+        if ( query == null || string.IsNullOrEmpty( query.TextTemplate ) )
+          continue;
+
         if ( !builder.IsEndWithWhiteSpace() && !query.IsStartWithWhiteSpace() && Db.AddWhiteSpaceOnConcat )
           builder.Append( ' ' );
 
