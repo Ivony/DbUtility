@@ -103,6 +103,18 @@ namespace Ivony.Data.Test
       Assert.AreEqual( query.ParameterValues[1], 2, "以object数组作为参数测试失败" );
       Assert.AreEqual( query.ParameterValues[2], 3, "以object数组作为参数测试失败" );
 
+
+      Db.AllowNonObjectArrayAsArgs = true;
+
+      query = Db.T( "SELECT * FROM Users WHERE ID IN ( {0}, {1}, {2} )", new[] { 1, 2, 3 } );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#, #1#, #2# )", "以值类型数组作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues.Length, 3, "以值类型数组作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues[0], 1, "以值类型数组作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues[1], 2, "以值类型数组作为参数测试失败" );
+      Assert.AreEqual( query.ParameterValues[2], 3, "以值类型数组作为参数测试失败" );
+
+      Db.AllowNonObjectArrayAsArgs = false;
+
     }
 
 

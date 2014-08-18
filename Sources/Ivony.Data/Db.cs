@@ -24,38 +24,21 @@ namespace Ivony.Data
     /// <param name="templateText">模板文本</param>
     /// <param name="args">模板参数</param>
     /// <returns>参数化查询</returns>
-    public static ParameterizedQuery Template<TElement>( string templateText, TElement[] args )
-    {
-      return TemplateParser.ParseTemplate( templateText, new[] { args } );
-    }
-
-
-    /// <summary>
-    /// 解析模板表达式，创建参数化查询对象
-    /// </summary>
-    /// <param name="templateText">模板文本</param>
-    /// <param name="args">模板参数</param>
-    /// <returns>参数化查询</returns>
     public static ParameterizedQuery Template( string templateText, params object[] args )
     {
       if ( args == null )
         args = new object[] { null };
 
+      if ( !AllowNonObjectArrayAsArgs )
+      {
+        if ( args.GetType() != typeof( object[] ) )
+          args = new object[] { args };
+      }
+
       return TemplateParser.ParseTemplate( templateText, args );
     }
 
 
-
-    /// <summary>
-    /// 解析模板表达式，创建参数化查询对象
-    /// </summary>
-    /// <param name="templateText">模板文本</param>
-    /// <param name="arg0">模板参数</param>
-    /// <returns>参数化查询</returns>
-    public static ParameterizedQuery T<TElement>( string templateText, TElement[] arg0 )
-    {
-      return Template( templateText, new[] { arg0 } );
-    }
 
     /// <summary>
     /// 解析模板表达式，创建参数化查询对象
@@ -68,8 +51,35 @@ namespace Ivony.Data
       if ( args == null )
         args = new object[] { null };
 
+      if ( !AllowNonObjectArrayAsArgs )
+      {
+        if ( args.GetType() != typeof( object[] ) )
+          args = new object[] { args };
+      }
+      else
+      {
+        if ( args.Length == 1 )
+        {
+          var array = args[0] as Array;
+
+          if ( array != null )
+          {
+
+            args = new object[array.Length];
+            array.CopyTo( args, 0 );
+          }
+        }
+      }
+
       return Template( templateText, args );
     }
+
+
+
+    /// <summary>
+    /// 允许非 object[] 类型的数组对象作为多参数列表使用，即允许任意类型数组展开成参数列表。
+    /// </summary>
+    public static bool AllowNonObjectArrayAsArgs { get; set; }
 
 
     /// <summary>
