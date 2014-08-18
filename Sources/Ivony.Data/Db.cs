@@ -17,15 +17,31 @@ namespace Ivony.Data
   {
 
 
+
     /// <summary>
     /// 解析模板表达式，创建参数化查询对象
     /// </summary>
     /// <param name="templateText">模板文本</param>
-    /// <param name="paramaters">模板参数</param>
+    /// <param name="args">模板参数</param>
     /// <returns>参数化查询</returns>
-    public static ParameterizedQuery Template( string templateText, params object[] paramaters )
+    public static ParameterizedQuery Template<TElement>( string templateText, TElement[] args )
     {
-      return TemplateParser.ParseTemplate( templateText, paramaters );
+      return TemplateParser.ParseTemplate( templateText, new[] { args } );
+    }
+
+
+    /// <summary>
+    /// 解析模板表达式，创建参数化查询对象
+    /// </summary>
+    /// <param name="templateText">模板文本</param>
+    /// <param name="args">模板参数</param>
+    /// <returns>参数化查询</returns>
+    public static ParameterizedQuery Template( string templateText, params object[] args )
+    {
+      if ( args == null )
+        args = new object[] { null };
+
+      return TemplateParser.ParseTemplate( templateText, args );
     }
 
 
@@ -34,11 +50,25 @@ namespace Ivony.Data
     /// 解析模板表达式，创建参数化查询对象
     /// </summary>
     /// <param name="templateText">模板文本</param>
-    /// <param name="paramaters">模板参数</param>
+    /// <param name="arg0">模板参数</param>
     /// <returns>参数化查询</returns>
-    public static ParameterizedQuery T( string templateText, params object[] paramaters )
+    public static ParameterizedQuery T<TElement>( string templateText, TElement[] arg0 )
     {
-      return Template( templateText, paramaters );
+      return Template( templateText, new[] { arg0 } );
+    }
+
+    /// <summary>
+    /// 解析模板表达式，创建参数化查询对象
+    /// </summary>
+    /// <param name="templateText">模板文本</param>
+    /// <param name="args">模板参数</param>
+    /// <returns>参数化查询</returns>
+    public static ParameterizedQuery T( string templateText, params object[] args )
+    {
+      if ( args == null )
+        args = new object[] { null };
+
+      return Template( templateText, args );
     }
 
 

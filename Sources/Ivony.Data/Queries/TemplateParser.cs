@@ -26,12 +26,12 @@ namespace Ivony.Data
     /// 解析查询模板
     /// </summary>
     /// <param name="templateText">模板文本</param>
-    /// <param name="paramaters">模板参数</param>
+    /// <param name="args">模板参数</param>
     /// <returns>解析结果</returns>
-    public static ParameterizedQuery ParseTemplate( string templateText, params object[] paramaters )
+    public static ParameterizedQuery ParseTemplate( string templateText, object[] args )
     {
       var builder = new ParameterizedQueryBuilder();
-      return ParseTemplate( builder, templateText, paramaters );
+      return ParseTemplate( builder, templateText, args );
     }
 
 
@@ -41,13 +41,13 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="builder">参数化查询构建器</param>
     /// <param name="templateText">模板文本</param>
-    /// <param name="parameters">模板参数</param>
+    /// <param name="args">模板参数</param>
     /// <returns>解析结果</returns>
-    public static ParameterizedQuery ParseTemplate( ParameterizedQueryBuilder builder, string templateText, params object[] parameters )
+    public static ParameterizedQuery ParseTemplate( ParameterizedQueryBuilder builder, string templateText, object[] args )
     {
 
-      if ( parameters == null )
-        parameters = new object[] { null };
+      if ( args == null )
+        throw new ArgumentNullException( "parameters" );
 
       lock ( builder.SyncRoot )
       {
@@ -85,7 +85,7 @@ namespace Ivony.Data
                 if ( !int.TryParse( match.Groups["index"].Value, out parameterIndex ) )
                   throw FormatError( templateText, i );
 
-                AddParameter( builder, parameters[parameterIndex] );
+                AddParameter( builder, args[parameterIndex] );
                 break;
               }
 
@@ -102,14 +102,14 @@ namespace Ivony.Data
                     throw FormatError( templateText, i );
                 }
                 else
-                  end = parameters.Length - 1;
+                  end = args.Length - 1;
 
 
-                if ( begin > end || end >= parameters.Length )
+                if ( begin > end || end >= args.Length )
                   throw FormatError( templateText, i );
 
 
-                AddParameters( builder, parameters, begin, end );
+                AddParameters( builder, args, begin, end );
                 break;
               }
 
@@ -117,7 +117,7 @@ namespace Ivony.Data
               match = allRegex.Match( templateText, i );
               if ( match.Success )
               {
-                AddParameters( builder, parameters, 0, parameters.Length - 1 );
+                AddParameters( builder, args, 0, args.Length - 1 );
                 break;
               }
             } while ( false );

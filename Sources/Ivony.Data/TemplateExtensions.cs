@@ -25,7 +25,7 @@ namespace Ivony.Data
     /// <returns>参数化查询实例</returns>
     public static DbExecutableQuery<ParameterizedQuery> Template( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
     {
-      return new DbExecutableQuery<ParameterizedQuery>( executor, TemplateParser.ParseTemplate( template, parameters ) );
+      return new DbExecutableQuery<ParameterizedQuery>( executor, Db.Template( template, parameters ) );
     }
 
 
@@ -38,7 +38,7 @@ namespace Ivony.Data
     /// <returns>参数化查询实例</returns>
     public static AsyncDbExecutableQuery<ParameterizedQuery> Template( this IAsyncDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
     {
-      return new AsyncDbExecutableQuery<ParameterizedQuery>( executor, TemplateParser.ParseTemplate( template, parameters ) );
+      return new AsyncDbExecutableQuery<ParameterizedQuery>( executor, Db.Template( template, parameters ) );
     }
 
 

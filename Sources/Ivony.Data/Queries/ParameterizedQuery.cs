@@ -132,7 +132,7 @@ namespace Ivony.Data.Queries
     /// <returns>参数化查询对象</returns>
     public static implicit operator ParameterizedQuery( string text )
     {
-      return TemplateParser.ParseTemplate( text );
+      return TemplateParser.ParseTemplate( text, new object[0] );
     }
 
 
