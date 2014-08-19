@@ -28,6 +28,9 @@ namespace Ivony.Data
       }
 
 
+      else if ( type.IsEnum )
+        return ConvertEnum<T>;
+
       else if ( IsConvertiableType( type ) )
         return ConvertConvertible<T>;
 
@@ -49,6 +52,21 @@ namespace Ivony.Data
       else
         return new T?( ConvertFrom<T>( value ) );
     }
+
+
+    private static T ConvertEnum<T>( object value )
+    {
+      var enumType = typeof( T );
+
+
+      var str = value as string;
+      if ( str != null )
+        return (T) Enum.Parse( enumType, str );
+
+
+      return (T) Enum.ToObject( enumType, value );
+    }
+
 
 
 
