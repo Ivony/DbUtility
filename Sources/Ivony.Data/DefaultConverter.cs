@@ -15,25 +15,6 @@ namespace Ivony.Data
       public static Converter<object, T> Converter = CreateConverter<T>();
     }
 
-    private static Converter<object, object> CreateConverter( Type type )
-    {
-
-      var underlyingType = Nullable.GetUnderlyingType( type );
-
-      if ( underlyingType != null )
-      {
-
-        var methodInfo = typeof( DbValueConverter ).GetMethod( "ConvertNullable", BindingFlags.Static | BindingFlags.NonPublic ).MakeGenericMethod( new Type[] { underlyingType } );
-        var delegateType = typeof( Converter<,> ).MakeGenericType( typeof( object ), type );
-        return (Converter<object, object>) Delegate.CreateDelegate( delegateType, methodInfo );
-
-      }
-      else if ( IsConvertiableType( type ) )
-        return value => ConvertConvertible( value, type );
-
-      else
-        return value => ConvertObject( value, type );
-    }
 
     private static Converter<object, T> CreateConverter<T>()
     {
@@ -50,6 +31,9 @@ namespace Ivony.Data
       else if ( IsConvertiableType( type ) )
         return ConvertConvertible<T>;
 
+
+      else if ( type.IsValueType )
+        return ConvertValueType<T>;
 
       else
         return ConvertObject<T>;
@@ -113,12 +97,12 @@ namespace Ivony.Data
     {
       var convertible = value as IConvertible;
       if ( convertible == null )
-        throw new InvalidCastException( string.Format( "无法将 {0} 类型的实例转换为 {1} 类型", value.GetType(), type ) );
+        throw new InvalidCastException( string.Format( CultureInfo.InvariantCulture, "无法将 {0} 类型的实例转换为 {1} 类型", value.GetType(), type ) );
 
       if ( Convert.IsDBNull( value ) )
       {
         if ( type.IsValueType )
-          throw new InvalidCastException( string.Format( "无法将 DBNull 转换为 {0} 类型", type ) );
+          throw new InvalidCastException( string.Format( CultureInfo.InvariantCulture, "无法将 DBNull 转换为 {0} 类型", type ) );
 
         return null;
       }
@@ -131,23 +115,16 @@ namespace Ivony.Data
 
     private static T ConvertObject<T>( object value )
     {
-      return (T) ConvertObject( value, typeof( T ) );
+      return (T) value;
     }
 
-    private static object ConvertObject( object value, Type type )
+    private static T ConvertValueType<T>( object value )
     {
       if ( value == null || Convert.IsDBNull( value ) )
-      {
+        throw new InvalidCastException( string.Format( CultureInfo.InvariantCulture, "不能将 null 值转换为 {0} 类型对象", typeof( T ).FullName ) );
 
-        if ( type.IsValueType )
-          throw new InvalidCastException( string.Format( "无法将 null 或 DBNull 实例转换为 {0} 类型", type ) );
+      return (T) value;
 
-        else
-          return null;
-      }
-
-      else
-        return value;
     }
   }
 }
