@@ -1,4 +1,4 @@
-﻿using Ivony.Data.Queries;
+﻿using Ivony.Data.Common;
 using Npgsql;
 
 namespace Ivony.Data.PostgreSQL.PostgreSqlClient
