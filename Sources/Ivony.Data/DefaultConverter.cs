@@ -113,17 +113,18 @@ namespace Ivony.Data
 
     private static object ConvertConvertible( object value, Type type )
     {
-      var convertible = value as IConvertible;
-      if ( convertible == null )
-        throw new InvalidCastException( string.Format( CultureInfo.InvariantCulture, "无法将 {0} 类型的实例转换为 {1} 类型", value.GetType(), type ) );
-
-      if ( Convert.IsDBNull( value ) )
+      if ( value == null || Convert.IsDBNull( value ) )
       {
         if ( type.IsValueType )
-          throw new InvalidCastException( string.Format( CultureInfo.InvariantCulture, "无法将 DBNull 转换为 {0} 类型", type ) );
+          throw new InvalidCastException( string.Format( CultureInfo.InvariantCulture, "不能将 null 值转换为 {0} 类型对象", type ) );
 
         return null;
       }
+
+      
+      var convertible = value as IConvertible;
+      if ( convertible == null )
+        throw new InvalidCastException( string.Format( CultureInfo.InvariantCulture, "无法将 {0} 类型的实例转换为 {1} 类型", value.GetType(), type ) );
 
       return convertible.ToType( type, CultureInfo.InvariantCulture );
 
