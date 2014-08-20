@@ -323,9 +323,38 @@ CREATE TABLE [dbo].[Test1]
       Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<double?>(), null );
       Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<float?>(), null );
       Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<string>(), null );
+    }
+
+
+
+    [TestMethod]
+    public void EnumTest()
+    {
+
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )", 
+        TestEnum.One.ToString(), TestEnum.Two.ToString(), TestEnum.Three ).ExecuteNonQuery();
+      
+      
+      Assert.AreEqual( db.T( "SELECT Name FROM Test1" ).ExecuteScalar<string>(), "One" );
+      Assert.AreEqual( db.T( "SELECT [Index] FROM Test1" ).ExecuteScalar<int>(), 3 );
+      Assert.AreEqual( db.T( "SELECT Name FROM Test1" ).ExecuteScalar<TestEnum>(), TestEnum.One );
+      Assert.AreEqual( db.T( "SELECT [Index] FROM Test1" ).ExecuteScalar<TestEnum>(), TestEnum.Three );
 
 
     }
+
+
+    enum TestEnum : long
+    {
+      One = 1,
+      Two,
+      Three,
+    }
+
+
+
+
+
 
     public class WrongEntity
     {
