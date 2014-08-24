@@ -108,8 +108,8 @@
     <Compile Include="Common\IParameterizedQueryParser.cs" />
     <Compile Include="Common\ParameterizedQueryParser.cs" />
     <Compile Include="Common\ParameterizedQueryLiteralValueParser.cs" />
-    <Compile Include="IParameterizedQueryExecutor.cs" />
-    <Compile Include="ParameterizedQueryExecuteContext.cs" />
+    <Compile Include="Queries\IParameterizedQueryExecutor.cs" />
+    <Compile Include="Queries\ParameterizedQueryExecuteContext.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />

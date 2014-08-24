@@ -9,11 +9,15 @@ namespace Ivony.Data
 {
 
   /// <summary>
-  /// 定义数据库执行上下文
+  /// 定义数据库查询执行上下文
   /// </summary>
   public interface IDbExecuteContext
   {
 
+    /// <summary>
+    /// 执行查询并获得查询结果
+    /// </summary>
+    /// <returns>数据库查询结果</returns>
     IDbResult Execute();
 
   }
