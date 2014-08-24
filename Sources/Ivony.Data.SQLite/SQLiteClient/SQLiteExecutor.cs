@@ -51,7 +51,7 @@ namespace Ivony.Data.SQLiteClient
 
 
 
-    public IDbExecuteContext Execute( ParameterizedQuery query )
+    public IDbResult Execute( ParameterizedQuery query )
     {
       var tracing = TryCreateTracing( this, query );
       var command = new SQLiteParameterizedQueryParser().Parse( query );
@@ -59,7 +59,7 @@ namespace Ivony.Data.SQLiteClient
       return Execute( command, tracing );
     }
 
-    private IDbExecuteContext Execute( SQLiteCommand command, IDbTracing tracing )
+    private IDbResult Execute( SQLiteCommand command, IDbTracing tracing )
     {
       try
       {

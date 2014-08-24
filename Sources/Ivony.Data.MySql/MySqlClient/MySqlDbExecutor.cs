@@ -50,14 +50,14 @@ namespace Ivony.Data.MySqlClient
       private set;
     }
 
-    public IDbExecuteContext Execute( ParameterizedQuery query )
+    public IDbResult Execute( ParameterizedQuery query )
     {
 
       return Execute( CreateCommand( query ), TryCreateTracing( this, query ) );
 
     }
 
-    protected virtual IDbExecuteContext Execute( MySqlCommand command, IDbTracing tracing )
+    protected virtual IDbResult Execute( MySqlCommand command, IDbTracing tracing )
     {
       try
       {

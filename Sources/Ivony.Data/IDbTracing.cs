@@ -24,7 +24,7 @@ namespace Ivony.Data
     /// 通知追踪记录器正在加载数据。
     /// </summary>
     /// <param name="context">查询执行上下文</param>
-    void OnLoadingData( IDbExecuteContext context );
+    void OnLoadingData( IDbResult context );
 
     /// <summary>
     /// 通知追踪记录器查询已经全部完成。

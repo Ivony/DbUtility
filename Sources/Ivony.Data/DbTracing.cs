@@ -123,7 +123,7 @@ namespace Ivony.Data
       queryStopwatch.Restart();
     }
 
-    void IDbTracing.OnLoadingData( IDbExecuteContext context )
+    void IDbTracing.OnLoadingData( IDbResult context )
     {
       events.Add( new TraceEventDescriptor( "OnLoadingData", DateTime.UtcNow ) );
       executionStopwatch.Stop();

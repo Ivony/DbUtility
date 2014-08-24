@@ -15,7 +15,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// 实现 SQL Server 执行上下文
   /// </summary>
-  public class SqlDbExecuteContext : AsyncDbExecuteContextBase
+  public class SqlDbExecuteContext : AsyncDbResultBase
   {
 
 

@@ -12,7 +12,7 @@ namespace Ivony.Data
   /// <summary>
   /// 查询执行上下文
   /// </summary>
-  public interface IDbExecuteContext : IDisposable
+  public interface IDbResult : IDisposable
   {
 
     /// <summary>
@@ -57,7 +57,7 @@ namespace Ivony.Data
   /// <summary>
   /// 异步查询执行上下文
   /// </summary>
-  public interface IAsyncDbExecuteContext : IDbExecuteContext
+  public interface IAsyncDbResult : IDbResult
   {
 
     /// <summary>

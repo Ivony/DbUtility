@@ -90,7 +90,7 @@ namespace Ivony.Data.SqlClient
       /// <param name="token">取消指示</param>
       /// <param name="tracing">用于追踪的追踪器</param>
       /// <returns>查询执行上下文</returns>
-      protected sealed override async Task<IAsyncDbExecuteContext> ExecuteAsync( SqlCommand command, CancellationToken token, IDbTracing tracing = null )
+      protected sealed override async Task<IAsyncDbResult> ExecuteAsync( SqlCommand command, CancellationToken token, IDbTracing tracing = null )
       {
         try
         {
@@ -125,7 +125,7 @@ namespace Ivony.Data.SqlClient
       /// <param name="command">查询命令</param>
       /// <param name="tracing">用于追踪查询过程的追踪器</param>
       /// <returns>查询执行上下文</returns>
-      protected sealed override IDbExecuteContext Execute( SqlCommand command, IDbTracing tracing = null )
+      protected sealed override IDbResult Execute( SqlCommand command, IDbTracing tracing = null )
       {
         try
         {

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Ivony.Data.SQLiteClient
 {
-  class SQLiteExecuteContext : DbExecuteContextBase
+  class SQLiteExecuteContext : DbResultBase
   {
     public SQLiteExecuteContext( SQLiteDataReader dataReader, IDbTracing tracing, object sync )
       : base( dataReader, tracing, sync: sync )

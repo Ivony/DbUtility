@@ -72,7 +72,7 @@ namespace Ivony.Data.MySqlClient
       private MySqlDbTransactionContext _transaction;
 
 
-      protected override IDbExecuteContext Execute( MySqlCommand command, IDbTracing tracing )
+      protected override IDbResult Execute( MySqlCommand command, IDbTracing tracing )
       {
 
         TryExecuteTracing( tracing, t => t.OnExecuting( command ) );

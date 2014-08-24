@@ -29,7 +29,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
             this.Configuration = configuration;
         }
 
-        protected virtual IDbExecuteContext Execute(NpgsqlCommand command, IDbTracing tracing)
+        protected virtual IDbResult Execute(NpgsqlCommand command, IDbTracing tracing)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         /// <param name="token">取消指示</param>
         /// <param name="tracing">用于追踪查询过程的追踪器</param>
         /// <returns>查询执行上下文</returns>
-        protected virtual async Task<IAsyncDbExecuteContext> ExecuteAsync(NpgsqlCommand command, CancellationToken token, IDbTracing tracing = null)
+        protected virtual async Task<IAsyncDbResult> ExecuteAsync(NpgsqlCommand command, CancellationToken token, IDbTracing tracing = null)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         /// </summary>
         /// <param name="query">查询对象</param>
         /// <returns>查询执行上下文</returns>
-        public IDbExecuteContext Execute(ParameterizedQuery query)
+        public IDbResult Execute(ParameterizedQuery query)
         {
             return this.Execute(this.CreateCommand(query), this.TryCreateTracing(this, query));
         }
@@ -134,7 +134,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         /// <param name="query">要执行的查询</param>
         /// <param name="token">取消指示</param>
         /// <returns>查询执行上下文</returns>
-        public Task<IAsyncDbExecuteContext> ExecuteAsync(ParameterizedQuery query, CancellationToken token)
+        public Task<IAsyncDbResult> ExecuteAsync(ParameterizedQuery query, CancellationToken token)
         {
             return this.ExecuteAsync(this.CreateCommand(query), token, this.TryCreateTracing(this, query));
         }
@@ -148,7 +148,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         /// </summary>
         /// <param name="query">查询对象</param>
         /// <returns>查询执行上下文</returns>
-        public IDbExecuteContext Execute(StoredProcedureQuery query)
+        public IDbResult Execute(StoredProcedureQuery query)
         {
             return Execute(CreateCommand(query), TryCreateTracing(this, query));
         }
@@ -163,7 +163,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         /// <param name="query">要执行的查询</param>
         /// <param name="token">取消指示</param>
         /// <returns>查询执行上下文</returns>
-        public Task<IAsyncDbExecuteContext> ExecuteAsync(StoredProcedureQuery query, CancellationToken token)
+        public Task<IAsyncDbResult> ExecuteAsync(StoredProcedureQuery query, CancellationToken token)
         {
             return ExecuteAsync(CreateCommand(query), token, TryCreateTracing(this, query));
         }
@@ -206,7 +206,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         /// <param name="token">取消指示</param>
         /// <param name="tracing">用于追踪的追踪器</param>
         /// <returns>查询执行上下文</returns>
-        protected sealed override async Task<IAsyncDbExecuteContext> ExecuteAsync(NpgsqlCommand command, CancellationToken token, IDbTracing tracing = null)
+        protected sealed override async Task<IAsyncDbResult> ExecuteAsync(NpgsqlCommand command, CancellationToken token, IDbTracing tracing = null)
         {
             try
             {
@@ -237,7 +237,7 @@ namespace Ivony.Data.PostgreSQL.PostgreSqlClient
         /// <param name="command">查询命令</param>
         /// <param name="tracing">用于追踪查询过程的追踪器</param>
         /// <returns>查询执行上下文</returns>
-        protected sealed override IDbExecuteContext Execute(NpgsqlCommand command, IDbTracing tracing = null)
+        protected sealed override IDbResult Execute(NpgsqlCommand command, IDbTracing tracing = null)
         {
             try
             {

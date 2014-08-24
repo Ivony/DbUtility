@@ -14,7 +14,7 @@ namespace Ivony.Data.Common
   /// <summary>
   /// 辅助实现 IDbExecuteContext 接口的基类
   /// </summary>
-  public abstract class DbExecuteContextBase : IDbExecuteContext
+  public abstract class DbResultBase : IDbResult
   {
 
 
@@ -26,7 +26,7 @@ namespace Ivony.Data.Common
     /// <param name="tracing">用于追踪此次查询过程的追踪器</param>
     /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
     /// <param name="sync">用于同步的对象，如果有的话</param>
-    protected DbExecuteContextBase( IDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null, object sync = null )
+    protected DbResultBase( IDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null, object sync = null )
     {
 
       if ( dataReader == null )
@@ -171,7 +171,7 @@ namespace Ivony.Data.Common
   /// <summary>
   /// 辅助实现 IAsyncDbExecuteContext 接口的基类
   /// </summary>
-  public abstract class AsyncDbExecuteContextBase : DbExecuteContextBase, IAsyncDbExecuteContext
+  public abstract class AsyncDbResultBase : DbResultBase, IAsyncDbResult
   {
 
 
@@ -181,7 +181,7 @@ namespace Ivony.Data.Common
     /// <param name="dataReader">用于读取数据的 IDataReader 对象</param>
     /// <param name="tracing">用于追踪此次查询过程的追踪器</param>
     /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
-    protected AsyncDbExecuteContextBase( DbDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null )
+    protected AsyncDbResultBase( DbDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null )
       : base( dataReader, tracing, connectionResource )
     {
 

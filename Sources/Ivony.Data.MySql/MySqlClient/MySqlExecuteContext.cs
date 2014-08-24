@@ -12,7 +12,7 @@ namespace Ivony.Data.MySqlClient
   /// <summary>
   /// MySql 数据执行上下文
   /// </summary>
-  public class MySqlExecuteContext : AsyncDbExecuteContextBase
+  public class MySqlExecuteContext : AsyncDbResultBase
   {
 
     /// <summary>

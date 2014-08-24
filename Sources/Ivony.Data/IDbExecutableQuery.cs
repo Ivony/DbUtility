@@ -21,7 +21,7 @@ namespace Ivony.Data
     /// 同步执行查询
     /// </summary>
     /// <returns></returns>
-    IDbExecuteContext Execute();
+    IDbResult Execute();
 
   }
 
@@ -37,7 +37,7 @@ namespace Ivony.Data
     /// 异步执行查询
     /// </summary>
     /// <returns></returns>
-    Task<IAsyncDbExecuteContext> ExecuteAsync( CancellationToken token );
+    Task<IAsyncDbResult> ExecuteAsync( CancellationToken token );
   
   }
 }

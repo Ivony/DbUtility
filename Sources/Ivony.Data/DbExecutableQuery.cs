@@ -45,7 +45,7 @@ namespace Ivony.Data
     /// 同步执行查询
     /// </summary>
     /// <returns>查询执行上下文</returns>
-    public IDbExecuteContext Execute()
+    public IDbResult Execute()
     {
       return Executor.Execute( Query );
     }
@@ -124,7 +124,7 @@ namespace Ivony.Data
     /// </summary>
     /// <returns>查询执行上下文</returns>
     [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Advanced )]
-    public IDbExecuteContext Execute()
+    public IDbResult Execute()
     {
       return Executor.Execute( Query );
     }
@@ -134,7 +134,7 @@ namespace Ivony.Data
     /// </summary>
     /// <returns>异步查询执行上下文</returns>
     [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Advanced )]
-    public Task<IAsyncDbExecuteContext> ExecuteAsync( CancellationToken token = default( CancellationToken ) )
+    public Task<IAsyncDbResult> ExecuteAsync( CancellationToken token = default( CancellationToken ) )
     {
       return Executor.ExecuteAsync( Query, token );
     }

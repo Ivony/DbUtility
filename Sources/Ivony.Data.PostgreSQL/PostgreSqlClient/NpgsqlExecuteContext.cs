@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 {
-  public class NpgsqlDbExecuteContext : AsyncDbExecuteContextBase
+  public class NpgsqlDbExecuteContext : AsyncDbResultBase
   {
     /// <summary>
     /// 创建 NpgsqlExecuteContext 对象

@@ -89,7 +89,7 @@ namespace Ivony.Data.SqlClient
     /// <param name="command">查询命令</param>
     /// <param name="tracing">用于追踪查询过程的追踪器</param>
     /// <returns>查询执行上下文</returns>
-    protected virtual IDbExecuteContext Execute( SqlCommand command, IDbTracing tracing = null )
+    protected virtual IDbResult Execute( SqlCommand command, IDbTracing tracing = null )
     {
 
       try
@@ -128,7 +128,7 @@ namespace Ivony.Data.SqlClient
     /// <param name="token">取消指示</param>
     /// <param name="tracing">用于追踪查询过程的追踪器</param>
     /// <returns>查询执行上下文</returns>
-    protected virtual async Task<IAsyncDbExecuteContext> ExecuteAsync( SqlCommand command, CancellationToken token, IDbTracing tracing = null )
+    protected virtual async Task<IAsyncDbResult> ExecuteAsync( SqlCommand command, CancellationToken token, IDbTracing tracing = null )
     {
       try
       {
@@ -158,12 +158,12 @@ namespace Ivony.Data.SqlClient
 
 
 
-    IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
+    IDbResult IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
       return Execute( CreateCommand( query ), TryCreateTracing( this, query ) );
     }
 
-    Task<IAsyncDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )
+    Task<IAsyncDbResult> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )
     {
       return ExecuteAsync( CreateCommand( query ), token, TryCreateTracing( this, query ) );
     }

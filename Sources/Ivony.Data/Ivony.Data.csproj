@@ -92,7 +92,7 @@
     <Compile Include="Db.cs" />
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="DbExecutableQuery.cs" />
-    <Compile Include="Common\DbExecuteContextBase.cs" />
+    <Compile Include="Common\DbResultBase.cs" />
     <Compile Include="DbValueConverter.cs" />
     <Compile Include="DynamicExtensions.cs" />
     <Compile Include="EntityExtensions.cs" />
@@ -101,7 +101,7 @@
     <Compile Include="IDbTracing.cs" />
     <Compile Include="IDbTransactionProvider.cs" />
     <Compile Include="IDbExecutableQuery.cs" />
-    <Compile Include="IDbExecuteContext.cs" />
+    <Compile Include="IDbResult.cs" />
     <Compile Include="Common\IDbProvider.cs" />
     <Compile Include="IDbQuery.cs" />
     <Compile Include="IDbTransactionContext.cs" />
