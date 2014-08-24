@@ -19,7 +19,7 @@ namespace Ivony.Data
     /// <summary>
     /// 执行查询并将第一个结果集包装成 DataTable 返回
     /// </summary>
-    /// <param name="query">要执行的查询对象</param>
+    /// <param name="context">要执行的查询对象</param>
     /// <returns>查询结果</returns>
     public static DataTable ExecuteDataTable( this IDbExecuteContext context )
     {

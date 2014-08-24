@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
+
+  /// <summary>
+  /// 定义数据库执行上下文
+  /// </summary>
   public interface IDbExecuteContext
   {
 
