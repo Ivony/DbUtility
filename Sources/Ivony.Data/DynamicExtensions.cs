@@ -47,11 +47,11 @@ namespace Ivony.Data
     /// <summary>
     /// 执行查询并将第一个结果集填充动态对象列表
     /// </summary>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <returns>查询结果</returns>
-    public static dynamic[] ExecuteDynamics( this IDbExecutableQuery query )
+    public static dynamic[] ExecuteDynamics( this IDbExecuteContext context )
     {
-      var data = query.ExecuteDataTable();
+      var data = context.ExecuteDataTable();
       return ToDynamics( data );
     }
 
@@ -59,12 +59,12 @@ namespace Ivony.Data
     /// <summary>
     /// 异步执行查询并将第一个结果集填充动态对象列表
     /// </summary>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <param name="token">取消指示</param>
     /// <returns>查询结果</returns>
-    public static async Task<dynamic[]> ExecuteDynamicsAsync( this IAsyncDbExecutableQuery query, CancellationToken token = default( CancellationToken ) )
+    public static async Task<dynamic[]> ExecuteDynamicsAsync( this IAsyncDbExecuteContext context, CancellationToken token = default( CancellationToken ) )
     {
-      var data = await query.ExecuteDataTableAsync( token );
+      var data = await context.ExecuteDataTableAsync( token );
       return ToDynamics( data );
     }
 
@@ -74,11 +74,11 @@ namespace Ivony.Data
     /// <summary>
     /// 执行查询并将第一个结果集的第一条记录填充动态对象
     /// </summary>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <returns>查询结果</returns>
-    public static dynamic ExecuteDynamicObject( this IDbExecutableQuery query )
+    public static dynamic ExecuteDynamicObject( this IDbExecuteContext context )
     {
-      var dataItem = query.ExecuteFirstRow();
+      var dataItem = context.ExecuteFirstRow();
       return ToDynamic( dataItem );
     }
 
@@ -86,11 +86,11 @@ namespace Ivony.Data
     /// <summary>
     /// 异步执行查询并将第一个结果集的第一条记录填充动态对象
     /// </summary>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <returns>查询结果</returns>
-    public static async Task<dynamic> ExecuteDynamicObjectAsync( this IAsyncDbExecutableQuery query )
+    public static async Task<dynamic> ExecuteDynamicObjectAsync( this IAsyncDbExecuteContext context )
     {
-      var dataItem = await query.ExecuteFirstRowAsync();
+      var dataItem = await context.ExecuteFirstRowAsync();
       return ToDynamic( dataItem );
     }
 

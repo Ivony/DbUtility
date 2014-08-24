@@ -122,44 +122,44 @@ namespace Ivony.Data
     /// 执行查询并返回第一列数据
     /// </summary>
     /// <typeparam name="T">列类型</typeparam>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <returns>第一列的数据</returns>
-    public static T[] ExecuteFirstColumn<T>( this IDbExecutableQuery query )
+    public static T[] ExecuteFirstColumn<T>( this IDbExecuteContext context )
     {
-      return query.ExecuteDataTable().Column<T>();
+      return context.ExecuteDataTable().Column<T>();
     }
 
     /// <summary>
     /// 异步执行查询并返回第一列数据
     /// </summary>
     /// <typeparam name="T">列类型</typeparam>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <returns>第一列的数据</returns>
-    public async static Task<T[]> ExecuteFirstColumnAsync<T>( this IAsyncDbExecutableQuery query )
+    public async static Task<T[]> ExecuteFirstColumnAsync<T>( this IAsyncDbExecuteContext context )
     {
-      return (await query.ExecuteDataTableAsync()).Column<T>();
+      return (await context.ExecuteDataTableAsync()).Column<T>();
     }
 
 
     /// <summary>
     /// 执行查询并将数据转换为 DataRowView 集合返回
     /// </summary>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <returns>转换为 DataRowView 的数据集合</returns>
-    public static IEnumerable<DataRowView> ExecuteDataRowViews( this IDbExecutableQuery query )
+    public static IEnumerable<DataRowView> ExecuteDataRowViews( this IDbExecuteContext context )
     {
-      return query.ExecuteDataTable().GetRowViews();
+      return context.ExecuteDataTable().GetRowViews();
     }
 
 
     /// <summary>
     /// 异步执行查询并将数据转换为 DataRowView 集合返回
     /// </summary>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <returns>转换为 DataRowView 的数据集合</returns>
-    public async static Task<IEnumerable<DataRowView>> ExecuteDataRowViewsAsync( this IAsyncDbExecutableQuery query )
+    public async static Task<IEnumerable<DataRowView>> ExecuteDataRowViewsAsync( this IAsyncDbExecuteContext context )
     {
-      return (await query.ExecuteDataTableAsync()).GetRowViews();
+      return (await context.ExecuteDataTableAsync()).GetRowViews();
     }
 
 
@@ -167,21 +167,21 @@ namespace Ivony.Data
     /// <summary>
     /// 执行查询并将第一行数据数据转换为 DataRowView 返回
     /// </summary>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <returns>转换为 DataRowView 的数据集合</returns>
-    public static DataRowView ExecuteFirstDataRowView( this IDbExecutableQuery query )
+    public static DataRowView ExecuteFirstDataRowView( this IDbExecuteContext context )
     {
-      return query.ExecuteDataTable().GetRowViews().FirstOrDefault();
+      return context.ExecuteDataTable().GetRowViews().FirstOrDefault();
     }
 
     /// <summary>
     /// 异步执行查询并将第一行数据数据转换为 DataRowView 返回
     /// </summary>
-    /// <param name="query">要执行的查询</param>
+    /// <param name="context">要执行的查询</param>
     /// <returns>转换为 DataRowView 的数据集合</returns>
-    public async static Task<DataRowView> ExecuteFirstDataRowViewAsync( this IAsyncDbExecutableQuery query )
+    public async static Task<DataRowView> ExecuteFirstDataRowViewAsync( this IAsyncDbExecuteContext context )
     {
-      return (await query.ExecuteDataTableAsync()).GetRowViews().FirstOrDefault();
+      return (await context.ExecuteDataTableAsync()).GetRowViews().FirstOrDefault();
     }
 
 
