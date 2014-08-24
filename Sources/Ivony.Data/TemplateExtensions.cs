@@ -23,10 +23,11 @@ namespace Ivony.Data
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>参数化查询实例</returns>
-    public static DbExecutableQuery<ParameterizedQuery> Template( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
+    public static TContext Template<TContext>( this IParameterizedQueryExecutor<TContext> executor, string template, params object[] parameters ) where TContext : ParameterizedQueryExecuteContext
     {
-      return new DbExecutableQuery<ParameterizedQuery>( executor, Db.Template( template, parameters ) );
+      return executor.Execute( Db.Template( template, parameters ) );
     }
+
 
 
     /// <summary>
@@ -36,36 +37,24 @@ namespace Ivony.Data
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>参数化查询实例</returns>
-    public static AsyncDbExecutableQuery<ParameterizedQuery> Template( this IAsyncDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
+    public static TContext T<TContext>( this IParameterizedQueryExecutor<TContext> executor, string template, params object[] parameters ) where TContext : ParameterizedQueryExecuteContext
     {
-      return new AsyncDbExecutableQuery<ParameterizedQuery>( executor, Db.Template( template, parameters ) );
+      return executor.Execute( Db.Template( template, parameters ) );
     }
+
 
 
     /// <summary>
     /// 根据模板表达式创建参数化查询实例
     /// </summary>
-    /// <param name="executor">查询执行器</param>
+    /// <param name="provider">数据库事务对象</param>
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>参数化查询实例</returns>
-    public static DbExecutableQuery<ParameterizedQuery> T( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
+    public static TContext Template<TContext>( this IDbExecutorProvider<IParameterizedQueryExecutor<TContext>> provider, string template, params object[] parameters ) where TContext : ParameterizedQueryExecuteContext
     {
-      return Template( executor, template, parameters );
+      return provider.DbExecutor.Template( template, parameters );
     }
-
-    /// <summary>
-    /// 根据模板表达式创建参数化查询实例
-    /// </summary>
-    /// <param name="executor">查询执行器</param>
-    /// <param name="template">SQL 命令模版</param>
-    /// <param name="parameters">模版参数列表</param>
-    /// <returns>参数化查询实例</returns>
-    public static AsyncDbExecutableQuery<ParameterizedQuery> T( this IAsyncDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
-    {
-      return Template( executor, template, parameters );
-    }
-
 
 
 
@@ -77,49 +66,11 @@ namespace Ivony.Data
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>参数化查询实例</returns>
-    public static DbExecutableQuery<ParameterizedQuery> Template( this IDbTransactionContext<IDbExecutor<ParameterizedQuery>> transaction, string template, params object[] parameters )
+    public static TContext T<TContext>( this IDbExecutorProvider<IParameterizedQueryExecutor<TContext>> provider, string template, params object[] parameters ) where TContext : ParameterizedQueryExecuteContext
     {
-      return transaction.DbExecutor.Template( template, parameters );
+      return provider.DbExecutor.Template( template, parameters );
     }
 
-
-    /// <summary>
-    /// 根据模板表达式创建参数化查询实例
-    /// </summary>
-    /// <param name="transaction">数据库事务对象</param>
-    /// <param name="template">SQL 命令模版</param>
-    /// <param name="parameters">模版参数列表</param>
-    /// <returns>参数化查询实例</returns>
-    public static AsyncDbExecutableQuery<ParameterizedQuery> Template( this IDbTransactionContext<IAsyncDbExecutor<ParameterizedQuery>> transaction, string template, params object[] parameters )
-    {
-      return transaction.DbExecutor.Template( template, parameters );
-    }
-
-
-    /// <summary>
-    /// 根据模板表达式创建参数化查询实例
-    /// </summary>
-    /// <param name="transaction">数据库事务对象</param>
-    /// <param name="template">SQL 命令模版</param>
-    /// <param name="parameters">模版参数列表</param>
-    /// <returns>参数化查询实例</returns>
-    public static DbExecutableQuery<ParameterizedQuery> T( this IDbTransactionContext<IDbExecutor<ParameterizedQuery>> transaction, string template, params object[] parameters )
-    {
-      return transaction.DbExecutor.Template( template, parameters );
-    }
-
-
-    /// <summary>
-    /// 根据模板表达式创建参数化查询实例
-    /// </summary>
-    /// <param name="transaction">数据库事务对象</param>
-    /// <param name="template">SQL 命令模版</param>
-    /// <param name="parameters">模版参数列表</param>
-    /// <returns>参数化查询实例</returns>
-    public static AsyncDbExecutableQuery<ParameterizedQuery> T( this IDbTransactionContext<IAsyncDbExecutor<ParameterizedQuery>> transaction, string template, params object[] parameters )
-    {
-      return transaction.DbExecutor.Template( template, parameters );
-    }
 
 
 
