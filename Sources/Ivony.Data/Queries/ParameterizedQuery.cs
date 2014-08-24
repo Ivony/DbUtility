@@ -147,27 +147,6 @@ namespace Ivony.Data.Queries
       return query1.Concat( query2 );
     }
 
-    /// <summary>
-    /// 串联两个参数化查询对象
-    /// </summary>
-    /// <param name="query1">第一个参数化查询对象</param>
-    /// <param name="query2">第二个参数化查询对象</param>
-    /// <returns>串联后的参数化查询对象</returns>
-    public static DbExecutableQuery<ParameterizedQuery> operator +( DbExecutableQuery<ParameterizedQuery> query1, ParameterizedQuery query2 )
-    {
-      return query1.Concat( query2 );
-    }
-
-    /// <summary>
-    /// 串联两个参数化查询对象
-    /// </summary>
-    /// <param name="query1">第一个参数化查询对象</param>
-    /// <param name="query2">第二个参数化查询对象</param>
-    /// <returns>串联后的参数化查询对象</returns>
-    public static AsyncDbExecutableQuery<ParameterizedQuery> operator +( AsyncDbExecutableQuery<ParameterizedQuery> query1, ParameterizedQuery query2 )
-    {
-      return query1.Concat( query2 );
-    }
 
 
     internal bool IsStartWithWhiteSpace()
