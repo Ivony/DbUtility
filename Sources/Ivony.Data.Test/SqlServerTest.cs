@@ -201,12 +201,197 @@ CREATE TABLE [dbo].[Test1]
 
       var document1 = db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<XDocument>();
 
-
       Assert.AreEqual( document.ToString( SaveOptions.OmitDuplicateNamespaces ), document1.ToString( SaveOptions.OmitDuplicateNamespaces ) );
+
+      db.T( "UPDATE Test1 SET XmlContent = {0} ", null ).ExecuteNonQuery();
+      Assert.IsNull( db.T( "SELECT XmlContent FROM Test1 " ).ExecuteScalar<XDocument>() );
 
 
       DbValueConverter.Unregister<XDocument>();
 
     }
+
+
+    [TestMethod]
+    public void NullableConvertTest()
+    {
+      db.T( "SELECT [Index] FROM Test1" ).ExecuteScalar<int?>();
+    }
+
+    [TestMethod]
+    public void ConvertExceptionTest()
+    {
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES( {...} )", "Test", "TestContent", 1 ).ExecuteNonQuery();
+
+      Exception exception = null;
+      try
+      {
+        db.T( "SELECT [Index] FROM Test1" ).ExecuteEntity<WrongEntity>();
+      }
+      catch ( InvalidCastException e )
+      {
+        exception = e;
+      }
+
+      Assert.IsNotNull( exception, "转换异常测试失败" );
+      Assert.IsNotNull( exception.Data["DataColumnName"], "转换异常测试失败" );
+
+
+    }
+
+
+    [TestMethod]
+    public void EntityTest()
+    {
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES( {...} )", "Test", "TestContent", 1 ).ExecuteNonQuery();
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES( {...} )", "Test", "TestContent", 2 ).ExecuteNonQuery();
+
+      db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteEntity<CorrectEntity>();
+      db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteEntities<CorrectEntity>();
+
+      var entity = (CorrectEntity) db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteDynamicObject();
+      var entities = db.T( "SELECT Name, Content, [Index] FROM Test1" ).ExecuteDynamics().Select( item => (CorrectEntity) item ).ToArray();
+
+    }
+
+
+    [TestMethod]
+    public void ConvertibleTest()
+    {
+
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )", "5", "0.9", 100 ).ExecuteNonQuery();
+
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<long>(), 100L );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<int>(), 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<short>(), (short) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<byte>(), (byte) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<ulong>(), (ulong) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<uint>(), 100u );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<ushort>(), (ushort) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<sbyte>(), (sbyte) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<char>(), (char) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<decimal>(), (decimal) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<double>(), (double) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<float>(), (float) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<string>(), "100" );
+
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<long?>(), 100L );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<int?>(), 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<short?>(), (short) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<byte?>(), (byte) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<ulong?>(), (ulong) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<uint?>(), 100u );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<ushort?>(), (ushort) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<sbyte?>(), (sbyte) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<char?>(), (char) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<decimal?>(), (decimal) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<double?>(), (double) 100 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<float?>(), (float) 100 );
+
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<long>(), 5 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<int>(), 5 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<short>(), (short) 5 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<byte>(), (byte) 5 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<ulong>(), (ulong) 5 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<uint>(), 5u );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<ushort>(), (ushort) 5 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<sbyte>(), (sbyte) 5 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<decimal>(), (decimal) 5 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<double>(), (double) 5 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<float>(), (float) 5 );
+
+
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<decimal>(), (decimal) 0.9m );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<double>(), (double) 0.9 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<float>(), (float) 0.9 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<decimal?>(), (decimal) 0.9m );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<double?>(), (double) 0.9 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<float?>(), (float) 0.9 );
+      Assert.AreEqual( db.T( "SELECT TOP 1 Content FROM Test1" ).ExecuteScalar<string>(), "0.9" );
+
+
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<long?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<int?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<short?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<byte?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<ulong?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<uint?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<ushort?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<sbyte?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<char?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<decimal?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<double?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<float?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<string>(), null );
+
+
+      db.T( "DELETE Test1" ).ExecuteNonQuery();
+
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<long?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<int?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<short?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<byte?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<ulong?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<uint?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<ushort?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<sbyte?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<char?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<decimal?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<double?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<float?>(), null );
+      Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<string>(), null );
+    }
+
+
+
+    [TestMethod]
+    public void EnumTest()
+    {
+
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )", 
+        TestEnum.One.ToString(), TestEnum.Two.ToString(), TestEnum.Three ).ExecuteNonQuery();
+      
+      
+      Assert.AreEqual( db.T( "SELECT Name FROM Test1" ).ExecuteScalar<string>(), "One" );
+      Assert.AreEqual( db.T( "SELECT [Index] FROM Test1" ).ExecuteScalar<int>(), 3 );
+      Assert.AreEqual( db.T( "SELECT Name FROM Test1" ).ExecuteScalar<TestEnum>(), TestEnum.One );
+      Assert.AreEqual( db.T( "SELECT [Index] FROM Test1" ).ExecuteScalar<TestEnum>(), TestEnum.Three );
+
+
+    }
+
+
+    enum TestEnum : long
+    {
+      One = 1,
+      Two,
+      Three,
+    }
+
+
+
+
+
+
+    public class WrongEntity
+    {
+      public string Name { get; set; }
+      public string Content { get; set; }
+      public TimeSpan Index { get; set; }
+    }
+
+
+    public class CorrectEntity
+    {
+      public string Name { get; set; }
+      public string Content { get; set; }
+
+      [FieldName( "Index" )]
+      public long OrderIndex { get; set; }
+
+      [NonField]
+      public object NonDataField { get; set; }
+    }
+
   }
 }

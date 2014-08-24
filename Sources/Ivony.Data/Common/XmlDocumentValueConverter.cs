@@ -17,6 +17,9 @@ namespace Ivony.Data.Common
     XDocument IDbValueConverter<XDocument>.ConvertValueFrom( object dataValue, string dataTypeName )
     {
 
+      if ( dataValue == null || Convert.IsDBNull( dataValue ) )
+        return null;
+
       var text = (string) dataValue;
       return XDocument.Parse( text );
 
@@ -24,6 +27,9 @@ namespace Ivony.Data.Common
 
     object IDbValueConverter<XDocument>.ConvertValueTo( object value, string dataTypeName )
     {
+      if ( value == null )
+        return null;
+
       return ((XDocument) value).ToString( SaveOptions.DisableFormatting | SaveOptions.OmitDuplicateNamespaces );
     }
   }

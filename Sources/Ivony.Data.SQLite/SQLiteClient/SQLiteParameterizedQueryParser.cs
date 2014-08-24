@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ivony.Data.Queries;
 using System.Data.SQLite;
+using Ivony.Data.Common;
 
 namespace Ivony.Data.SQLiteClient
 {

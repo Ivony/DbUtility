@@ -17,15 +17,25 @@ namespace Ivony.Data
   {
 
 
+
     /// <summary>
     /// 解析模板表达式，创建参数化查询对象
     /// </summary>
     /// <param name="templateText">模板文本</param>
-    /// <param name="paramaters">模板参数</param>
+    /// <param name="args">模板参数</param>
     /// <returns>参数化查询</returns>
-    public static ParameterizedQuery Template( string templateText, params object[] paramaters )
+    public static ParameterizedQuery Template( string templateText, params object[] args )
     {
-      return TemplateParser.ParseTemplate( templateText, paramaters );
+      if ( args == null )
+        args = new object[] { null };
+
+      if ( !AllowNonObjectArrayAsArgs )
+      {
+        if ( args.GetType() != typeof( object[] ) )
+          args = new object[] { args };
+      }
+
+      return TemplateParser.ParseTemplate( templateText, args );
     }
 
 
@@ -34,12 +44,42 @@ namespace Ivony.Data
     /// 解析模板表达式，创建参数化查询对象
     /// </summary>
     /// <param name="templateText">模板文本</param>
-    /// <param name="paramaters">模板参数</param>
+    /// <param name="args">模板参数</param>
     /// <returns>参数化查询</returns>
-    public static ParameterizedQuery T( string templateText, params object[] paramaters )
+    public static ParameterizedQuery T( string templateText, params object[] args )
     {
-      return Template( templateText, paramaters );
+      if ( args == null )
+        args = new object[] { null };
+
+      if ( !AllowNonObjectArrayAsArgs )
+      {
+        if ( args.GetType() != typeof( object[] ) )
+          args = new object[] { args };
+      }
+      else
+      {
+        if ( args.Length == 1 )
+        {
+          var array = args[0] as Array;
+
+          if ( array != null )
+          {
+
+            args = new object[array.Length];
+            array.CopyTo( args, 0 );
+          }
+        }
+      }
+
+      return Template( templateText, args );
     }
+
+
+
+    /// <summary>
+    /// 允许非 object[] 类型的数组对象作为多参数列表使用，即允许任意类型数组展开成参数列表。
+    /// </summary>
+    public static bool AllowNonObjectArrayAsArgs { get; set; }
 
 
     /// <summary>
@@ -75,6 +115,11 @@ namespace Ivony.Data
     public static ParameterizedQuery Join( this string sperator, params ParameterizedQuery[] queries )
     {
 
+      if ( queries == null )
+        throw new ArgumentNullException( "queries" );
+
+
+      queries = queries.Where( i => i != null ).ToArray();//去除所有为 null 的参数化查询对象
       if ( !queries.Any() )
         return null;
 
@@ -83,7 +128,14 @@ namespace Ivony.Data
 
       foreach ( var q in queries.Skip( 1 ) )
       {
+        if ( !builder.IsEndWithWhiteSpace() && !char.IsWhiteSpace( sperator[0] ) && Db.AddWhiteSpaceOnConcat )
+          builder.Append( ' ' );
+
         builder.AppendText( sperator );
+
+        if ( !builder.IsEndWithWhiteSpace() && !q.IsStartWithWhiteSpace() && Db.AddWhiteSpaceOnConcat )
+          builder.Append( ' ' );
+
         builder.AppendPartial( q );
       }
 

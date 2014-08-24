@@ -78,6 +78,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultConverter.cs" />
+    <Compile Include="EntityConvertAttribute.cs" />
     <Compile Include="IDbValueConverter.cs" />
     <Compile Include="Common\DbExecutorBase.cs" />
     <Compile Include="DbTracing.cs" />
@@ -103,9 +105,9 @@
     <Compile Include="Common\IDbProvider.cs" />
     <Compile Include="IDbQuery.cs" />
     <Compile Include="IDbTransactionContext.cs" />
-    <Compile Include="Queries\IParameterizedQueryParser.cs" />
-    <Compile Include="Queries\ParameterizedQueryParser.cs" />
-    <Compile Include="Queries\ParameterizedQueryLiteralValueParser.cs" />
+    <Compile Include="Common\IParameterizedQueryParser.cs" />
+    <Compile Include="Common\ParameterizedQueryParser.cs" />
+    <Compile Include="Common\ParameterizedQueryLiteralValueParser.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />

@@ -1,7 +1,7 @@
-﻿using Ivony.Data.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,9 +14,15 @@ namespace Ivony.Data
   /// <summary>
   /// 提供 IDbValueConverter&lt;T&gt; 的注册点。
   /// </summary>
-  public static class DbValueConverter
+  public static partial class DbValueConverter
   {
 
+
+
+    /// <summary>
+    /// 是否禁用 Convertible 对象转换（原生对象之间的转换）
+    /// </summary>
+    public static bool DisableConvertible { get; set; }
 
     private static class ConverterCache<T>
     {
@@ -27,7 +33,8 @@ namespace Ivony.Data
 
     private static object sync = new object();
 
-    private static Dictionary<Type, Converter> converterDictionary = new Dictionary<Type, Converter>();
+    private static Dictionary<Type, Converter> convertToMethodDictionary = new Dictionary<Type, Converter>();
+    private static Dictionary<Type, Converter> convertFromMethodDictionary = new Dictionary<Type, Converter>();
 
     private delegate object Converter( object value, string dataType );
 
@@ -47,7 +54,8 @@ namespace Ivony.Data
 
         ConverterCache<T>.ConverterInstance = converter;
 
-        converterDictionary[typeof( T )] = converter.ConvertValueTo;
+        convertToMethodDictionary[typeof( T )] = converter.ConvertValueTo;
+        convertFromMethodDictionary[typeof( T )] = ( value, dataType ) => converter.ConvertValueFrom( value, dataType );
       }
     }
 
@@ -62,7 +70,8 @@ namespace Ivony.Data
       {
         ConverterCache<T>.ConverterInstance = null;
 
-        converterDictionary.Remove( typeof( T ) );
+        convertToMethodDictionary.Remove( typeof( T ) );
+        convertFromMethodDictionary.Remove( typeof( T ) );
       }
     }
 
@@ -81,6 +90,13 @@ namespace Ivony.Data
     }
 
 
+    /// <summary>
+    /// 从数据类型转换为目标类型
+    /// </summary>
+    /// <typeparam name="T">目标类型</typeparam>
+    /// <param name="value">数据值</param>
+    /// <param name="dataTypeName">数据类型名称</param>
+    /// <returns>类型转换后的结果</returns>
     internal static T ConvertFrom<T>( object value, string dataTypeName = null )
     {
       var converter = GetConverter<T>();
@@ -92,70 +108,28 @@ namespace Ivony.Data
 
 
 
-    private class DefaultConverter<T>
-    {
-      public static Converter<object, T> Converter = CreateConverter<T>();
-    }
 
-    private static Converter<object, T> CreateConverter<T>()
-    {
-      var type = typeof( T );
-
-      if ( type.IsGenericType && !type.IsGenericTypeDefinition && typeof( Nullable<> ) == type.GetGenericTypeDefinition() )
-      {
-        var methodInfo = typeof( DbValueConverter ).GetMethod( "NullableConverter", BindingFlags.Static | BindingFlags.NonPublic ).MakeGenericMethod( new Type[] { type.GetGenericArguments()[0] } );
-        return (Converter<object, T>) Delegate.CreateDelegate( typeof( Converter<object, T> ), methodInfo );
-      }
-
-      else if ( type.IsValueType )
-      {
-        return ConvertValueType<T>;
-      }
-
-      else
-        return ConvertObject<T>;
-
-    }
-
-
-    private static T ConvertObject<T>( object value )
-    {
-      if ( value == null || Convert.IsDBNull( value ) )
-        return default(T);
-
-      else
-        return (T) value;
-
-    }
-
-    private static T ConvertValueType<T>( object value )
-    {
-      return (T) value;
-    }
-
-
-    private static T? ConvertNullable<T>( object value ) where T : struct
-    {
-      if ( value == null || Convert.IsDBNull( value ) )
-        return null;
-
-      else
-        return new T?( (T) value );
-    }
-
-
-
+    /// <summary>
+    /// 将值转换为数据库可以接受的类型
+    /// </summary>
+    /// <param name="value">所需要转换的值对象</param>
+    /// <param name="dataTypeName">数据库类型名称</param>
+    /// <returns>数据库可接受的类型</returns>
     internal static object ConvertTo( object value, string dataTypeName = null )
     {
+      if ( value == null )
+        return DBNull.Value;
+
+
       var type = value.GetType();
 
       lock ( sync )
       {
 
-        foreach ( var _type in converterDictionary.Keys )
+        foreach ( var _type in convertToMethodDictionary.Keys )
         {
           if ( _type.IsAssignableFrom( type ) )
-            return converterDictionary[_type]( value, dataTypeName );
+            return convertToMethodDictionary[_type]( value, dataTypeName );
         }
       }
 

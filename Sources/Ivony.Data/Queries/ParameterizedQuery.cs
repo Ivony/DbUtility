@@ -126,6 +126,17 @@ namespace Ivony.Data.Queries
 
 
     /// <summary>
+    /// 提供从字符串到 ParameterizedQuery 的隐式类型转换
+    /// </summary>
+    /// <param name="text">要转换为参数化查询的查询字符串</param>
+    /// <returns>参数化查询对象</returns>
+    public static implicit operator ParameterizedQuery( string text )
+    {
+      return TemplateParser.ParseTemplate( text, new object[0] );
+    }
+
+
+    /// <summary>
     /// 串联两个参数化查询对象
     /// </summary>
     /// <param name="query1">第一个参数化查询对象</param>
