@@ -288,7 +288,16 @@ namespace Ivony.Data
 
 
 
-
+    /// <summary>
+    /// 将 DataRow 转换为实体
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="dataItem">包含数据的 DataRow</param>
+    /// <returns>实体</returns>
+    public static T ToEntity<T>( this DataRow dataItem ) where T : new()
+    {
+      return ToEntity<T>( dataItem, null );
+    }
 
     /// <summary>
     /// 将 DataRow 转换为实体
@@ -297,7 +306,7 @@ namespace Ivony.Data
     /// <param name="dataItem">包含数据的 DataRow</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体</returns>
-    public static T ToEntity<T>( this DataRow dataItem, IEntityConverter<T> converter = null ) where T : new()
+    public static T ToEntity<T>( this DataRow dataItem, IEntityConverter<T> converter ) where T : new()
     {
       if ( dataItem == null )
       {
@@ -318,35 +327,78 @@ namespace Ivony.Data
       }
 
 
-      var convertType = converter ?? ConvertTypeCache<T>.Converter;
-
-      if ( convertType == null )
-      {
-        var type = typeof( T );
-        var attribute = type.GetCustomAttributes( typeof( EntityConvertAttribute ), false ).OfType<EntityConvertAttribute>().FirstOrDefault();
-
-        if ( attribute != null )
-          convertType = attribute.CreateConverter<T>();
-        else
-          convertType = new DefaultEntityConverter<T>();
-
-
-        if ( convertType.IsReusable )
-          ConvertTypeCache<T>.Converter = convertType;
-      }
+      var entityConverter = converter ?? EntityConverterCache<T>.GetConverter();
 
 
       var entity = new T();
 
-      if ( convertType.NeedPreconversion )
+      if ( entityConverter.NeedPreconversion )
       {
         var method = CreateEntityConvertMethod<T>();
         method( dataItem, entity );
       }
 
-      convertType.Convert( dataItem, entity );
+      entityConverter.Convert( dataItem, entity );
       return entity;
     }
+
+
+
+    private static Dictionary<Type, Func<DataRow, object>> entityConverterDictionary = new Dictionary<Type, Func<DataRow, object>>();
+
+
+    internal static object ToEntity( this DataRow dataItem, Type entityType )
+    {
+      return GetToEntityMethod( entityType )( dataItem );
+    }
+
+
+    private static Func<DataRow, object> GetToEntityMethod( Type entityType )
+    {
+      lock ( sync )
+      {
+        if ( entityConverterDictionary.ContainsKey( entityType ) )
+          return entityConverterDictionary[entityType];
+
+
+        var method = typeof( EntityExtensions )
+          .GetMethod( "ToEntity", new[] { typeof( DataRow ) } )
+          .MakeGenericMethod( entityType );
+
+        return entityConverterDictionary[entityType] = (Func<DataRow, object>) Delegate.CreateDelegate( typeof( Func<DataRow, object> ), method );
+      }
+    }
+
+
+
+
+
+
+    private static Dictionary<Type, Func<DataRow, DataColumn, object>> dbValueConverterDictionary = new Dictionary<Type, Func<DataRow, DataColumn, object>>();
+
+
+    internal static object FieldValue( this DataRow dataItem, DataColumn column, Type valueType )
+    {
+      return GetFieldValueMethod( valueType )( dataItem, column );
+    }
+
+
+    private static Func<DataRow, DataColumn, object> GetFieldValueMethod( Type valueType )
+    {
+      lock ( sync )
+      {
+        if ( dbValueConverterDictionary.ContainsKey( valueType ) )
+          return dbValueConverterDictionary[valueType];
+
+
+        var method = typeof( EntityExtensions )
+          .GetMethod( "FieldValue", new[] { typeof( DataRow ), typeof( DataColumn ) } )
+          .MakeGenericMethod( valueType );
+
+        return dbValueConverterDictionary[valueType] = (Func<DataRow, DataColumn, object>) Delegate.CreateDelegate( typeof( Func<DataRow, DataColumn, object> ), method );
+      }
+    }
+
 
 
     /// <summary>
@@ -441,6 +493,7 @@ namespace Ivony.Data
     }
 
 
+
     /// <summary>
     /// 获取指定字段的值
     /// </summary>
@@ -450,7 +503,8 @@ namespace Ivony.Data
     /// <returns>强类型的值</returns>
     public static T FieldValue<T>( this DataRow dataRow, int columnIndex )
     {
-      return DbValueConverter.ConvertFrom<T>( dataRow[columnIndex] );
+
+      return FieldValue<T>( dataRow, dataRow.Table.Columns[columnIndex] );
     }
 
     /// <summary>
@@ -462,7 +516,29 @@ namespace Ivony.Data
     /// <returns>强类型的值</returns>
     public static T FieldValue<T>( this DataRow dataRow, string columnName )
     {
-      return DbValueConverter.ConvertFrom<T>( dataRow[columnName] );
+      return FieldValue<T>( dataRow, dataRow.Table.Columns[columnName] );
+    }
+
+
+
+    private static T FieldValue<T>( this DataRow dataRow, DataColumn column )
+    {
+      if ( dataRow == null )
+        throw new ArgumentNullException( "dataRow" );
+
+      if ( column == null )
+        throw new ArgumentNullException( "column" );
+
+
+      try
+      {
+        return DbValueConverter.ConvertFrom<T>( dataRow[column] );
+      }
+      catch ( Exception e )
+      {
+        e.Data.Add( "DataColumnName", column.ColumnName );
+        throw;
+      }
     }
 
 
@@ -488,20 +564,20 @@ namespace Ivony.Data
     /// <summary>
     /// 获取指定属性上的特性
     /// </summary>
-    /// <param name="p">要获取特性的属性</param>
+    /// <param name="property">要获取特性的属性</param>
     /// <returns>属性上所设置的特性</returns>
-    private static object[] GetAttributes( PropertyInfo p )
+    private static object[] GetAttributes( PropertyInfo property )
     {
       lock ( sync )
       {
         object[] attributes;
 
-        if ( _propertyAttributesCache.TryGetValue( p, out attributes ) )
+        if ( _propertyAttributesCache.TryGetValue( property, out attributes ) )
           return attributes;
 
-        attributes = p.GetCustomAttributes( false );
+        attributes = property.GetCustomAttributes( false );
 
-        _propertyAttributesCache[p] = attributes;
+        _propertyAttributesCache[property] = attributes;
 
         return attributes;
       }
@@ -512,103 +588,43 @@ namespace Ivony.Data
       public static Action<DataRow, T> Converter { get; set; }
     }
 
-    private static class ConvertTypeCache<T>
+
+
+
+    private static class EntityConverterCache<T>
     {
-      public static IEntityConverter<T> Converter { get; set; }
+      private static IEntityConverter<T> converterInstacne;
+
+      private static Func<IEntityConverter<T>> createConverter;
+
+
+      static EntityConverterCache()
+      {
+        var type = typeof( T );
+        var attribute = type.GetCustomAttributes( typeof( EntityConvertAttribute ), false ).OfType<EntityConvertAttribute>().FirstOrDefault();
+
+        if ( attribute != null )
+          createConverter = () => attribute.CreateConverter<T>();   //缓存创建实例的方法
+        else
+          createConverter = () => new DefaultEntityConverter<T>();
+
+
+        var instance = createConverter();
+
+        if ( instance.IsReusable )
+          converterInstacne = instance;                             //缓存可复用的实例
+      }
+
+
+      public static IEntityConverter<T> GetConverter()
+      {
+
+        if ( converterInstacne != null && converterInstacne.IsReusable )//如果有缓存的可复用的实例，则返回
+          return converterInstacne;
+
+
+        return createConverter();
+      }
     }
-
   }
-
-  /// <summary>
-  /// 用于指定字段名称的特性
-  /// </summary>
-  [AttributeUsage( AttributeTargets.Property, Inherited = false )]
-  public class FieldNameAttribute : Attribute
-  {
-    /// <summary>
-    /// 创建 FieldNameAttribute 对象
-    /// </summary>
-    /// <param name="name">字段名</param>
-    public FieldNameAttribute( string name )
-    {
-      FieldName = name;
-    }
-
-    /// <summary>
-    /// 字段名
-    /// </summary>
-    public string FieldName
-    {
-      get;
-      set;
-    }
-  }
-
-
-  /// <summary>
-  /// 用于指示属性与任何字段没有关系
-  /// </summary>
-  [AttributeUsage( AttributeTargets.Property, Inherited = false )]
-  public class NonFieldAttribute : Attribute
-  {
-  }
-
-
-  /// <summary>
-  /// 指定类型所应使用的实体转换器
-  /// </summary>
-  [AttributeUsage( AttributeTargets.Class, Inherited = false )]
-  public class EntityConvertAttribute : Attribute
-  {
-
-    private Type _convertType;
-
-    /// <summary>
-    /// 创建 EntityConvertAttribute 对象
-    /// </summary>
-    /// <param name="convertType">实体转换器类型</param>
-    public EntityConvertAttribute( Type convertType )
-    {
-      _convertType = convertType;
-    }
-
-    /// <summary>
-    /// 创建实体转换器实例
-    /// </summary>
-    /// <typeparam name="T">实体类型</typeparam>
-    /// <returns>实体转换器实例</returns>
-    public IEntityConverter<T> CreateConverter<T>()
-    {
-      return (IEntityConverter<T>) Activator.CreateInstance( _convertType );
-    }
-
-  }
-
-  /// <summary>
-  /// 定义实体转换器类型
-  /// </summary>
-  /// <typeparam name="T">实体类型</typeparam>
-  public interface IEntityConverter<T>
-  {
-    /// <summary>
-    /// 将数据写入实体
-    /// </summary>
-    /// <param name="dataItem">数据行</param>
-    /// <param name="entity">要写入数据的实体</param>
-    /// <returns></returns>
-    void Convert( DataRow dataItem, T entity );
-
-    /// <summary>
-    /// 是否可重用
-    /// </summary>
-    bool IsReusable { get; }
-
-    /// <summary>
-    /// 是否需要预转换
-    /// </summary>
-    bool NeedPreconversion { get; }
-  }
-
-
-
 }

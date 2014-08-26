@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Ivony.Data.Queries;
+using System;
 
 
-namespace Ivony.Data.Queries
+namespace Ivony.Data.Common
 {
 
   /// <summary>

@@ -1,4 +1,5 @@
-﻿using Ivony.Data.Queries;
+﻿using Ivony.Data.Common;
+using Ivony.Data.Queries;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;

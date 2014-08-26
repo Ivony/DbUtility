@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using Ivony.Fluent;
 using Ivony.Data.Queries;
 using System.Text.RegularExpressions;
 using Ivony.Data.Common;
@@ -26,7 +25,7 @@ namespace Ivony.Data
     /// <returns>参数化查询实例</returns>
     public static DbExecutableQuery<ParameterizedQuery> Template( this IDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
     {
-      return new DbExecutableQuery<ParameterizedQuery>( executor, TemplateParser.ParseTemplate( template, parameters ) );
+      return new DbExecutableQuery<ParameterizedQuery>( executor, Db.Template( template, parameters ) );
     }
 
 
@@ -39,7 +38,7 @@ namespace Ivony.Data
     /// <returns>参数化查询实例</returns>
     public static AsyncDbExecutableQuery<ParameterizedQuery> Template( this IAsyncDbExecutor<ParameterizedQuery> executor, string template, params object[] parameters )
     {
-      return new AsyncDbExecutableQuery<ParameterizedQuery>( executor, TemplateParser.ParseTemplate( template, parameters ) );
+      return new AsyncDbExecutableQuery<ParameterizedQuery>( executor, Db.Template( template, parameters ) );
     }
 
 
@@ -137,6 +136,10 @@ namespace Ivony.Data
       firstQuery.AppendTo( builder );
       foreach ( var query in otherQueries )
       {
+
+        if ( query == null || string.IsNullOrEmpty( query.TextTemplate ) )
+          continue;
+
         if ( !builder.IsEndWithWhiteSpace() && !query.IsStartWithWhiteSpace() && Db.AddWhiteSpaceOnConcat )
           builder.Append( ' ' );
 

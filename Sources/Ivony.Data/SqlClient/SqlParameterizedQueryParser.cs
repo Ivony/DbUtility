@@ -1,7 +1,6 @@
 ﻿using Ivony.Data;
 using Ivony.Data.Common;
 using Ivony.Data.Queries;
-using Ivony.Fluent;
 using System;
 using System.Collections.Generic;
 using System.Data;

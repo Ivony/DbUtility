@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Ivony.Data.Queries;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data.Queries
+namespace Ivony.Data.Common
 {
   /// <summary>
   /// 辅助实现 IParameterizedQueryParser 的基类

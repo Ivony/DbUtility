@@ -9,7 +9,6 @@ using System.Collections;
 using System.Configuration;
 using System.Threading.Tasks;
 using Ivony.Data.Queries;
-using Ivony.Fluent;
 
 using System.Linq;
 using System.Threading;
@@ -21,7 +20,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// 用于操作 SQL Server 的数据库访问工具
   /// </summary>
-  public class SqlDbExecutor : DbExecutorBase, IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>, IDbTransactionProvider<SqlDbExecutor>
+  public class SqlDbExecutor : DbExecutorBase, IAsyncDbExecutor<ParameterizedQuery>, IDbTransactionProvider<SqlDbExecutor>
   {
 
 
@@ -101,7 +100,7 @@ namespace Ivony.Data.SqlClient
         var connection = new SqlConnection( ConnectionString );
         connection.Open();
         command.Connection = connection;
-        
+
         if ( Configuration.QueryExecutingTimeout.HasValue )
           command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
 
@@ -138,7 +137,7 @@ namespace Ivony.Data.SqlClient
         var connection = new SqlConnection( ConnectionString );
         await connection.OpenAsync( token );
         command.Connection = connection;
-        
+
         if ( Configuration.QueryExecutingTimeout.HasValue )
           command.CommandTimeout = (int) Configuration.QueryExecutingTimeout.Value.TotalSeconds;
 
@@ -178,33 +177,6 @@ namespace Ivony.Data.SqlClient
     protected SqlCommand CreateCommand( ParameterizedQuery query )
     {
       return new SqlParameterizedQueryParser().Parse( query );
-    }
-
-
-
-    IDbExecuteContext IDbExecutor<StoredProcedureQuery>.Execute( StoredProcedureQuery query )
-    {
-      return Execute( CreateCommand( query ), TryCreateTracing( this, query ) );
-    }
-
-    Task<IAsyncDbExecuteContext> IAsyncDbExecutor<StoredProcedureQuery>.ExecuteAsync( StoredProcedureQuery query, CancellationToken token )
-    {
-      return ExecuteAsync( CreateCommand( query ), token, TryCreateTracing( this, query ) );
-    }
-
-
-    /// <summary>
-    /// 通过存储过程查询创建 SqlCommand 对象
-    /// </summary>
-    /// <param name="query">存储过程查询对象</param>
-    /// <returns>SQL 查询命令对象</returns>
-    protected SqlCommand CreateCommand( StoredProcedureQuery query )
-    {
-      var command = new SqlCommand( query.Name );
-      command.CommandType = CommandType.StoredProcedure;
-      query.Parameters.ForAll( pair => command.Parameters.AddWithValue( pair.Key, pair.Value ) );
-
-      return command;
     }
   }
 
