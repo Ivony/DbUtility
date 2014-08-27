@@ -113,10 +113,8 @@
     <Compile Include="Common\ParameterizedQueryLiteralValueParser.cs" />
     <Compile Include="Parser\ILexicalAnalyzer.cs" />
     <Compile Include="Parser\ITextToken.cs" />
-    <Compile Include="Parser\RegexMatchToken.cs" />
     <Compile Include="Parser\TextScaner.cs" />
     <Compile Include="Parser\TextToken.cs" />
-    <Compile Include="Parser\LexicalAnalyzer.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\QuickQuery.cs" />

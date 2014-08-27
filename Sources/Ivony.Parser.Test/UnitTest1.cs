@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text.RegularExpressions;
 
 namespace Ivony.Parser.Test
 {
@@ -11,7 +12,16 @@ namespace Ivony.Parser.Test
     public void Test1()
     {
 
-      var array = new TestLexicalAnlyzer().Analyze( "Test" ).ToArray();
+      var array = new TestLexicalAnlyzer().Analyze( "Test Test\t\nTestTest!" ).ToArray();
+
+      Assert.AreEqual( array.Length, 6 );
+      Assert.AreEqual( array[0].ToString(), "Test" );
+      Assert.AreEqual( array[1].ToString(), " " );
+      Assert.AreEqual( array[2].ToString(), "Test" );
+      Assert.AreEqual( array[3].ToString(), "\t\n" );
+      Assert.AreEqual( array[4].ToString(), "Test" );
+      Assert.AreEqual( array[5].ToString(), "Test" );
+
 
     }
 
@@ -22,15 +32,18 @@ namespace Ivony.Parser.Test
 
       protected static ITextToken Test( TextScaner scaner )
       {
-        var literal = "Test";
-        if ( scaner.SubString( scaner.Offset, literal.Length ) == literal )
-          return CreateToken( scaner, literal.Length, "Test" );
 
-        else
-          return null;
+        return MatchLiteral( scaner, "Test" );
 
       }
 
+
+      protected static ITextToken WhiteSpace( TextScaner scaner )
+      {
+
+        return MatchRegex( scaner, new Regex( @"\G\s+", RegexOptions.Compiled ) );
+
+      }
 
     }
   }

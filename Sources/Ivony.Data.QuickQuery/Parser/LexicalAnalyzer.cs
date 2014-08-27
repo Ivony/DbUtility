@@ -127,6 +127,33 @@ namespace Ivony.Parser
 
       return new TextToken( scaner.Text, offset, length, type );
     }
+
+
+
+    protected static ITextToken MatchLiteral( TextScaner scaner, string literal, string type = null, StringComparison comparison = StringComparison.Ordinal )
+    {
+
+      var text = scaner.SubString( scaner.Offset, literal.Length );
+      if ( string.Equals( literal, text, comparison ) )
+        return CreateToken( scaner, text.Length, type );
+
+      else
+        return null;
+    }
+
+
+    protected static ITextToken MatchRegex( TextScaner scaner, Regex regex, string type = null )
+    {
+
+      var match = regex.Match( scaner.Text, scaner.Offset );
+      if ( !match.Success )
+        return null;
+
+      scaner.Skip( match.Index - scaner.Offset + match.Length );
+
+      return new RegexTextToken( scaner.Text, match, type );
+    }
+
   }
 }
 

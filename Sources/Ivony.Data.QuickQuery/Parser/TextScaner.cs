@@ -135,9 +135,21 @@ namespace Ivony.Parser
     /// </summary>
     /// <param name="offset">开始位置</param>
     /// <param name="length">要截取的长度</param>
+    /// <param name="throwIfOverflow">当截取字符串会导致溢出时，是否抛出异常</param>
     /// <returns>截取的子字符串</returns>
-    public string SubString( int offset, int length )
+    public string SubString( int offset, int length, bool throwIfOverflow = false )
     {
+      if ( offset + length > _text.Length )
+      {
+        if ( throwIfOverflow )
+          throw new ArgumentOutOfRangeException();
+
+        
+        length = _text.Length - offset;
+        if ( length < 0 )
+          return null;
+      }
+
       return _text.Substring( offset, length );
     }
 

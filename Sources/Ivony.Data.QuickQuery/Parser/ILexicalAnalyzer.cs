@@ -14,6 +14,12 @@ namespace Ivony.Parser
   public interface ILexicalAnalyzer
   {
 
+    /// <summary>
+    /// 对文本进行词法分析
+    /// </summary>
+    /// <param name="text">要分析的文本</param>
+    /// <param name="index">开始分析的位置</param>
+    /// <returns>分析结果</returns>
     IEnumerable<ITextToken> Analyze( string text, int index = 0 );
 
 
