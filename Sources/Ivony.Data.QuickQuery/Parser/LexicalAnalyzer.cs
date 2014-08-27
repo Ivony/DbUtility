@@ -142,8 +142,15 @@ namespace Ivony.Parser
     }
 
 
-    protected static ITextToken MatchRegex( TextScaner scaner, Regex regex, string type = null )
+    protected static ITextToken MatchRegex( TextScaner scaner, string regularExpression, string type = null )
     {
+
+
+      if ( !regularExpression.StartsWith( @"\G" ) )
+        regularExpression = @"\G" + regularExpression;
+
+
+      var regex = new Regex( regularExpression, RegexOptions.Compiled );
 
       var match = regex.Match( scaner.Text, scaner.Offset );
       if ( !match.Success )
