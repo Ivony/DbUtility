@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.RegularExpressions;
+using Ivony.Data.QuickQuery;
 
 namespace Ivony.Parser.Test
 {
@@ -26,6 +27,30 @@ namespace Ivony.Parser.Test
     }
 
 
+    [TestMethod]
+    public void Test2()
+    {
+
+      var array = new QuickQueryLexicalAnalyzer().Analyze( "abc :> a1 a2 :X123" ).ToArray();
+
+
+      Assert.AreEqual( array.Length, 10 );
+      Assert.AreEqual( array[0].ToString(), "abc" );
+      Assert.AreEqual( array[1].ToString(), " " );
+      Assert.AreEqual( array[2].ToString(), ":>" );
+      Assert.AreEqual( array[3].ToString(), " " );
+      Assert.AreEqual( array[4].ToString(), "a1" );
+      Assert.AreEqual( array[5].ToString(), " " );
+      Assert.AreEqual( array[6].ToString(), "a2" );
+      Assert.AreEqual( array[7].ToString(), " " );
+      Assert.AreEqual( array[8].ToString(), ":" );
+      Assert.AreEqual( array[9].ToString(), "X123" );
+
+    }
+
+
+
+
 
     public class TestLexicalAnlyzer : LexicalAnalyzer
     {
@@ -41,7 +66,7 @@ namespace Ivony.Parser.Test
       protected static ITextToken WhiteSpace( TextScaner scaner )
       {
 
-        return MatchRegex( scaner, new Regex( @"\G\s+", RegexOptions.Compiled ) );
+        return MatchRegex( scaner, @"\s+" );
 
       }
 

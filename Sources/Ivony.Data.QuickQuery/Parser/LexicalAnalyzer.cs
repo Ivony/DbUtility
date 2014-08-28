@@ -118,6 +118,14 @@ namespace Ivony.Parser
 
 
 
+    protected static readonly string CNameRegex = "[a-zA-Z_][a-zA-Z_0-9]*";
+
+    protected static readonly string WhitespaceRegex = @"\s+";
+
+
+
+
+
 
     protected static TextToken CreateToken( TextScaner scaner, int length, string type = null )
     {
