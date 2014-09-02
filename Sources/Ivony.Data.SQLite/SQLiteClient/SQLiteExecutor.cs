@@ -16,7 +16,7 @@ namespace Ivony.Data.SQLiteClient
   /// <summary>
   /// 用于操作 SQLite 的数据库访问工具
   /// </summary>
-  public class SQLiteExecutor : DbExecutorBase, IDbExecutor<ParameterizedQuery>
+  public class SQLiteExecutor : DbHandlerBase, IDbExecutor<ParameterizedQuery>
   {
 
     public SQLiteExecutor( string connectionString, SQLiteConfiguration configuration )

@@ -83,7 +83,7 @@
     <Compile Include="IDbExecuteContext.cs" />
     <Compile Include="IDbExecutorProvider.cs" />
     <Compile Include="IDbValueConverter.cs" />
-    <Compile Include="Common\DbExecutorBase.cs" />
+    <Compile Include="Common\DbHandlerBase.cs" />
     <Compile Include="DbTracing.cs" />
     <Compile Include="Common\DbTransactionContextBase.cs" />
     <Compile Include="Common\XmlDocumentValueConverter.cs" />
@@ -117,8 +117,11 @@
     <Compile Include="Queries\IParameterizedQueryPartial.cs" />
     <Compile Include="Queries\TemplateParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlClient\SqlDbExecutor.cs" />
+    <Compile Include="SqlClient\SqlAsyncDbResult.cs" />
+    <Compile Include="SqlClient\SqlServerHandler.cs" />
     <Compile Include="SqlClient\SqlDbExecuteContext.cs" />
+    <Compile Include="SqlClient\SqlDbResult.cs" />
+    <Compile Include="SqlClient\SqlParameterizedQueryExecuteContext.cs" />
     <Compile Include="SqlClient\SqlParameterizedQueryParser.cs" />
     <Compile Include="SqlClient\SqlDbTransactionContext.cs" />
     <Compile Include="SqlClient\SqlDbConfiguration.cs" />

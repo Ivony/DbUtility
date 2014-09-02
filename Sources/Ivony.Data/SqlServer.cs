@@ -25,7 +25,7 @@ namespace Ivony.Data
     /// <param name="name">连接字符串配置名称</param>
     /// <param name="configuration">SQL Server 数据库配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbExecutor FromConfiguration( string name, SqlDbConfiguration configuration = null )
+    public static SqlServerHandler FromConfiguration( string name, SqlDbConfiguration configuration = null )
     {
       var setting = ConfigurationManager.ConnectionStrings[name];
       if ( setting == null )
@@ -41,9 +41,9 @@ namespace Ivony.Data
     /// <param name="connectionString">连接字符串</param>
     /// <param name="configuration">SQL Server 数据库配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbExecutor Connect( string connectionString, SqlDbConfiguration configuration = null )
+    public static SqlServerHandler Connect( string connectionString, SqlDbConfiguration configuration = null )
     {
-      return new SqlDbExecutor( connectionString, configuration ?? Configuration );
+      return new SqlServerHandler( connectionString, configuration ?? Configuration );
     }
 
 
@@ -54,7 +54,7 @@ namespace Ivony.Data
     /// <param name="builder">连接字符串构建器</param>
     /// <param name="configuration">SQL Server 数据库配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbExecutor Connect( SqlConnectionStringBuilder builder, SqlDbConfiguration configuration = null )
+    public static SqlServerHandler Connect( SqlConnectionStringBuilder builder, SqlDbConfiguration configuration = null )
     {
       return Connect( builder.ConnectionString, configuration );
     }
@@ -71,7 +71,7 @@ namespace Ivony.Data
     /// <param name="pooling">是否启用连接池（默认启用）</param>
     /// <param name="configuration">SQL Server 数据库配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbExecutor Connect( string dataSource, string initialCatalog, string userID, string password, bool pooling = true, SqlDbConfiguration configuration = null )
+    public static SqlServerHandler Connect( string dataSource, string initialCatalog, string userID, string password, bool pooling = true, SqlDbConfiguration configuration = null )
     {
       var builder = new SqlConnectionStringBuilder()
       {
@@ -95,7 +95,7 @@ namespace Ivony.Data
     /// <param name="pooling">是否启用连接池（默认启用）</param>
     /// <param name="configuration">SQL Server 数据库配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbExecutor Connect( string dataSource, string initialCatalog, bool pooling = true, SqlDbConfiguration configuration = null )
+    public static SqlServerHandler Connect( string dataSource, string initialCatalog, bool pooling = true, SqlDbConfiguration configuration = null )
     {
       var builder = new SqlConnectionStringBuilder()
       {

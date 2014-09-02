@@ -15,7 +15,7 @@ namespace Ivony.Data.MySqlClient
   /// <summary>
   /// 用于操作 MySQL 的数据库访问工具
   /// </summary>
-  public class MySqlDbExecutor : DbExecutorBase, IDbExecutor<ParameterizedQuery>, IDbTransactionProvider<MySqlDbExecutor>
+  public class MySqlDbExecutor : DbHandlerBase, IDbExecutor<ParameterizedQuery>, IDbTransactionProvider<MySqlDbExecutor>
   {
 
 

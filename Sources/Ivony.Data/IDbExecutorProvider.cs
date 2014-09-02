@@ -8,9 +8,9 @@ namespace Ivony.Data
 {
 
   /// <summary>
-  /// 定义数据库执行器提供程序
+  /// 定义数据库查询执行器提供程序
   /// </summary>
-  /// <typeparam name="TExecutor"></typeparam>
+  /// <typeparam name="TExecutor">查询执行器类型</typeparam>
   public interface IDbExecutorProvider<TExecutor>
   {
 

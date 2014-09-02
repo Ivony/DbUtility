@@ -10,32 +10,24 @@ namespace Ivony.Data.Common
   /// <summary>
   /// 辅助实现数据库查询器的基类
   /// </summary>
-  public abstract class DbExecutorBase
+  public abstract class DbHandlerBase
   {
 
-
-    private DbConfiguration _configuration;
 
 
     /// <summary>
     /// 初始化 DbExecuterBase 类型
     /// </summary>
     /// <param name="configuration">当前要使用的数据库配置</param>
-    protected DbExecutorBase( DbConfiguration configuration )
+    protected DbHandlerBase()
     {
-      _configuration = configuration;
-      TraceService = configuration.TraceService;
     }
 
 
     /// <summary>
     /// 获取在追踪数据库查询过程的追踪服务
     /// </summary>
-    protected IDbTraceService TraceService
-    {
-      get;
-      private set;
-    }
+    protected abstract IDbTraceService TraceService { get { return null; } }
 
 
 

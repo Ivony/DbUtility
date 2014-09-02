@@ -10,7 +10,7 @@ using Npgsql;
 
 namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 {
-    public class NpgsqlDbExecutor : DbExecutorBase, IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>, IDbTransactionProvider<NpgsqlDbExecutor>
+    public class NpgsqlDbExecutor : DbHandlerBase, IAsyncDbExecutor<ParameterizedQuery>, IAsyncDbExecutor<StoredProcedureQuery>, IDbTransactionProvider<NpgsqlDbExecutor>
     {
         protected string ConnectionString { get; private set; }
         protected NpgsqlDbConfiguration Configuration { get; private set; }

@@ -23,8 +23,15 @@ namespace Ivony.Data
   }
 
 
+
+  /// <summary>
+  /// 定义数据库异步查询执行上下文
+  /// </summary>
   public interface IAsyncDbExecuteContext
   {
+    /// <summary>
+    /// 异步执行查询，并获得查询结果
+    /// </summary>
     Task<IAsyncDbResult> ExecuteAsync( CancellationToken token = default( CancellationToken ) );
   }
 }

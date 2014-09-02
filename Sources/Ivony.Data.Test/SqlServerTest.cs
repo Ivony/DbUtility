@@ -17,7 +17,7 @@ namespace Ivony.Data.Test
 
 
     private TestTraceService traceService;
-    private SqlDbExecutor db;
+    private SqlServerHandler db;
 
 
     public SqlServerTest()
