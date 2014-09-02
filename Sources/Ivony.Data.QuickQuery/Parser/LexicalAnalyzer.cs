@@ -23,18 +23,18 @@ namespace Ivony.Parser
     /// </summary>
     /// <param name="text">要分析的文本字符串</param>
     /// <returns>分析结果</returns>
-    public IEnumerable<ITextToken> Analyze( string text, int index = 0 )
+    public IEnumerable<TextToken> Analyze( string text, int index = 0 )
     {
       var tokenizer = GetTokenizer( GetType(), new TextScaner( new object(), text, index ) );
 
       while ( true )
       {
         var token = tokenizer.NextToken();
-        if ( token == null )
-          yield break;
+        if ( token.HasValue )
+          yield return token.Value;
 
         else
-          yield return token;
+          yield break;
       }
     }
 
@@ -45,14 +45,14 @@ namespace Ivony.Parser
 
     }
 
-    private static Func<TextScaner, ITextToken>[] GetLexicals( Type type )
+    private static Func<TextScaner, TextToken?>[] GetLexicals( Type type )
     {
       var methods = from method in type.GetMethods( BindingFlags.Static | BindingFlags.NonPublic )
-                    where typeof( ITextToken ).IsAssignableFrom( method.ReturnType )
+                    where typeof( TextToken? ).IsAssignableFrom( method.ReturnType )
                     where method.IsFamily
                     let parameters = method.GetParameters()
                     where parameters.Length == 1 && parameters[0].ParameterType == typeof( TextScaner )
-                    select (Func<TextScaner, ITextToken>) Delegate.CreateDelegate( typeof( Func<TextScaner, ITextToken> ), method );
+                    select (Func<TextScaner, TextToken?>) Delegate.CreateDelegate( typeof( Func<TextScaner, TextToken?> ), method );
 
 
       return methods.ToArray();
@@ -60,7 +60,7 @@ namespace Ivony.Parser
 
 
 
-    private static ConcurrentDictionary<Type, Func<TextScaner, ITextToken>[]> lexicalsCache = new ConcurrentDictionary<Type, Func<TextScaner, ITextToken>[]>();
+    private static ConcurrentDictionary<Type, Func<TextScaner, TextToken?>[]> lexicalsCache = new ConcurrentDictionary<Type, Func<TextScaner, TextToken?>[]>();
 
 
 
@@ -68,7 +68,7 @@ namespace Ivony.Parser
     {
 
 
-      public Tokenizer( TextScaner scaner, Func<TextScaner, ITextToken>[] lexicals )
+      public Tokenizer( TextScaner scaner, Func<TextScaner, TextToken?>[] lexicals )
       {
         if ( scaner == null )
           throw new ArgumentNullException( "scaner" );
@@ -88,7 +88,7 @@ namespace Ivony.Parser
       /// <summary>
       /// 获取要使用的词法分析器列表
       /// </summary>
-      public Func<TextScaner, ITextToken>[] Lexicals
+      public Func<TextScaner, TextToken?>[] Lexicals
       {
         get;
         private set;
@@ -99,7 +99,7 @@ namespace Ivony.Parser
       /// 获取下一个词素
       /// </summary>
       /// <returns>词素对象</returns>
-      public ITextToken NextToken()
+      public TextToken? NextToken()
       {
 
 
@@ -108,7 +108,7 @@ namespace Ivony.Parser
           var token = lexical( Scaner );
 
           if ( token != null )
-            return token;
+            return token.Value;
         }
 
         return null;
@@ -127,7 +127,7 @@ namespace Ivony.Parser
 
 
 
-    protected static TextToken CreateToken( TextScaner scaner, int length, string type = null )
+    protected static TextToken CreateToken( TextScaner scaner, int length, string type = null, object dataObject = null )
     {
 
       var offset = scaner.Offset;
@@ -138,7 +138,7 @@ namespace Ivony.Parser
 
 
 
-    protected static ITextToken MatchLiteral( TextScaner scaner, string literal, string type = null, StringComparison comparison = StringComparison.Ordinal )
+    protected static TextToken? MatchLiteral( TextScaner scaner, string literal, string type = null, StringComparison comparison = StringComparison.Ordinal )
     {
 
       var text = scaner.SubString( scaner.Offset, literal.Length );
@@ -150,7 +150,7 @@ namespace Ivony.Parser
     }
 
 
-    protected static ITextToken MatchRegex( TextScaner scaner, string regularExpression, string type = null )
+    protected static TextToken? MatchRegex( TextScaner scaner, string regularExpression, string type = null )
     {
 
 
@@ -164,9 +164,7 @@ namespace Ivony.Parser
       if ( !match.Success )
         return null;
 
-      scaner.Skip( match.Index - scaner.Offset + match.Length );
-
-      return new RegexTextToken( scaner.Text, match, type );
+      return CreateToken( scaner, match.Length, type, match );
     }
 
   }

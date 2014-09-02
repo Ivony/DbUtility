@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Ivony.Parser
 {
   /// <summary>
-  /// 代表一个文本 Token
+  /// 代表一个文本词素
   /// </summary>
-  public struct TextToken : ITextToken
+  public struct TextToken
   {
 
     /// <summary>
@@ -18,13 +18,17 @@ namespace Ivony.Parser
     /// <param name="text">分析的原始文本</param>
     /// <param name="startIndex">在文本中的开始位置</param>
     /// <param name="length">TextToken 的长度</param>
-    public TextToken( string text, int startIndex, int length, string type = null )
+    /// <param name="type">词素类型</param>
+    /// <param name="dataObject">数据对象</param>
+    public TextToken( string text, int startIndex, int length, string type = null, object dataObject = null )
     {
       _text = text;
       _startIndex = startIndex;
       _length = length;
       _type = type;
+      _dataObject = null;
 
+      _match = true;
       _str = null;
     }
 
@@ -63,8 +67,18 @@ namespace Ivony.Parser
     }
 
 
-    private string _str;
 
+    private object _dataObject;
+    /// <summary>
+    /// 获取数据对象
+    /// </summary>
+    public object DataObject
+    {
+      get { return _dataObject; }
+    }
+
+
+    private string _str;
     /// <summary>获取 TextToken 的字符串表达</summary>
     public override string ToString()
     {
@@ -79,5 +93,10 @@ namespace Ivony.Parser
 
       return _str;
     }
+
+
+
+    private bool _match;
+    public bool IsMatch { get { return _match; } }
   }
 }

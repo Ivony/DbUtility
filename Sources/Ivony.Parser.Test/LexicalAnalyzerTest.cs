@@ -55,7 +55,7 @@ namespace Ivony.Parser.Test
     public class TestLexicalAnlyzer : LexicalAnalyzer
     {
 
-      protected static ITextToken Test( TextScaner scaner )
+      protected static TextToken? Test( TextScaner scaner )
       {
 
         return MatchLiteral( scaner, "Test" );
@@ -63,7 +63,7 @@ namespace Ivony.Parser.Test
       }
 
 
-      protected static ITextToken WhiteSpace( TextScaner scaner )
+      protected static TextToken? WhiteSpace( TextScaner scaner )
       {
 
         return MatchRegex( scaner, @"\s+" );

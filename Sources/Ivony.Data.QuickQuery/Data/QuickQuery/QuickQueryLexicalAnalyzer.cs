@@ -13,14 +13,14 @@ namespace Ivony.Data.QuickQuery
 
 
 
-    protected static ITextToken ReverseAlias( TextScaner scaner )
+    protected static TextToken? ReverseAlias( TextScaner scaner )
     {
 
       return MatchLiteral( scaner, ":>" );
 
     }
 
-    protected static ITextToken Alias( TextScaner scaner )
+    protected static TextToken? Alias( TextScaner scaner )
     {
 
       return MatchLiteral( scaner, ":" );
@@ -30,14 +30,14 @@ namespace Ivony.Data.QuickQuery
 
 
 
-    protected static ITextToken TableName( TextScaner scaner )
+    protected static TextToken? TableName( TextScaner scaner )
     {
 
       return MatchRegex( scaner, @"@" + CNameRegex, "TableName" );
 
     }
 
-    protected static ITextToken Name( TextScaner scaner )
+    protected static TextToken? Name( TextScaner scaner )
     {
 
       return MatchRegex( scaner, CNameRegex, "Name" );
@@ -45,7 +45,7 @@ namespace Ivony.Data.QuickQuery
     }
 
 
-    protected static ITextToken WhiteSpace( TextScaner scaner )
+    protected static TextToken? WhiteSpace( TextScaner scaner )
     {
 
       return MatchRegex( scaner, WhitespaceRegex, "Whitespace" );
