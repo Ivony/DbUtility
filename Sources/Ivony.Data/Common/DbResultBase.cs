@@ -12,7 +12,7 @@ namespace Ivony.Data.Common
 
 
   /// <summary>
-  /// 辅助实现 IDbExecuteContext 接口的基类
+  /// 辅助实现 IDbResult 接口的基类
   /// </summary>
   public abstract class DbResultBase : IDbResult
   {

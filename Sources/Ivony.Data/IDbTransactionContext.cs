@@ -10,8 +10,8 @@ namespace Ivony.Data
   /// <summary>
   /// 定义数据库事务上下文
   /// </summary>
-  /// <typeparam name="TDbExecutor">数据库查询执行程序类型</typeparam>
-  public interface IDbTransactionContext<out TDbExecutor> : IDisposable
+  /// <typeparam name="TDbHandler">数据库查询执行程序类型</typeparam>
+  public interface IDbTransactionContext<out TDbHandler> : IDbHandlerProvider<TDbHandler>, IDisposable
   {
 
     /// <summary>
@@ -24,10 +24,6 @@ namespace Ivony.Data
     /// </summary>
     void Rollback();
 
-    /// <summary>
-    /// 数据库查询执行程序
-    /// </summary>
-    TDbExecutor DbExecutor { get; }
 
     /// <summary>
     /// 获取用于同步的对象

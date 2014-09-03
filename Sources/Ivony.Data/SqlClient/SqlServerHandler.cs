@@ -20,7 +20,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// 用于操作 SQL Server 的数据库访问工具
   /// </summary>
-  public class SqlServerHandler : DbHandlerBase, IParameterizedQueryExecutor<SqlParameterizedQueryExecuteContext>, IDbTransactionProvider<SqlServerHandler>
+  public class SqlServerHandler : IParameterizedQueryExecutor<SqlParameterizedQueryExecuteContext>, IDbTransactionProvider<SqlServerHandler>
   {
 
 
@@ -159,28 +159,41 @@ namespace Ivony.Data.SqlClient
 
     SqlParameterizedQueryExecuteContext IParameterizedQueryExecutor<SqlParameterizedQueryExecuteContext>.Execute( ParameterizedQuery query )
     {
-      var command  = CreateCommand( query );
-      ApplyConnection( command );
-      if ( Configuration.CommandTimeout.HasValue )
-        command.CommandTimeout = (int) Math.Ceiling( Configuration.CommandTimeout.Value.TotalSeconds );
-
-      return new SqlParameterizedQueryExecuteContext( this, command, TraceService );
+      var tracing = TraceService.CreateTracing( this, query );
+      return new SqlParameterizedQueryExecuteContext( this, query, tracing );
     }
+
+
 
     /// <summary>
     /// 对指定的 SQL 命令对象应用数据库连接，此时连接可能处于未打开状态。
     /// </summary>
     /// <param name="command">要应用数据库连接的 SQL 命令对象</param>
-    protected virtual void ApplyConnection( SqlCommand command )
+    internal virtual SqlCommand ApplyConnection( SqlCommand command )
     {
       command.Connection = new SqlConnection( ConnectionString );
+      return command;
+    }
+
+
+    /// <summary>
+    /// 对指定的 SQL 命令对象应用数据库连接和设置，此时连接可能处于未打开状态。
+    /// </summary>
+    /// <param name="command">要应用数据库连接的 SQL 命令对象</param>
+    internal SqlCommand ApplyConnectionAndSettings( SqlCommand command )
+    {
+      command = ApplyConnection( command );
+      if ( Configuration.CommandTimeout.HasValue )
+        command.CommandTimeout = (int) Math.Ceiling( Configuration.CommandTimeout.Value.TotalSeconds );
+
+      return command;
     }
 
 
     /// <summary>
     /// 获取查询执行需要使用的追踪服务
     /// </summary>
-    protected override IDbTraceService TraceService
+    protected virtual IDbTraceService TraceService
     {
       get { return Configuration.TraceService; }
     }

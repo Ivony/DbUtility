@@ -13,7 +13,7 @@ namespace Ivony.Data.Common
   /// <summary>
   /// 辅助实现 IDbTransactionContext 的抽象基类
   /// </summary>
-  public abstract class DbTransactionContextBase<TDbExecutor, TDbTransaction> : IDbTransactionContext<TDbExecutor> where TDbTransaction : IDbTransaction
+  public abstract class DbTransactionContextBase<TDbHandler, TDbTransaction> : IDbTransactionContext<TDbHandler> where TDbTransaction : IDbTransaction
   {
 
 
@@ -110,10 +110,7 @@ namespace Ivony.Data.Common
     /// <summary>
     /// 获取在事务中执行查询的执行器
     /// </summary>
-    public abstract TDbExecutor DbExecutor
-    {
-      get;
-    }
+    public abstract TDbHandler GetDbHandler();
 
 
 

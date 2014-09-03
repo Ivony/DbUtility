@@ -51,9 +51,9 @@ namespace Ivony.Data
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>参数化查询实例</returns>
-    public static TContext Template<TContext>( this IDbExecutorProvider<IParameterizedQueryExecutor<TContext>> provider, string template, params object[] parameters ) where TContext : IParameterizedQueryExecuteContext
+    public static TContext Template<TContext>( this IDbHandlerProvider<IParameterizedQueryExecutor<TContext>> provider, string template, params object[] parameters ) where TContext : IParameterizedQueryExecuteContext
     {
-      return provider.GetDbExecutor().Template( template, parameters );
+      return provider.GetDbHandler().Template( template, parameters );
     }
 
 
@@ -66,9 +66,9 @@ namespace Ivony.Data
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
     /// <returns>参数化查询实例</returns>
-    public static TContext T<TContext>( this IDbExecutorProvider<IParameterizedQueryExecutor<TContext>> provider, string template, params object[] parameters ) where TContext : IParameterizedQueryExecuteContext
+    public static TContext T<TContext>( this IDbHandlerProvider<IParameterizedQueryExecutor<TContext>> provider, string template, params object[] parameters ) where TContext : IParameterizedQueryExecuteContext
     {
-      return provider.GetDbExecutor().Template( template, parameters );
+      return provider.GetDbHandler().Template( template, parameters );
     }
 
 

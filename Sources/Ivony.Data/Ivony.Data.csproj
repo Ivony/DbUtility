@@ -78,12 +78,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\DbTracingHelper.cs" />
+    <Compile Include="Common\SimpleDataTable.cs" />
     <Compile Include="DefaultConverter.cs" />
     <Compile Include="EntityConvertAttribute.cs" />
     <Compile Include="IDbExecuteContext.cs" />
-    <Compile Include="IDbExecutorProvider.cs" />
+    <Compile Include="IDbHandlerProvider.cs" />
     <Compile Include="IDbValueConverter.cs" />
-    <Compile Include="Common\DbHandlerBase.cs" />
     <Compile Include="DbTracing.cs" />
     <Compile Include="Common\DbTransactionContextBase.cs" />
     <Compile Include="Common\XmlDocumentValueConverter.cs" />

@@ -24,7 +24,7 @@ namespace Ivony.Data.SqlClient
     internal SqlDbTransactionContext( string connectionString, SqlDbConfiguration configuration )
     {
       Connection = new SqlConnection( connectionString );
-      _executor = new SqlServerHostWithTransaction( this, configuration );
+      _executor = new SqlServerHandlerWithTransaction( this, configuration );
     }
 
 
@@ -52,21 +52,21 @@ namespace Ivony.Data.SqlClient
     }
 
 
-    private SqlServerHostWithTransaction _executor;
+    private SqlServerHandlerWithTransaction _executor;
 
     /// <summary>
     /// 获取用于在事务中执行查询的 SQL Server 查询执行器
     /// </summary>
-    public override SqlServerHandler DbExecutor
+    public override SqlServerHandler GetDbHandler()
     {
-      get { return _executor; }
+      return _executor;
     }
 
 
 
-    private class SqlServerHostWithTransaction : SqlServerHandler
+    private class SqlServerHandlerWithTransaction : SqlServerHandler
     {
-      public SqlServerHostWithTransaction( SqlDbTransactionContext transaction, SqlDbConfiguration configuration )
+      public SqlServerHandlerWithTransaction( SqlDbTransactionContext transaction, SqlDbConfiguration configuration )
         : base( transaction.Connection.ConnectionString )
       {
         TransactionContext = transaction;
@@ -82,7 +82,14 @@ namespace Ivony.Data.SqlClient
         private set;
       }
 
-    }
 
+      internal override SqlCommand ApplyConnection( SqlCommand command )
+      {
+        command.Connection = TransactionContext.Connection;
+        command.Transaction = TransactionContext.Transaction;
+
+        return command;
+      }
+    }
   }
 }

@@ -10,6 +10,11 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.SqlClient
 {
+
+
+  /// <summary>
+  /// SQL Server 参数化查询执行上下文
+  /// </summary>
   public class SqlParameterizedQueryExecuteContext : IParameterizedQueryExecuteContext, IDbExecuteContext, IAsyncDbExecuteContext
   {
     private ParameterizedQuery _query;
@@ -27,6 +32,9 @@ namespace Ivony.Data.SqlClient
 
 
 
+    /// <summary>
+    /// 正在执行的参数化查询对象
+    /// </summary>
     public ParameterizedQuery Query
     {
       get { return _query; }
@@ -34,7 +42,11 @@ namespace Ivony.Data.SqlClient
     }
 
 
-    public IDbResult Execute()
+    /// <summary>
+    /// 执行查询并获得结果
+    /// </summary>
+    /// <returns></returns>
+    public IDbResult GetResult()
     {
 
 
@@ -64,7 +76,12 @@ namespace Ivony.Data.SqlClient
         return ExecuteCore( command );
     }
 
-    public async Task<IAsyncDbResult> ExecuteAsync()
+
+    /// <summary>
+    /// 异步执行查询并获得结果
+    /// </summary>
+    /// <returns></returns>
+    public async Task<IAsyncDbResult> GetResultAsync( CancellationToken token = default( CancellationToken ) )
     {
 
 
@@ -78,7 +95,7 @@ namespace Ivony.Data.SqlClient
 
         try
         {
-          result = await ExecuteAsyncCore( command );
+          result = await ExecuteAsyncCore( command, token );
         }
         catch ( Exception e )
         {
@@ -101,7 +118,12 @@ namespace Ivony.Data.SqlClient
     /// <returns>SQL 查询命令对象</returns>
     protected SqlCommand CreateCommand( ParameterizedQuery query )
     {
-      return new SqlParameterizedQueryParser().Parse( query );
+      var command = new SqlParameterizedQueryParser().Parse( query );
+      _handler.ApplyConnectionAndSettings( command );
+
+      return command;
+
+
     }
 
 
@@ -118,5 +140,6 @@ namespace Ivony.Data.SqlClient
       return new SqlAsyncDbResult( await command.ExecuteReaderAsync() );
 
     }
+
   }
 }

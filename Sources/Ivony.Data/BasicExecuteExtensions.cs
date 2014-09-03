@@ -23,7 +23,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static DataTable ExecuteDataTable( this IDbExecuteContext context )
     {
-      using ( var result = context.Execute() )
+      using ( var result = context.GetResult() )
       {
         return result.LoadDataTable( 0, 0 );
       }
@@ -37,7 +37,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static async Task<DataTable> ExecuteDataTableAsync( this IAsyncDbExecuteContext context, CancellationToken token = default( CancellationToken ) )
     {
-      using ( var result = await context.ExecuteAsync( token ) )
+      using ( var result = await context.GetResultAsync( token ) )
       {
 
         return await result.LoadDataTableAsync( 0, 0, token );
@@ -58,7 +58,7 @@ namespace Ivony.Data
 
       List<DataTable> dataTables = new List<DataTable>();
 
-      using ( var result = context.Execute() )
+      using ( var result = context.GetResult() )
       {
 
         do
@@ -73,15 +73,15 @@ namespace Ivony.Data
     /// <summary>
     /// 异步执行查询并将所有结果集包装成 DataTable 返回
     /// </summary>
-    /// <param name="query">要执行的查询对象</param>
+    /// <param name="context">要执行的查询对象</param>
     /// <param name="token">取消指示</param>
     /// <returns>查询结果</returns>
-    public static async Task<DataTable[]> ExecuteAllDataTablesAsync( this IAsyncDbExecuteContext query, CancellationToken token = default( CancellationToken ) )
+    public static async Task<DataTable[]> ExecuteAllDataTablesAsync( this IAsyncDbExecuteContext context, CancellationToken token = default( CancellationToken ) )
     {
 
       List<DataTable> dataTables = new List<DataTable>();
 
-      using ( var result  = await query.ExecuteAsync( token ) )
+      using ( var result  = await context.GetResultAsync( token ) )
       {
 
         do
@@ -105,7 +105,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static object ExecuteScalar( this IDbExecuteContext context )
     {
-      using ( var result = context.Execute() )
+      using ( var result = context.GetResult() )
       {
         var record = result.ReadRecord();
         if ( record != null && record.FieldCount > 0 )
@@ -124,7 +124,7 @@ namespace Ivony.Data
     /// <returns>查询结果</returns>
     public static async Task<object> ExecuteScalarAsync( this IAsyncDbExecuteContext context, CancellationToken token = default( CancellationToken ) )
     {
-      using ( var result = await context.ExecuteAsync( token ) )
+      using ( var result = await context.GetResultAsync( token ) )
       {
 
         var record = await result.ReadRecordAsync();
@@ -147,7 +147,7 @@ namespace Ivony.Data
     /// <returns>查询所影响的行数</returns>
     public static int ExecuteNonQuery( this IDbExecuteContext context )
     {
-      using ( var result = context.Execute() )
+      using ( var result = context.GetResult() )
       {
         return result.RecordsAffected;
       }
@@ -161,7 +161,7 @@ namespace Ivony.Data
     /// <returns>查询所影响的行数</returns>
     public static async Task<int> ExecuteNonQueryAsync( this IAsyncDbExecuteContext context, CancellationToken token = default( CancellationToken ) )
     {
-      using ( var result = await context.ExecuteAsync( token ) )
+      using ( var result = await context.GetResultAsync( token ) )
       {
         return result.RecordsAffected;
       }
@@ -179,7 +179,7 @@ namespace Ivony.Data
     {
       //UNDONE
 
-      using ( var result = context.Execute() )
+      using ( var result = context.GetResult() )
       {
         var data = result.LoadDataTable( 0, 1 );
         if ( data.Rows.Count > 0 )
@@ -200,7 +200,7 @@ namespace Ivony.Data
     {
       //UNDONE
 
-      using ( var result = await context.ExecuteAsync( token ) )
+      using ( var result = await context.GetResultAsync( token ) )
       {
         var data = result.LoadDataTable( 0, 1 );
         if ( data.Rows.Count > 0 )
