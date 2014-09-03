@@ -21,7 +21,7 @@ namespace Ivony.Data
     /// <param name="database">数据库名称或者数据库文件路径</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlServerHandler ConnectLocalDB( string database, SqlDbConfiguration configuration = null )
+    public static SqlDbHandler ConnectLocalDB( string database, SqlDbConfiguration configuration = null )
     {
 
       configuration = configuration ?? SqlServerExpress.Configuration;
@@ -37,7 +37,7 @@ namespace Ivony.Data
     /// <param name="database">数据库名称或者数据库文件路径</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlServerHandler Connect( string database, SqlDbConfiguration configuration = null )
+    public static SqlDbHandler Connect( string database, SqlDbConfiguration configuration = null )
     {
       configuration = configuration ?? SqlServerExpress.Configuration;
       return Connect( database, @"(local)\" + ExpressInstanceName, configuration );
@@ -51,7 +51,7 @@ namespace Ivony.Data
     /// <param name="datasource">SQL Server 实例名称</param>
     /// <param name="configuration">SQL Server 配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    private static SqlServerHandler Connect( string database, string datasource, SqlDbConfiguration configuration = null )
+    private static SqlDbHandler Connect( string database, string datasource, SqlDbConfiguration configuration = null )
     {
       var builder = new SqlConnectionStringBuilder()
       {

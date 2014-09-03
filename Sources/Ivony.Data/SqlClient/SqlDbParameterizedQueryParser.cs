@@ -16,7 +16,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// 定义 SQL Server 的参数化查询解析器
   /// </summary>
-  public class SqlParameterizedQueryParser : ParameterizedQueryParser<SqlCommand, SqlParameter>
+  public sealed class SqlDbParameterizedQueryParser : ParameterizedQueryParser<SqlCommand, SqlParameter>
   {
 
 

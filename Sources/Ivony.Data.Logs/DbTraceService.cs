@@ -28,7 +28,7 @@ namespace Ivony.Data.Logs
 
 
 
-    public IDbTracing CreateTracing<TQuery>( IDbExecutor<TQuery> executor, TQuery query ) where TQuery : IDbQuery
+    public IDbTracing CreateTracing<TQuery>( object handler, TQuery query )
     {
       return new DbTracing( query, LogTracing );
     }

@@ -118,12 +118,12 @@
     <Compile Include="Queries\IParameterizedQueryPartial.cs" />
     <Compile Include="Queries\TemplateParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlClient\SqlAsyncDbResult.cs" />
-    <Compile Include="SqlClient\SqlServerHandler.cs" />
+    <Compile Include="SqlClient\SqlDbAsyncResult.cs" />
+    <Compile Include="SqlClient\SqlDbHandler.cs" />
     <Compile Include="SqlClient\SqlDbExecuteContext.cs" />
     <Compile Include="SqlClient\SqlDbResult.cs" />
-    <Compile Include="SqlClient\SqlParameterizedQueryExecuteContext.cs" />
-    <Compile Include="SqlClient\SqlParameterizedQueryParser.cs" />
+    <Compile Include="SqlClient\SqlDbParameterizedQueryExecuteContext.cs" />
+    <Compile Include="SqlClient\SqlDbParameterizedQueryParser.cs" />
     <Compile Include="SqlClient\SqlDbTransactionContext.cs" />
     <Compile Include="SqlClient\SqlDbConfiguration.cs" />
     <Compile Include="SqlServer.cs" />

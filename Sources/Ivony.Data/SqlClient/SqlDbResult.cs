@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.SqlClient
 {
-  public class SqlDbResult : DbResultBase
+  public sealed class SqlDbResult : DbResultBase
   {
 
     internal SqlDbResult( SqlDataReader reader ) : base( reader ) { }

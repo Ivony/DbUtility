@@ -7,10 +7,10 @@ using System.Text;
 
 namespace Ivony.Data.SqlClient
 {
-  public class SqlAsyncDbResult : AsyncDbResultBase
+  public class SqlDbAsyncResult : DbAsyncResultBase
   {
 
-    internal SqlAsyncDbResult( SqlDataReader reader ) : base( reader ) { }
+    internal SqlDbAsyncResult( SqlDataReader reader ) : base( reader ) { }
 
   }
 }

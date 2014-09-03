@@ -42,7 +42,7 @@ namespace Ivony.Data.Common
       DataTableAdapter = new DataTableAdapter();
 
 
-      
+
       if ( SyncRoot != null )
         Monitor.Enter( SyncRoot );
     }
@@ -171,7 +171,7 @@ namespace Ivony.Data.Common
   /// <summary>
   /// 辅助实现 IAsyncDbExecuteContext 接口的基类
   /// </summary>
-  public abstract class AsyncDbResultBase : DbResultBase, IAsyncDbResult
+  public abstract class DbAsyncResultBase : DbResultBase, IAsyncDbResult
   {
 
 
@@ -181,7 +181,7 @@ namespace Ivony.Data.Common
     /// <param name="dataReader">用于读取数据的 IDataReader 对象</param>
     /// <param name="tracing">用于追踪此次查询过程的追踪器</param>
     /// <param name="connectionResource">销毁该上下文时，需要同时销毁的连接资源</param>
-    protected AsyncDbResultBase( DbDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null )
+    protected DbAsyncResultBase( DbDataReader dataReader, IDbTracing tracing = null, IDisposable connectionResource = null )
       : base( dataReader, tracing, connectionResource )
     {
 
@@ -201,7 +201,7 @@ namespace Ivony.Data.Common
     }
 
 
-    
+
     /// <summary>
     /// 异步加载数据到 DataTable
     /// </summary>
@@ -237,7 +237,7 @@ namespace Ivony.Data.Common
     }
 
 
-    
+
     /// <summary>
     /// 尝试异步读取下一个结果集
     /// </summary>

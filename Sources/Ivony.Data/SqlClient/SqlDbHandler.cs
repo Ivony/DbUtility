@@ -20,7 +20,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// 用于操作 SQL Server 的数据库访问工具
   /// </summary>
-  public class SqlServerHandler : IParameterizedQueryExecutor<SqlParameterizedQueryExecuteContext>, IDbTransactionProvider<SqlServerHandler>
+  public class SqlDbHandler : IParameterizedQueryExecutor<SqlDbParameterizedQueryExecuteContext>, IDbTransactionProvider<SqlDbHandler>
   {
 
 
@@ -42,7 +42,7 @@ namespace Ivony.Data.SqlClient
     /// <param name="traceService">要使用的查询追踪服务</param>
     /// <param name="commandTimeout">查询超时时间</param>
     /// <param name="immediateExecution">是否立即执行查询</param>
-    public SqlServerHandler( string connectionString, IDbTraceService traceService = null, TimeSpan? commandTimeout = null, bool immediateExecution = false )
+    public SqlDbHandler( string connectionString, IDbTraceService traceService = null, TimeSpan? commandTimeout = null, bool immediateExecution = false )
     {
       if ( connectionString == null )
         throw new ArgumentNullException( "connectionString" );
@@ -65,7 +65,7 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="connectionString">连接字符串</param>
     /// <param name="configuration">当前要使用的数据库配置信息</param>
-    public SqlServerHandler( string connectionString, SqlDbConfiguration configuration )
+    public SqlDbHandler( string connectionString, SqlDbConfiguration configuration )
     {
 
       if ( connectionString == null )
@@ -83,7 +83,7 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="traceService">用于查询追踪的服务对象</param>
     /// <returns>使用指定追踪服务的 SqlServerHandler 对象</returns>
-    public SqlServerHandler WithTraceService( IDbTraceService traceService )
+    public SqlDbHandler WithTraceService( IDbTraceService traceService )
     {
       return WithConfiguration( configuration => configuration.TraceService = traceService );
     }
@@ -95,7 +95,7 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="timeout">指定的查询超时时间</param>
     /// <returns>使用指定查询超时时间的 SqlServerHandler 对象</returns>
-    public SqlServerHandler WithCommandTimeout( TimeSpan timeout )
+    public SqlDbHandler WithCommandTimeout( TimeSpan timeout )
     {
       return WithConfiguration( configuration => configuration.CommandTimeout = timeout );
     }
@@ -107,7 +107,7 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="immediateExecution">是否应当立即执行查询，默认值是 true</param>
     /// <returns>使用指定 ImmediateExecution 设置的 SqlServerHandler 对象</returns>
-    public SqlServerHandler WithImmediateExecution( bool immediateExecution = true )
+    public SqlDbHandler WithImmediateExecution( bool immediateExecution = true )
     {
       return WithConfiguration( configuration => configuration.ImmediateExecution = immediateExecution );
     }
@@ -118,12 +118,12 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="configurationSetter">修改设置的方法</param>
     /// <returns>使用新的设置的 SqlServerHandler 对象</returns>
-    protected virtual SqlServerHandler WithConfiguration( Action<SqlDbConfiguration> configurationSetter )
+    protected virtual SqlDbHandler WithConfiguration( Action<SqlDbConfiguration> configurationSetter )
     {
       var newConfiguration = new SqlDbConfiguration( Configuration );
       configurationSetter( newConfiguration );
 
-      return new SqlServerHandler( ConnectionString, newConfiguration );
+      return new SqlDbHandler( ConnectionString, newConfiguration );
     }
 
 
@@ -148,7 +148,7 @@ namespace Ivony.Data.SqlClient
     }
 
 
-    IDbTransactionContext<SqlServerHandler> IDbTransactionProvider<SqlServerHandler>.CreateTransaction()
+    IDbTransactionContext<SqlDbHandler> IDbTransactionProvider<SqlDbHandler>.CreateTransaction()
     {
       return CreateTransaction();
     }
@@ -157,10 +157,18 @@ namespace Ivony.Data.SqlClient
 
 
 
-    SqlParameterizedQueryExecuteContext IParameterizedQueryExecutor<SqlParameterizedQueryExecuteContext>.Execute( ParameterizedQuery query )
+    SqlDbParameterizedQueryExecuteContext IParameterizedQueryExecutor<SqlDbParameterizedQueryExecuteContext>.Execute( ParameterizedQuery query )
     {
-      var tracing = TraceService.CreateTracing( this, query );
-      return new SqlParameterizedQueryExecuteContext( this, query, tracing );
+      return new SqlDbParameterizedQueryExecuteContext( this, query, TryCreateTracing( query ) );
+    }
+
+    private IDbTracing TryCreateTracing<TQuery>( TQuery query )
+    {
+      if ( TraceService == null )
+        return null;
+
+      else
+        return TraceService.CreateTracing( this, query );
     }
 
 

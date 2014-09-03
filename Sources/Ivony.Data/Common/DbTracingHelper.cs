@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ivony.Data.Common
@@ -34,6 +35,98 @@ namespace Ivony.Data.Common
 
       return tracing;
     }
+
+
+
+
+    public static TResult TryExecuteWithTracing<TResult, TCommand>( this IDbTracing tracing, TCommand commandObject, Func<TCommand, TResult> executeMethod ) where TResult : IDbResult
+    {
+      if ( tracing == null )
+        return executeMethod( commandObject );
+
+      try
+      {
+        tracing.OnExecuting( commandObject );
+      }
+      catch { }
+
+
+
+      TResult result;
+
+      try
+      {
+        result = executeMethod( commandObject );
+      }
+      catch ( Exception exception )
+      {
+        try
+        {
+          tracing.OnException( exception );
+        }
+        catch { }
+
+
+        throw;
+      }
+
+
+
+      try
+      {
+        tracing.OnLoadingData( result );
+      }
+      catch { }
+
+
+      return result;
+    }
+
+
+    
+    public async static Task<TResult> TryExecuteAsyncWithTracing<TResult, TCommand>( this IDbTracing tracing, TCommand commandObject, Func<TCommand, CancellationToken, Task<TResult>> executeMethod, CancellationToken token = default( CancellationToken ) ) where TResult : IDbResult
+    {
+      if ( tracing == null )
+        return await executeMethod( commandObject, token );
+
+      try
+      {
+        tracing.OnExecuting( commandObject );
+      }
+      catch { }
+
+
+
+      TResult result;
+
+      try
+      {
+        result = await executeMethod( commandObject, token );
+      }
+      catch ( Exception exception )
+      {
+        try
+        {
+          tracing.OnException( exception );
+        }
+        catch { }
+
+
+        throw;
+      }
+
+
+
+      try
+      {
+        tracing.OnLoadingData( result );
+      }
+      catch { }
+
+
+      return result;
+    }
+
 
 
     /// <summary>

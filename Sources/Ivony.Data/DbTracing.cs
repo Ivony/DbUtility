@@ -20,7 +20,7 @@ namespace Ivony.Data
     /// 创建一个 DbTracing 实例
     /// </summary>
     /// <param name="query">即将执行的查询对象</param>
-    public DbTracing( IDbQuery query ) : this( query, null ) { }
+    public DbTracing( object query ) : this( query, null ) { }
 
 
 
@@ -29,7 +29,7 @@ namespace Ivony.Data
     /// </summary>
     /// <param name="query">即将执行的查询对象</param>
     /// <param name="complateCallback">当查询执行完成之后需要回调的方法</param>
-    public DbTracing( IDbQuery query, Action<DbTracing> complateCallback )
+    public DbTracing( object query, Action<DbTracing> complateCallback )
     {
 
       QueryObject = query;
@@ -52,7 +52,7 @@ namespace Ivony.Data
     /// <summary>
     /// 获取此次查询执行的查询对象
     /// </summary>
-    public IDbQuery QueryObject
+    public object QueryObject
     {
       get;
       private set;

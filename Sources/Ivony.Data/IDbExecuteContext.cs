@@ -18,7 +18,7 @@ namespace Ivony.Data
     /// 执行查询并获得查询结果
     /// </summary>
     /// <returns>数据库查询结果</returns>
-    IDbResult GetResult();
+    IDbResult Execute();
 
   }
 
@@ -32,6 +32,6 @@ namespace Ivony.Data
     /// <summary>
     /// 异步执行查询，并获得查询结果
     /// </summary>
-    Task<IAsyncDbResult> GetResultAsync( CancellationToken token = default( CancellationToken ) );
+    Task<IAsyncDbResult> ExecuteAsync( CancellationToken token = default( CancellationToken ) );
   }
 }

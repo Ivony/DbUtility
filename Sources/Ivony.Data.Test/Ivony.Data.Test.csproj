@@ -76,11 +76,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="MySqlTest.cs" />
     <Compile Include="ParameterizedQueryTest.cs" />
-    <Compile Include="PostgreSqlTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLiteTest.cs" />
     <Compile Include="SqlServerTest.cs" />
     <Compile Include="TestTraceService.cs" />
   </ItemGroup>
