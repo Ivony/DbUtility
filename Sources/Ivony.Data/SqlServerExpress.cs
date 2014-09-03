@@ -25,7 +25,7 @@ namespace Ivony.Data
     {
 
       configuration = configuration ?? SqlServerExpress.Configuration;
-      return Connect( database, @"(LocalDB)\" + configuration.LocalDBInstanceName, configuration );
+      return Connect( database, @"(LocalDB)\" + LocalDBInstanceName, configuration );
 
     }
 
@@ -40,7 +40,7 @@ namespace Ivony.Data
     public static SqlServerHandler Connect( string database, SqlDbConfiguration configuration = null )
     {
       configuration = configuration ?? SqlServerExpress.Configuration;
-      return Connect( database, @"(local)\" + configuration.ExpressInstanceName, configuration );
+      return Connect( database, @"(local)\" + ExpressInstanceName, configuration );
     }
 
 
@@ -78,5 +78,29 @@ namespace Ivony.Data
     {
       get { return SqlServer.Configuration; }
     }
+
+
+
+    static SqlServerExpress()
+    {
+      LocalDBInstanceName = "v11.0";
+      ExpressInstanceName = "SQLEXPRESS";
+    }
+
+
+    /// <summary>
+    /// 获取或设置SQL Server Express LocalDB 默认实例名
+    /// </summary>
+    /// <remarks>
+    /// 默认值为 v11.0，即 SQL Server Express LocalDB 2012，若需要连接 SQL Server Express LocalDB 2014 ，请使用 MSSQLLocalDB
+    /// </remarks>
+    public static string LocalDBInstanceName { get; set; }
+
+
+    /// <summary>
+    /// 获取或设置SQL Server Express 默认实例名
+    /// </summary>
+    public static string ExpressInstanceName { get; set; }
+
   }
 }

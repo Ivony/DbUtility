@@ -39,15 +39,93 @@ namespace Ivony.Data.SqlClient
     /// 创建 SqlServer 数据库查询执行程序
     /// </summary>
     /// <param name="connectionString">连接字符串</param>
-    /// <param name="configuration">当前要使用的数据库配置信息</param>
-    public SqlServerHandler( string connectionString, IDbTraceService traceService = null, TimeSpan? commandTimeout = null, TimeSpan? connectionTimeout = null, bool immediateExecution = false )
+    /// <param name="traceService">要使用的查询追踪服务</param>
+    /// <param name="commandTimeout">查询超时时间</param>
+    /// <param name="immediateExecution">是否立即执行查询</param>
+    public SqlServerHandler( string connectionString, IDbTraceService traceService = null, TimeSpan? commandTimeout = null, bool immediateExecution = false )
     {
+      if ( connectionString == null )
+        throw new ArgumentNullException( "connectionString" );
+
+      ConnectionString = connectionString;
+
+      Configuration = new SqlDbConfiguration()
+      {
+        TraceService = traceService,
+        CommandTimeout = commandTimeout,
+        ImmediateExecution = immediateExecution,
+      };
+
+    }
+
+
+
+    /// <summary>
+    /// 创建 SqlServer 数据库查询执行程序
+    /// </summary>
+    /// <param name="connectionString">连接字符串</param>
+    /// <param name="configuration">当前要使用的数据库配置信息</param>
+    public SqlServerHandler( string connectionString, SqlDbConfiguration configuration )
+    {
+
       if ( connectionString == null )
         throw new ArgumentNullException( "connectionString" );
 
 
       ConnectionString = connectionString;
+      Configuration = new SqlDbConfiguration( configuration );
     }
+
+
+
+    /// <summary>
+    /// 创建一个新的 SqlServerHandler 对象，使用指定的追踪服务
+    /// </summary>
+    /// <param name="traceService">用于查询追踪的服务对象</param>
+    /// <returns>使用指定追踪服务的 SqlServerHandler 对象</returns>
+    public SqlServerHandler WithTraceService( IDbTraceService traceService )
+    {
+      return WithConfiguration( configuration => configuration.TraceService = traceService );
+    }
+
+
+
+    /// <summary>
+    /// 创建一个新的 SqlServerHandler 对象，使用指定的查询超时时间
+    /// </summary>
+    /// <param name="timeout">指定的查询超时时间</param>
+    /// <returns>使用指定查询超时时间的 SqlServerHandler 对象</returns>
+    public SqlServerHandler WithCommandTimeout( TimeSpan timeout )
+    {
+      return WithConfiguration( configuration => configuration.CommandTimeout = timeout );
+    }
+
+
+
+    /// <summary>
+    /// 创建一个新的 SqlServerHandler 对象，指定是否应当立即执行查询
+    /// </summary>
+    /// <param name="immediateExecution">是否应当立即执行查询，默认值是 true</param>
+    /// <returns>使用指定 ImmediateExecution 设置的 SqlServerHandler 对象</returns>
+    public SqlServerHandler WithImmediateExecution( bool immediateExecution = true )
+    {
+      return WithConfiguration( configuration => configuration.ImmediateExecution = immediateExecution );
+    }
+
+
+    /// <summary>
+    /// 创建一个新的 SqlServerHandler 对象，对设置进行指定的修改
+    /// </summary>
+    /// <param name="configurationSetter">修改设置的方法</param>
+    /// <returns>使用新的设置的 SqlServerHandler 对象</returns>
+    protected virtual SqlServerHandler WithConfiguration( Action<SqlDbConfiguration> configurationSetter )
+    {
+      var newConfiguration = new SqlDbConfiguration( Configuration );
+      configurationSetter( newConfiguration );
+
+      return new SqlServerHandler( ConnectionString, newConfiguration );
+    }
+
 
 
     /// <summary>
@@ -77,23 +155,16 @@ namespace Ivony.Data.SqlClient
 
 
 
-    /// <summary>
-    /// 从参数化查询创建查询命令对象
-    /// </summary>
-    /// <param name="query">参数化查询对象</param>
-    /// <returns>SQL 查询命令对象</returns>
-    protected SqlCommand CreateCommand( ParameterizedQuery query )
-    {
-      return new SqlParameterizedQueryParser().Parse( query );
-    }
 
 
     SqlParameterizedQueryExecuteContext IParameterizedQueryExecutor<SqlParameterizedQueryExecuteContext>.Execute( ParameterizedQuery query )
     {
       var command  = CreateCommand( query );
       ApplyConnection( command );
+      if ( Configuration.CommandTimeout.HasValue )
+        command.CommandTimeout = (int) Math.Ceiling( Configuration.CommandTimeout.Value.TotalSeconds );
 
-      return new SqlParameterizedQueryExecuteContext( this, command );
+      return new SqlParameterizedQueryExecuteContext( this, command, TraceService );
     }
 
     /// <summary>
@@ -105,9 +176,13 @@ namespace Ivony.Data.SqlClient
       command.Connection = new SqlConnection( ConnectionString );
     }
 
+
+    /// <summary>
+    /// 获取查询执行需要使用的追踪服务
+    /// </summary>
     protected override IDbTraceService TraceService
     {
-      get { return null; }
+      get { return Configuration.TraceService; }
     }
   }
 

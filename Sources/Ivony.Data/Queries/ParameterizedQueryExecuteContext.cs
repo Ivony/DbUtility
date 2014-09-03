@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.Queries
 {
-  public abstract class ParameterizedQueryExecuteContext : IDbExecuteContext
+  public interface IParameterizedQueryExecuteContext : IDbExecuteContext
   {
-    public abstract IDbResult Execute();
+
+    ParameterizedQuery Query { get; }
+
   }
 }

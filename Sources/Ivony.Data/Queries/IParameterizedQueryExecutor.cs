@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.Queries
 {
-  public interface IParameterizedQueryExecutor<TContext> where TContext : ParameterizedQueryExecuteContext
+  public interface IParameterizedQueryExecutor<TContext> where TContext : IParameterizedQueryExecuteContext
   {
 
     TContext Execute( ParameterizedQuery query );

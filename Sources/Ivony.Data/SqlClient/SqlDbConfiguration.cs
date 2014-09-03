@@ -30,28 +30,17 @@ namespace Ivony.Data.SqlClient
     public SqlDbConfiguration( DbConfiguration configuration ) : base( configuration ) { }
 
 
-    /// <summary>
-    /// 获取或设置SQL Server Express LocalDB 默认实例名（此配置为全局配置）
-    /// </summary>
-    /// <remarks>
-    /// 默认值为 v11.0，即 SQL Server Express LocalDB 2012，若需要连接 SQL Server Express LocalDB 2014 ，请使用 MSSQLLocalDB
-    /// </remarks>
-    public string LocalDBInstanceName
-    {
-      get { return SqlServer.LocalDBInstanceName; }
-      set { SqlServer.LocalDBInstanceName = value; }
-    }
+
 
     /// <summary>
-    /// 获取或设置SQL Server Express 默认实例名（此配置为全局配置）
+    /// 获取或设置执行查询超时时间
     /// </summary>
-    public string ExpressInstanceName
-    {
-      get { return SqlServer.ExpressInstanceName; }
-      set { SqlServer.ExpressInstanceName = value; }
-    }
+    public TimeSpan? CommandTimeout { get; set; }
 
 
-
+    /// <summary>
+    /// 获取或设置是否立即执行查询
+    /// </summary>
+    public bool ImmediateExecution { get; set; }
   }
 }
