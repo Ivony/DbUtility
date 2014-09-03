@@ -52,7 +52,7 @@ namespace Ivony.Data.SqlClient
       Configuration = new SqlDbConfiguration()
       {
         TraceService = traceService,
-        CommandTimeout = commandTimeout,
+        QueryTimeout = commandTimeout,
         ImmediateExecution = immediateExecution,
       };
 
@@ -97,7 +97,7 @@ namespace Ivony.Data.SqlClient
     /// <returns>使用指定查询超时时间的 SqlServerHandler 对象</returns>
     public SqlDbHandler WithCommandTimeout( TimeSpan timeout )
     {
-      return WithConfiguration( configuration => configuration.CommandTimeout = timeout );
+      return WithConfiguration( configuration => configuration.QueryTimeout = timeout );
     }
 
 
@@ -191,8 +191,8 @@ namespace Ivony.Data.SqlClient
     internal SqlCommand ApplyConnectionAndSettings( SqlCommand command )
     {
       command = ApplyConnection( command );
-      if ( Configuration.CommandTimeout.HasValue )
-        command.CommandTimeout = (int) Math.Ceiling( Configuration.CommandTimeout.Value.TotalSeconds );
+      if ( Configuration.QueryTimeout.HasValue )
+        command.CommandTimeout = (int) Math.Ceiling( Configuration.QueryTimeout.Value.TotalSeconds );
 
       return command;
     }
