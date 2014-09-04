@@ -82,13 +82,13 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="command">查询命令对象</param>
     /// <returns>查询结果</returns>
-    protected SqlDbResult ExecuteCore( SqlCommand command )
+    protected SqlDbResult ExecuteCore( SqlCommand command, IDbTracing tracing = null )
     {
       if ( command.Connection.State == System.Data.ConnectionState.Closed )
         command.Connection.Open();
 
 
-      return new SqlDbResult( command.ExecuteReader() );
+      return new SqlDbResult( command.ExecuteReader(), tracing );
 
     }
 
@@ -98,14 +98,13 @@ namespace Ivony.Data.SqlClient
     /// <param name="command">查询命令对象</param>
     /// <param name="token">取消标识</param>
     /// <returns>查询结果</returns>
-    public async Task<SqlDbAsyncResult> ExecuteAsyncCore( SqlCommand command, CancellationToken token = default( CancellationToken ) )
+    public async Task<SqlDbAsyncResult> ExecuteAsyncCore( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) )
     {
       if ( command.Connection.State == System.Data.ConnectionState.Closed )
         await command.Connection.OpenAsync();
 
-      return new SqlDbAsyncResult( await command.ExecuteReaderAsync() );
+      return new SqlDbAsyncResult( await command.ExecuteReaderAsync(), tracing );
 
     }
-
   }
 }
