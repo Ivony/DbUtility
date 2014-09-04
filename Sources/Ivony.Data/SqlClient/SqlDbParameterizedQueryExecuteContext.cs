@@ -94,6 +94,7 @@ namespace Ivony.Data.SqlClient
     /// 执行查询
     /// </summary>
     /// <param name="command">查询命令对象</param>
+    /// <param name="tracing">追踪查询过程的追踪器</param>
     /// <returns>查询结果</returns>
     protected virtual SqlDbResult ExecuteCore( SqlCommand command, IDbTracing tracing = null )
     {
@@ -114,6 +115,7 @@ namespace Ivony.Data.SqlClient
     /// 异步执行查询
     /// </summary>
     /// <param name="command">查询命令对象</param>
+    /// <param name="tracing">追踪查询过程的追踪器</param>
     /// <param name="token">取消标识</param>
     /// <returns>查询结果</returns>
     public virtual async Task<SqlDbAsyncResult> ExecuteAsyncCore( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) )

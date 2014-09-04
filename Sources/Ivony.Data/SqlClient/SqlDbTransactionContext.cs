@@ -73,6 +73,15 @@ namespace Ivony.Data.SqlClient
       }
 
 
+
+      protected override SqlDbHandler WithConfiguration( Action<SqlDbConfiguration> configurationSetter )
+      {
+        var newConfiguration = new SqlDbConfiguration( Configuration );
+        configurationSetter( newConfiguration );
+        return new SqlServerHandlerWithTransaction( TransactionContext, newConfiguration );
+      }
+
+
       /// <summary>
       /// 当前所处的事务
       /// </summary>
