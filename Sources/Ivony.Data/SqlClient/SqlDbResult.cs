@@ -12,7 +12,7 @@ namespace Ivony.Data.SqlClient
   public sealed class SqlDbResult : DbResultBase
   {
 
-    internal SqlDbResult( SqlDataReader reader, IDbTracing tracing ) : base( reader, tracing ) { }
+    internal SqlDbResult( SqlDataReader reader, IDbTracing tracing, SqlConnection connection = null ) : base( reader, tracing, connection ) { }
 
 
 
@@ -22,7 +22,7 @@ namespace Ivony.Data.SqlClient
   public class SqlDbAsyncResult : DbAsyncResultBase
   {
 
-    internal SqlDbAsyncResult( SqlDataReader reader, IDbTracing tracing ) : base( reader, tracing ) { }
+    internal SqlDbAsyncResult( SqlDataReader reader, IDbTracing tracing, SqlConnection connection = null ) : base( reader, tracing, connection ) { }
 
   }
 

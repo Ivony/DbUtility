@@ -95,14 +95,19 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="command">查询命令对象</param>
     /// <returns>查询结果</returns>
-    protected SqlDbResult ExecuteCore( SqlCommand command, IDbTracing tracing = null )
+    protected virtual SqlDbResult ExecuteCore( SqlCommand command, IDbTracing tracing = null )
     {
       if ( command.Connection.State == ConnectionState.Closed )
         command.Connection.Open();
 
 
-      return new SqlDbResult( command.ExecuteReader(), tracing );
+      var reader = command.ExecuteReader();
 
+      if ( command.Transaction == null )
+        return new SqlDbResult( reader, tracing, command.Connection );
+
+      else
+        return new SqlDbResult( reader, tracing );
     }
 
     /// <summary>
@@ -111,13 +116,18 @@ namespace Ivony.Data.SqlClient
     /// <param name="command">查询命令对象</param>
     /// <param name="token">取消标识</param>
     /// <returns>查询结果</returns>
-    public async Task<SqlDbAsyncResult> ExecuteAsyncCore( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) )
+    public virtual async Task<SqlDbAsyncResult> ExecuteAsyncCore( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) )
     {
       if ( command.Connection.State == ConnectionState.Closed )
         await command.Connection.OpenAsync();
 
-      return new SqlDbAsyncResult( await command.ExecuteReaderAsync(), tracing );
+      var reader = await command.ExecuteReaderAsync();
 
+      if ( command.Transaction == null )
+        return new SqlDbAsyncResult( reader, tracing, command.Connection );
+
+      else
+        return new SqlDbAsyncResult( reader, tracing );
     }
   }
 }
