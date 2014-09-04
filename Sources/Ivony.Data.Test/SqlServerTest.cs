@@ -340,6 +340,11 @@ CREATE TABLE [dbo].[Test1]
       Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<double?>(), null );
       Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<float?>(), null );
       Assert.AreEqual( db.T( "SELECT TOP 1 XmlContent FROM Test1" ).ExecuteScalar<string>(), null );
+
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )", "1900/1/2 13:00:05.276", "ABC", 0 ).ExecuteNonQuery();
+      Assert.AreEqual( db.T( "SELECT TOP 1 Name FROM Test1" ).ExecuteScalar<DateTime>(), new DateTime( 1900, 1, 2, 13, 0, 5, 276 ) );
+
+
     }
 
 
@@ -348,10 +353,10 @@ CREATE TABLE [dbo].[Test1]
     public void EnumTest()
     {
 
-      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )", 
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )",
         TestEnum.One.ToString(), TestEnum.Two.ToString(), TestEnum.Three ).ExecuteNonQuery();
-      
-      
+
+
       Assert.AreEqual( db.T( "SELECT Name FROM Test1" ).ExecuteScalar<string>(), "One" );
       Assert.AreEqual( db.T( "SELECT [Index] FROM Test1" ).ExecuteScalar<int>(), 3 );
       Assert.AreEqual( db.T( "SELECT Name FROM Test1" ).ExecuteScalar<TestEnum>(), TestEnum.One );
