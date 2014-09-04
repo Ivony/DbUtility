@@ -2,6 +2,7 @@
 using Ivony.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,13 +37,22 @@ CREATE TABLE [dbo].[Test1]
 
     private static void Test( SqlDbExecutor db )
     {
-      db.T( "SELECT ID FROM Test1" ).ExecuteScalar();
-      db.T( "SELECT ID FROM Test1" ).ExecuteFirstRow();
-      db.T( "SELECT COUNT(*) FROM Test1" ).ExecuteScalar<int>();
-      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )", "Ivony", "Test", 1 ).ExecuteNonQuery();
-      db.T( "SELECT * FROM Test1" ).ExecuteDynamics();
-      db.T( "SELECT ID FROM Test1" ).ExecuteFirstRow();
-      db.T( "SELECT * FROM Test1" ).ExecuteDynamicObject();
+
+
+      Stopwatch watch = new Stopwatch();
+
+      watch.Start();
+
+      for ( int i = 0; i < 10000; i++ )
+        db.T( "INSERT INTO Test1 ( Name, Content, XmlContent, [Index] ) VALUES ( {...} )", "Ivony", "Test", null, i ).ExecuteNonQuery();
+
+      db.T( "SELECT * FROM Test1" ).ExecuteDataTable();
+
+      watch.Stop();
+
+      Console.WriteLine( watch.Elapsed );
+
+
     }
 
   }
