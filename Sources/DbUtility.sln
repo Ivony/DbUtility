@@ -1,17 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ivony.Data", "Ivony.Data\Ivony.Data.csproj", "{27D46D02-F7BC-42B2-AE3E-33EB5B1FA3F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ivony.Data.Test", "Ivony.Data.Test\Ivony.Data.Test.csproj", "{D86B5F37-0FB4-4E69-8A00-E4F93B5C6EC6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ivony.Data.MySql", "Ivony.Data.MySql\Ivony.Data.MySql.csproj", "{297C6A4C-086B-426D-B146-DF352410DCF0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ivony.Data.SQLite", "Ivony.Data.SQLite\Ivony.Data.SQLite.csproj", "{7388FD8C-4D38-457F-A5D0-0C006ABBF15B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ivony.Data.PostgreSQL", "Ivony.Data.PostgreSQL\Ivony.Data.PostgreSQL.csproj", "{AD094A3A-E91F-4810-AE70-1E2B038CD98E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ivony.Data.Logs", "Ivony.Data.Logs\Ivony.Data.Logs.csproj", "{F0FB655F-B8A5-4CEB-8A66-C9BF12399956}"
 EndProject
@@ -29,18 +23,6 @@ Global
 		{D86B5F37-0FB4-4E69-8A00-E4F93B5C6EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D86B5F37-0FB4-4E69-8A00-E4F93B5C6EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D86B5F37-0FB4-4E69-8A00-E4F93B5C6EC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{297C6A4C-086B-426D-B146-DF352410DCF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{297C6A4C-086B-426D-B146-DF352410DCF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{297C6A4C-086B-426D-B146-DF352410DCF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{297C6A4C-086B-426D-B146-DF352410DCF0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7388FD8C-4D38-457F-A5D0-0C006ABBF15B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7388FD8C-4D38-457F-A5D0-0C006ABBF15B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7388FD8C-4D38-457F-A5D0-0C006ABBF15B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7388FD8C-4D38-457F-A5D0-0C006ABBF15B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD094A3A-E91F-4810-AE70-1E2B038CD98E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD094A3A-E91F-4810-AE70-1E2B038CD98E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD094A3A-E91F-4810-AE70-1E2B038CD98E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD094A3A-E91F-4810-AE70-1E2B038CD98E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F0FB655F-B8A5-4CEB-8A66-C9BF12399956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F0FB655F-B8A5-4CEB-8A66-C9BF12399956}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0FB655F-B8A5-4CEB-8A66-C9BF12399956}.Release|Any CPU.ActiveCfg = Release|Any CPU

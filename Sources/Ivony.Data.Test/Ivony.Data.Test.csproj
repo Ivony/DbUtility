@@ -82,18 +82,6 @@
     <Compile Include="TestTraceService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ivony.Data.MySql\Ivony.Data.MySql.csproj">
-      <Project>{297c6a4c-086b-426d-b146-df352410dcf0}</Project>
-      <Name>Ivony.Data.MySql</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ivony.Data.PostgreSQL\Ivony.Data.PostgreSQL.csproj">
-      <Project>{ad094a3a-e91f-4810-ae70-1e2b038cd98e}</Project>
-      <Name>Ivony.Data.PostgreSQL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Ivony.Data.SQLite\Ivony.Data.SQLite.csproj">
-      <Project>{7388fd8c-4d38-457f-a5d0-0c006abbf15b}</Project>
-      <Name>Ivony.Data.SQLite</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ivony.Data\Ivony.Data.csproj">
       <Project>{27d46d02-f7bc-42b2-ae3e-33eb5b1fa3f9}</Project>
       <Name>Ivony.Data</Name>
