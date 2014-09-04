@@ -34,7 +34,7 @@ CREATE TABLE [dbo].[Test1]
 
     }
 
-    private static void Test( SqlDbExecutor db )
+    private static void Test( SqlDbHandler db )
     {
       db.T( "SELECT ID FROM Test1" ).ExecuteScalar();
       db.T( "SELECT ID FROM Test1" ).ExecuteFirstRow();
