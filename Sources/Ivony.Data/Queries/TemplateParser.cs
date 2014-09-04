@@ -173,13 +173,6 @@ namespace Ivony.Data
 
 
       var partial = value as IParameterizedQueryPartial;
-      if ( partial == null )
-      {
-        var container = value as IDbQueryContainer;
-        if ( container != null )
-          partial = container.Query as IParameterizedQueryPartial;
-      }
-
       if ( partial != null )
       {
         partial.AppendTo( builder );

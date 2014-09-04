@@ -102,8 +102,6 @@
     <Compile Include="IDbTracing.cs" />
     <Compile Include="IDbTransactionProvider.cs" />
     <Compile Include="IDbResult.cs" />
-    <Compile Include="Common\IDbProvider.cs" />
-    <Compile Include="IDbQuery.cs" />
     <Compile Include="IDbTransactionContext.cs" />
     <Compile Include="Common\IParameterizedQueryParser.cs" />
     <Compile Include="Common\ParameterizedQueryParser.cs" />
@@ -113,7 +111,6 @@
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />
-    <Compile Include="IDbExecutor.cs" />
     <Compile Include="Queries\IParameterizedQueryPartial.cs" />
     <Compile Include="Queries\TemplateParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -82,29 +82,6 @@ namespace Ivony.Data
     public static bool AllowNonObjectArrayAsArgs { get; set; }
 
 
-    /// <summary>
-    /// 通过连接字符串设置，创建指定类型查询的执行器。
-    /// </summary>
-    /// <typeparam name="T">要执行的查询类型</typeparam>
-    /// <param name="connectionStringName">连接字符串名</param>
-    /// <returns>执行器</returns>
-    public static IDbExecutor<T> CreateExecutor<T>( string connectionStringName ) where T : IDbQuery
-    {
-      var connectionStringSetting = ConfigurationManager.ConnectionStrings[connectionStringName];
-      var provider = GetDbProvider( connectionStringSetting.ProviderName );
-
-      if ( provider == null )
-        return null;
-
-      return provider.GetDbExecutor<T>( connectionStringSetting.ConnectionString );
-    }
-
-    private static IDbProvider GetDbProvider( string name )
-    {
-      return null;
-    }
-
-
 
     /// <summary>
     /// 将多个参数化查询串联起来并用指定的字符串分隔

@@ -11,7 +11,7 @@ namespace Ivony.Data.Queries
   /// <summary>
   /// 存储过程表达式
   /// </summary>
-  public class StoredProcedureQuery : IDbQuery
+  public class StoredProcedureQuery
   {
 
     private string _name;

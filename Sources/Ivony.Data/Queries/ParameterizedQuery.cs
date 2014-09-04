@@ -14,7 +14,7 @@ namespace Ivony.Data.Queries
   /// <summary>
   /// 代表一个参数化查询
   /// </summary>
-  public class ParameterizedQuery : IDbQuery, IParameterizedQueryPartial
+  public class ParameterizedQuery : IParameterizedQueryPartial
   {
 
     /// <summary>
