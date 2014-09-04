@@ -102,13 +102,20 @@ namespace Ivony.Data.SqlClient
         command.Connection.Open();
 
 
-      var reader = command.ExecuteReader();
-
       if ( command.Transaction == null )
-        return new SqlDbResult( reader, tracing, command.Connection );
-
+      {
+        try
+        {
+          return new SqlDbResult( command.ExecuteReader(), tracing, command.Connection );
+        }
+        catch
+        {
+          command.Connection.Close();
+          throw;
+        }
+      }
       else
-        return new SqlDbResult( reader, tracing );
+        return new SqlDbResult( command.ExecuteReader(), tracing );
     }
 
     /// <summary>
@@ -123,13 +130,23 @@ namespace Ivony.Data.SqlClient
       if ( command.Connection.State == ConnectionState.Closed )
         await command.Connection.OpenAsync();
 
-      var reader = await command.ExecuteReaderAsync();
-
       if ( command.Transaction == null )
-        return new SqlDbAsyncResult( reader, tracing, command.Connection );
+      {
+        try
+        {
+          return new SqlDbAsyncResult( await command.ExecuteReaderAsync(), tracing, command.Connection );
+        }
+        catch
+        {
+          command.Connection.Close();
+          throw;
+        }
+      }
 
       else
-        return new SqlDbAsyncResult( reader, tracing );
+        return new SqlDbAsyncResult( await command.ExecuteReaderAsync(), tracing );
+
+
     }
   }
 }
