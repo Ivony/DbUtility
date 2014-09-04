@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Ivony.Data.Test
 {
 
-  [TestClass]
+  //[TestClass]
   public class SQLiteTest
   {
 
