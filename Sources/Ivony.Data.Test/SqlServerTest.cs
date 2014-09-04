@@ -259,11 +259,6 @@ CREATE TABLE [dbo].[Test1]
     public void ConvertibleTest()
     {
 
-      db = db.WithTraceService( null )
-             .WithCommandTimeout( new TimeSpan( 0, 0, 30 ) );
-
-        
-
       db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )", "5", "0.9", 100 ).ExecuteNonQuery();
 
       Assert.AreEqual( db.T( "SELECT TOP 1 [Index] FROM Test1" ).ExecuteScalar<long>(), 100L );

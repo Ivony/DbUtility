@@ -2,6 +2,7 @@
 using Ivony.Data.Queries;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -63,6 +64,14 @@ namespace Ivony.Data.SqlClient
 
     }
 
+
+
+
+
+    [ThreadStatic]
+    private static SqlDbParameterizedQueryParser parser;
+
+
     /// <summary>
     /// 从参数化查询创建查询命令对象
     /// </summary>
@@ -70,7 +79,11 @@ namespace Ivony.Data.SqlClient
     /// <returns>SQL 查询命令对象</returns>
     protected SqlCommand CreateCommand( ParameterizedQuery query )
     {
-      var command = new SqlDbParameterizedQueryParser().Parse( query );
+
+      if ( parser == null )
+        parser = new SqlDbParameterizedQueryParser();
+
+      var command = parser.Parse( query );
       _handler.ApplyConnectionAndSettings( command );
 
       return command;
@@ -84,7 +97,7 @@ namespace Ivony.Data.SqlClient
     /// <returns>查询结果</returns>
     protected SqlDbResult ExecuteCore( SqlCommand command, IDbTracing tracing = null )
     {
-      if ( command.Connection.State == System.Data.ConnectionState.Closed )
+      if ( command.Connection.State == ConnectionState.Closed )
         command.Connection.Open();
 
 
@@ -100,7 +113,7 @@ namespace Ivony.Data.SqlClient
     /// <returns>查询结果</returns>
     public async Task<SqlDbAsyncResult> ExecuteAsyncCore( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) )
     {
-      if ( command.Connection.State == System.Data.ConnectionState.Closed )
+      if ( command.Connection.State == ConnectionState.Closed )
         await command.Connection.OpenAsync();
 
       return new SqlDbAsyncResult( await command.ExecuteReaderAsync(), tracing );
