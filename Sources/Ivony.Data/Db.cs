@@ -125,6 +125,7 @@ namespace Ivony.Data
     static Db()
     {
       AddWhiteSpaceOnConcat = true;
+      AllowNonObjectArrayAsArgs = false;
     }
 
 

@@ -16,7 +16,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// SQL Server 参数化查询执行上下文
   /// </summary>
-  public class SqlDbParameterizedQueryExecuteContext : IParameterizedQueryExecuteContext, IDbExecuteContext, IAsyncDbExecuteContext
+  public sealed class SqlDbParameterizedQueryExecuteContext : IParameterizedQueryExecuteContext, IDbExecuteContext, IAsyncDbExecuteContext
   {
     private ParameterizedQuery _query;
     private SqlDbHandler _handler;
@@ -68,6 +68,16 @@ namespace Ivony.Data.SqlClient
 
 
 
+
+
+
+    private volatile bool _executed = false;
+
+    private object _sync = new object();
+
+
+
+
     [ThreadStatic]
     private static SqlDbParameterizedQueryParser parser;
 
@@ -77,7 +87,7 @@ namespace Ivony.Data.SqlClient
     /// </summary>
     /// <param name="query">参数化查询对象</param>
     /// <returns>SQL 查询命令对象</returns>
-    protected SqlCommand CreateCommand( ParameterizedQuery query )
+    private SqlCommand CreateCommand( ParameterizedQuery query )
     {
 
       if ( parser == null )
@@ -96,8 +106,17 @@ namespace Ivony.Data.SqlClient
     /// <param name="command">查询命令对象</param>
     /// <param name="tracing">追踪查询过程的追踪器</param>
     /// <returns>查询结果</returns>
-    protected virtual SqlDbResult ExecuteCore( SqlCommand command, IDbTracing tracing = null )
+    private SqlDbResult ExecuteCore( SqlCommand command, IDbTracing tracing = null )
     {
+
+      lock ( _sync )
+      {
+        if ( _executed )
+          throw new InvalidOperationException( "已经执行过查询，无法再次执行" );
+
+        _executed = true;
+      }
+
       if ( command.Connection.State == ConnectionState.Closed )
         command.Connection.Open();
 
@@ -125,8 +144,19 @@ namespace Ivony.Data.SqlClient
     /// <param name="tracing">追踪查询过程的追踪器</param>
     /// <param name="token">取消标识</param>
     /// <returns>查询结果</returns>
-    public virtual async Task<SqlDbAsyncResult> ExecuteAsyncCore( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) )
+    private async Task<SqlDbAsyncResult> ExecuteAsyncCore( SqlCommand command, IDbTracing tracing = null, CancellationToken token = default( CancellationToken ) )
     {
+      
+      lock ( _sync )
+      {
+        if ( _executed )
+          throw new InvalidOperationException( "已经执行过查询，无法再次执行" );
+
+        _executed = true;
+      }
+
+
+      
       if ( command.Connection.State == ConnectionState.Closed )
         await command.Connection.OpenAsync();
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ivony.Data
+namespace Ivony.Data.Common
 {
 
 
