@@ -120,7 +120,7 @@ namespace Ivony.Data.SqlClient
       }
     }
 
-
+#if !NET40
     /// <summary>
     /// 异步执行查询命令并返回执行上下文
     /// </summary>
@@ -155,21 +155,22 @@ namespace Ivony.Data.SqlClient
         throw;
       }
     }
+#endif
 
 
-
-    IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
+	IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
       return Execute( CreateCommand( query ), TryCreateTracing( this, query ) );
     }
 
+#if !NET40
     Task<IAsyncDbExecuteContext> IAsyncDbExecutor<ParameterizedQuery>.ExecuteAsync( ParameterizedQuery query, CancellationToken token )
     {
       return ExecuteAsync( CreateCommand( query ), token, TryCreateTracing( this, query ) );
     }
+#endif
 
-
-    /// <summary>
+	/// <summary>
     /// 从参数化查询创建查询命令对象
     /// </summary>
     /// <param name="query">参数化查询对象</param>
@@ -178,6 +179,7 @@ namespace Ivony.Data.SqlClient
     {
       return new SqlParameterizedQueryParser().Parse( query );
     }
+
   }
 
 }

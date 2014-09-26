@@ -43,8 +43,8 @@ namespace Ivony.Data.Common
     }
 
 
-
-    /// <summary>
+#if !NET40
+	/// <summary>
     /// 使用指定范围内的行异步填充 DataTable 并返回。
     /// </summary>
     /// <param name="dataReader">用来读取数据的 DataReader</param>
@@ -68,6 +68,7 @@ namespace Ivony.Data.Common
 
       return dataTable;
     }
+#endif
 
   }
 }

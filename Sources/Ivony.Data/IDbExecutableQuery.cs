@@ -32,12 +32,12 @@ namespace Ivony.Data
   /// </summary>
   public interface IAsyncDbExecutableQuery : IDbExecutableQuery
   {
-
+#if !NET40
     /// <summary>
     /// 异步执行查询
     /// </summary>
     /// <returns></returns>
     Task<IAsyncDbExecuteContext> ExecuteAsync( CancellationToken token );
-  
+#endif
   }
 }

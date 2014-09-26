@@ -29,6 +29,7 @@ namespace Ivony.Data
       }
     }
 
+#if !NET40
     /// <summary>
     /// 异步执行查询并将第一个结果集包装成 DataTable 返回
     /// </summary>
@@ -44,11 +45,11 @@ namespace Ivony.Data
 
       }
     }
+#endif
 
 
 
-
-    /// <summary>
+	/// <summary>
     /// 执行查询并将所有结果集包装成 DataTable 返回
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
@@ -69,6 +70,8 @@ namespace Ivony.Data
 
       return dataTables.ToArray();
     }
+
+#if !NET40
 
     /// <summary>
     /// 异步执行查询并将所有结果集包装成 DataTable 返回
@@ -94,11 +97,11 @@ namespace Ivony.Data
       return dataTables.ToArray();
 
     }
+#endif
 
 
 
-
-    /// <summary>
+	/// <summary>
     /// 执行查询并返回首行首列
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
@@ -116,6 +119,7 @@ namespace Ivony.Data
       }
     }
 
+#if !NET40
     /// <summary>
     /// 异步执行查询并返回首行首列
     /// </summary>
@@ -135,12 +139,12 @@ namespace Ivony.Data
           return null;
       }
     }
+#endif
 
 
 
 
-
-    /// <summary>
+	/// <summary>
     /// 执行没有结果的查询
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
@@ -153,7 +157,8 @@ namespace Ivony.Data
       }
     }
 
-    /// <summary>
+#if !NET40
+	/// <summary>
     /// 异步执行没有结果的查询
     /// </summary>
     /// <param name="query">要执行的查询对象</param>
@@ -166,7 +171,7 @@ namespace Ivony.Data
         return context.RecordsAffected;
       }
     }
-
+#endif
 
 
 
@@ -190,6 +195,7 @@ namespace Ivony.Data
       }
     }
 
+#if !NET40
     /// <summary>
     /// 异步执行查询并返回首行
     /// </summary>
@@ -210,11 +216,11 @@ namespace Ivony.Data
           return null;
       }
     }
+#endif
 
 
 
-
-    /// <summary>
+	/// <summary>
     /// 执行查询并返回首行首列
     /// </summary>
     /// <typeparam name="T">返回值类型</typeparam>
@@ -225,7 +231,9 @@ namespace Ivony.Data
       return DbValueConverter.ConvertFrom<T>( ExecuteScalar( query ) );
     }
 
-    /// <summary>
+
+#if !NET40
+	/// <summary>
     /// 异步执行查询并返回首行首列
     /// </summary>
     /// <typeparam name="T">返回值类型</typeparam>
@@ -236,7 +244,7 @@ namespace Ivony.Data
     {
       return DbValueConverter.ConvertFrom<T>( await ExecuteScalarAsync( query, token ) );
     }
-
+#endif
   }
 
 
