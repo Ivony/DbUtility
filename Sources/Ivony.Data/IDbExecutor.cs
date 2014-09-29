@@ -33,7 +33,7 @@ namespace Ivony.Data
   /// <typeparam name="T">查询类型</typeparam>
   public interface IAsyncDbExecutor<T> : IDbExecutor<T> where T : IDbQuery
   {
-
+#if !NET40
     /// <summary>
     /// 异步执行查询
     /// </summary>
@@ -41,7 +41,7 @@ namespace Ivony.Data
     /// <param name="token">取消指示</param>
     /// <returns>查询执行上下文</returns>
     Task<IAsyncDbExecuteContext> ExecuteAsync( T query, CancellationToken token );
-
+#endif
 
   }
 }

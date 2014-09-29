@@ -69,7 +69,7 @@ namespace Ivony.Data
     /// <returns>填充了数据的 DataTable</returns>
     Task<DataTable> LoadDataTableAsync( int startRecord, int maxRecords, CancellationToken token = default( CancellationToken ) );
 
-
+#if !NET40
     /// <summary>
     /// 尝试异步读取下一个结果集
     /// </summary>
@@ -82,6 +82,6 @@ namespace Ivony.Data
     /// </summary>
     /// <returns>若当前位置存在记录，则返回该记录，否则返回 null</returns>
     Task<IDataRecord> ReadRecordAsync();
-
+#endif
   }
 }

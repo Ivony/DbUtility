@@ -82,7 +82,7 @@ namespace Ivony.Data.SqlClient
         private set;
       }
 
-
+#if !NET40
       /// <summary>
       /// 重写 ExecuteAsync 方法，在事务中异步执行查询
       /// </summary>
@@ -117,9 +117,9 @@ namespace Ivony.Data.SqlClient
         }
 
       }
+#endif
 
-
-      /// <summary>
+	  /// <summary>
       /// 执行查询命令并返回执行上下文
       /// </summary>
       /// <param name="command">查询命令</param>
@@ -151,6 +151,7 @@ namespace Ivony.Data.SqlClient
           throw;
         }
       }
+
 
     }
 
