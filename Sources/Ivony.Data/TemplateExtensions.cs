@@ -124,12 +124,23 @@ namespace Ivony.Data
 
 
     /// <summary>
+    /// 串联两个参数化查询对象
+    /// </summary>
+    /// <param name="firstQuery">第一个参数化查询对象</param>
+    /// <param name="secondQuery">第二个参数化查询对象</param>
+    /// <returns>串联后的参数化查询对象</returns>
+    public static ParameterizedQuery Concat( this ParameterizedQuery firstQuery, ParameterizedQuery secondQuery )
+    {
+      return ConcatQueries( firstQuery, secondQuery );
+    }
+
+    /// <summary>
     /// 串联多个参数化查询对象
     /// </summary>
     /// <param name="firstQuery">第一个参数化查询对象</param>
     /// <param name="otherQueries">要串联的其他参数化查询对象</param>
     /// <returns>串联后的参数化查询对象</returns>
-    public static ParameterizedQuery Concat( this ParameterizedQuery firstQuery, params ParameterizedQuery[] otherQueries )
+    public static ParameterizedQuery ConcatQueries( this ParameterizedQuery firstQuery, params ParameterizedQuery[] otherQueries )
     {
       var builder = new ParameterizedQueryBuilder();
 
@@ -150,15 +161,40 @@ namespace Ivony.Data
     }
 
 
+
+    /// <summary>
+    /// 串联两个参数化查询对象
+    /// </summary>
+    /// <param name="firstQuery">第一个参数化查询对象</param>
+    /// <param name="secondQuery">第二个参数化查询对象</param>
+    /// <returns>串联后的参数化查询对象</returns>
+    public static DbExecutableQuery<ParameterizedQuery> Concat( this DbExecutableQuery<ParameterizedQuery> firstQuery, ParameterizedQuery secondQuery )
+    {
+      return ConcatQueries( firstQuery, secondQuery );
+    }
+
+
+    /// <summary>
+    /// 串联两个参数化查询对象
+    /// </summary>
+    /// <param name="firstQuery">第一个参数化查询对象</param>
+    /// <param name="secondQuery">第二个参数化查询对象</param>
+    /// <returns>串联后的参数化查询对象</returns>
+    public static AsyncDbExecutableQuery<ParameterizedQuery> Concat( this AsyncDbExecutableQuery<ParameterizedQuery> firstQuery, ParameterizedQuery secondQuery )
+    {
+      return ConcatQueries( firstQuery, secondQuery );
+    }
+
+
     /// <summary>
     /// 串联多个参数化查询对象
     /// </summary>
     /// <param name="firstQuery">第一个参数化查询对象</param>
     /// <param name="otherQueries">要串联的其他参数化查询对象</param>
     /// <returns>串联后的参数化查询对象</returns>
-    public static DbExecutableQuery<ParameterizedQuery> Concat( this DbExecutableQuery<ParameterizedQuery> firstQuery, params ParameterizedQuery[] otherQueries )
+    public static DbExecutableQuery<ParameterizedQuery> ConcatQueries( this DbExecutableQuery<ParameterizedQuery> firstQuery, params ParameterizedQuery[] otherQueries )
     {
-      var query = Concat( firstQuery.Query, otherQueries );
+      var query = ConcatQueries( firstQuery.Query, otherQueries );
       return new DbExecutableQuery<ParameterizedQuery>( firstQuery.Executor, query );
     }
 
@@ -169,9 +205,9 @@ namespace Ivony.Data
     /// <param name="firstQuery">第一个参数化查询对象</param>
     /// <param name="otherQueries">要串联的其他参数化查询对象</param>
     /// <returns>串联后的参数化查询对象</returns>
-    public static AsyncDbExecutableQuery<ParameterizedQuery> Concat( this AsyncDbExecutableQuery<ParameterizedQuery> firstQuery, params ParameterizedQuery[] otherQueries )
+    public static AsyncDbExecutableQuery<ParameterizedQuery> ConcatQueries( this AsyncDbExecutableQuery<ParameterizedQuery> firstQuery, params ParameterizedQuery[] otherQueries )
     {
-      var query = Concat( firstQuery.Query, otherQueries );
+      var query = ConcatQueries( firstQuery.Query, otherQueries );
       return new AsyncDbExecutableQuery<ParameterizedQuery>( firstQuery.Executor, query );
     }
 

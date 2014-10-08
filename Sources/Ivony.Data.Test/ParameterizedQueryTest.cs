@@ -147,13 +147,13 @@ namespace Ivony.Data.Test
 
 
       Assert.AreEqual( (query + query + query).TextTemplate, "SELECT * FROM Users; SELECT * FROM Users; SELECT * FROM Users;", "多个纯文本模板连接测试失败" );
-      Assert.AreEqual( query.Concat( query, query ).TextTemplate, "SELECT * FROM Users; SELECT * FROM Users; SELECT * FROM Users;", "多个纯文本模板连接测试失败" );
+      Assert.AreEqual( query.ConcatQueries( query, query ).TextTemplate, "SELECT * FROM Users; SELECT * FROM Users; SELECT * FROM Users;", "多个纯文本模板连接测试失败" );
 
 
       query = Db.T( "SELECT * FROM Users WHERE UserID = {0};", 1 );
 
       Assert.AreEqual( (query + query + query).TextTemplate, "SELECT * FROM Users WHERE UserID = #0#; SELECT * FROM Users WHERE UserID = #1#; SELECT * FROM Users WHERE UserID = #2#;", "多个带参数模板连接测试失败" );
-      Assert.AreEqual( query.Concat( query, query ).TextTemplate, "SELECT * FROM Users WHERE UserID = #0#; SELECT * FROM Users WHERE UserID = #1#; SELECT * FROM Users WHERE UserID = #2#;", "多个带参数模板连接测试失败" );
+      Assert.AreEqual( query.ConcatQueries( query, query ).TextTemplate, "SELECT * FROM Users WHERE UserID = #0#; SELECT * FROM Users WHERE UserID = #1#; SELECT * FROM Users WHERE UserID = #2#;", "多个带参数模板连接测试失败" );
 
 
       query += null;
