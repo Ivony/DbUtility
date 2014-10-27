@@ -138,5 +138,20 @@ namespace Ivony.Data
       set;
     }
 
+
+
+
+    /// <summary>
+    /// 使用指定的查询执行器来创建查询执行上下文
+    /// </summary>
+    /// <typeparam name="TContext">查询执行上下文类型</typeparam>
+    /// <param name="query">要执行的查询对象</param>
+    /// <param name="executor">查询执行器</param>
+    /// <returns>查询执行上下文</returns>
+    public static TContext ExecuteWith<TContext>( this ParameterizedQuery query, IParameterizedQueryExecutor<TContext> executor ) where TContext : IParameterizedQueryExecuteContext
+    {
+      return executor.Execute( query );
+    }
+
   }
 }
