@@ -80,7 +80,6 @@
   <ItemGroup>
     <Compile Include="Common\DbTracing.cs" />
     <Compile Include="Common\DbTracingHelper.cs" />
-    <Compile Include="Common\IDbProvider.cs" />
     <Compile Include="Common\SimpleDataColumn.cs" />
     <Compile Include="Common\SimpleDataRow.cs" />
     <Compile Include="Common\SimpleDataTable.cs" />
@@ -125,7 +124,6 @@
     <Compile Include="SqlClient\SqlDbConfiguration.cs" />
     <Compile Include="SqlServer.cs" />
     <Compile Include="SqlServerExpress.cs" />
-    <Compile Include="SqlServerHelper.cs" />
     <Compile Include="TemplateExtensions.cs" />
     <Compile Include="TransactionExtensions.cs" />
   </ItemGroup>
