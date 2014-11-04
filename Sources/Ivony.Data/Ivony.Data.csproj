@@ -81,6 +81,7 @@
     <Compile Include="Common\DbTracing.cs" />
     <Compile Include="Common\DbTracingHelper.cs" />
     <Compile Include="Common\SimpleDataColumn.cs" />
+    <Compile Include="Common\SimpleDataColumnCollection.cs" />
     <Compile Include="Common\SimpleDataRow.cs" />
     <Compile Include="Common\SimpleDataTable.cs" />
     <Compile Include="DefaultConverter.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="Common\ParameterizedQueryParser.cs" />
     <Compile Include="Common\ParameterizedQueryLiteralValueParser.cs" />
     <Compile Include="Queries\IParameterizedQueryExecutor.cs" />
-    <Compile Include="Queries\ParameterizedQueryExecuteContext.cs" />
+    <Compile Include="Queries\IParameterizedQueryExecuteContext.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />

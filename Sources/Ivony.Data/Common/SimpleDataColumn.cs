@@ -9,81 +9,41 @@ namespace Ivony.Data.Common
 {
 
   /// <summary>
-  /// 定义数据列的抽象
+  /// 定义简单数据列，保存最小的数据列的元数据
   /// </summary>
-  public abstract class SimpleDataColumn
+  public sealed class SimpleDataColumn
   {
 
-    /// <summary>
-    /// 私有化构造函数，避免外部实例化
-    /// </summary>
-    private SimpleDataColumn( SimpleDataTable dataTable )
+
+    internal SimpleDataColumn( SimpleDataTable dataTable, string name, Type type, string dataType )
     {
-
       DataTable = dataTable;
-
+      Name = name;
+      ColumnType = type;
+      DataTypeName = dataType;
     }
 
 
+    /// <summary>
+    /// 所属的数据表对象
+    /// </summary>
     public SimpleDataTable DataTable { get; private set; }
+
+    /// <summary>
+    /// 列名称
+    /// </summary>
+    public string Name { get; private set; }
 
 
     /// <summary>
     /// 数据类型
     /// </summary>
-    public abstract Type ColumnType { get; }
+    public Type ColumnType { get; private set; }
+
 
     /// <summary>
-    /// 添加一个数据项
+    /// 供参考的原始数据类型名称
     /// </summary>
-    /// <param name="data"></param>
-    internal abstract void AddDataItem( object data );
-
-
-
-    private class DataColumn<T> : SimpleDataColumn
-    {
-
-
-      public DataColumn( SimpleDataTable dataTable ) : base( dataTable ) { }
-
-
-      private List<T> dataList = new List<T>();
-
-
-      public override Type ColumnType
-      {
-        get { return typeof( T ); }
-      }
-
-      internal override void AddDataItem( object data )
-      {
-        dataList.Add( (T) data );
-      }
-    }
-
-
-
-    private static object _sync = new object();
-    private static Dictionary<Type, Func<SimpleDataTable,SimpleDataColumn>> columnCreators = new Dictionary<Type, Func<SimpleDataTable, SimpleDataColumn>>();
-
-    internal static SimpleDataColumn CreateDataColumn( SimpleDataTable dataTable, string name, Type fieldType )
-    {
-
-      Func<SimpleDataTable,SimpleDataColumn> func;
-
-      lock ( _sync )
-      {
-        if ( !columnCreators.TryGetValue( fieldType, out func ) )
-        {
-          var newExpression = Expression.New( typeof( DataColumn<> ).MakeGenericType( fieldType ).GetConstructor( new[] { typeof( SimpleDataTable ) } ), Expression.Variable( typeof( SimpleDataTable ), "dataTable" ) );
-          func = Expression.Lambda<Func<SimpleDataTable, SimpleDataColumn>>( newExpression, Expression.Parameter( typeof( SimpleDataTable ), "dataTable" ) ).Compile();
-          columnCreators[fieldType] = func;
-        }
-      }
-
-
-      return func( dataTable );
-    }
+    public string DataTypeName { get; private set; }
   }
 }

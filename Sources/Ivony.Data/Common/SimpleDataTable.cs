@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -40,20 +41,15 @@ namespace Ivony.Data.Common
 
         table.FillDataItem( item );
       }
-
       return table;
     }
 
 
 
 
-    internal SimpleDataTable()
+    private SimpleDataTable()
     {
-      SyncRoot = new object();
     }
-
-
-    public object SyncRoot { get; private set; }
 
 
     private void Initialize( IDataRecord record )
@@ -62,38 +58,51 @@ namespace Ivony.Data.Common
       if ( Columns != null || Rows != null )
         throw new InvalidOperationException();
 
-      Columns = new SimpleDataColumn[record.FieldCount];
+      var columns = new SimpleDataColumn[record.FieldCount];
 
 
-      for ( int i = 0; i < Columns.Length; i++ )
+      for ( int i = 0; i < columns.Length; i++ )
       {
+        var dataType = record.GetDataTypeName( i );
         var fieldType = record.GetFieldType( i );
         var name = record.GetName( i );
-        Columns[i] = SimpleDataColumn.CreateDataColumn( this, name, fieldType );
+
+        columns[i] = new SimpleDataColumn( this, name, fieldType, dataType );
       }
+
+      Columns = new SimpleDataColumnCollection( columns );
+
 
       DataItemIndex = 0;
     }
 
-    private void FillData( IDataReader reader )
+
+    /// <summary>
+    /// 指示列名称是否大小写敏感的
+    /// </summary>
+    public bool CaseSensitive
     {
-
-      lock ( SyncRoot )
-      {
-        Initialize( reader );
-
-
-        while ( reader.Read() )
-          FillDataItem( reader );
-      }
-
-      Rows = Enumerable.Range( 0, DataItemIndex ).Select( i => new SimpleDataRow( this, i ) ).ToArray();
+      get { return Columns.CaseSensitive; }
     }
 
-    private void FillDataItem( IDataRecord record )
+
+    private void FillData( IDataReader reader )
     {
-      for ( var i = 0; i < record.FieldCount; i++ )
-        Columns[i].AddDataItem( record.GetValue( i ) );
+      Initialize( reader );
+
+
+      while ( reader.Read() )
+        FillDataItem( reader );
+    }
+
+
+    private SimpleDataRow FillDataItem( IDataRecord record )
+    {
+      var values = new object[record.FieldCount];
+      record.GetValues( values );
+
+      return new SimpleDataRow( this, values );
+
     }
 
 
@@ -104,7 +113,7 @@ namespace Ivony.Data.Common
     /// <summary>
     /// 获取数据表的所有列描述
     /// </summary>
-    public SimpleDataColumn[] Columns
+    public SimpleDataColumnCollection Columns
     {
       get;
       private set;
