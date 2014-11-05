@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Ivony.Data.Common
   /// <summary>
   /// 简单数据行，一个只读的数据行实现
   /// </summary>
-  public sealed class SimpleDataRow
+  public sealed class SimpleDataRow : ICustomTypeDescriptor
   {
 
     internal SimpleDataRow( SimpleDataTable dataTable, object[] values )
@@ -83,5 +84,64 @@ namespace Ivony.Data.Common
       }
     }
 
+    AttributeCollection ICustomTypeDescriptor.GetAttributes()
+    {
+      return new AttributeCollection();
+    }
+
+    string ICustomTypeDescriptor.GetClassName()
+    {
+      return null;
+    }
+
+    string ICustomTypeDescriptor.GetComponentName()
+    {
+      return null;
+    }
+
+    TypeConverter ICustomTypeDescriptor.GetConverter()
+    {
+      return null;
+    }
+
+    EventDescriptor ICustomTypeDescriptor.GetDefaultEvent()
+    {
+      return null;
+    }
+
+    PropertyDescriptor ICustomTypeDescriptor.GetDefaultProperty()
+    {
+      return null;
+    }
+
+    object ICustomTypeDescriptor.GetEditor( Type editorBaseType )
+    {
+      return null;
+    }
+
+    EventDescriptorCollection ICustomTypeDescriptor.GetEvents( Attribute[] attributes )
+    {
+      return new EventDescriptorCollection( null );
+    }
+
+    EventDescriptorCollection ICustomTypeDescriptor.GetEvents()
+    {
+      return new EventDescriptorCollection( null );
+    }
+
+    PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties( Attribute[] attributes )
+    {
+      return DataTable.GetProperties();
+    }
+
+    PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties()
+    {
+      return DataTable.GetProperties();
+    }
+
+    object ICustomTypeDescriptor.GetPropertyOwner( PropertyDescriptor descriptor )
+    {
+      return this;
+    }
   }
 }

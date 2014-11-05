@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,11 @@ namespace Ivony.Data.Common
 
 
 
+    /// <summary>
+    /// 用 DataReader 填充一个 SimpleDataTable 对象
+    /// </summary>
+    /// <param name="reader">用于读取数据的 DataReader</param>
+    /// <returns></returns>
     public static SimpleDataTable Fill( IDataReader reader )
     {
       var table = new SimpleDataTable();
@@ -26,24 +33,6 @@ namespace Ivony.Data.Common
 
       return table;
     }
-
-    public static SimpleDataTable Fill( IEnumerable<IDataRecord> records )
-    {
-      var table = new SimpleDataTable();
-      var initialized = false;
-      foreach ( var item in records )
-      {
-        if ( !initialized )
-        {
-          table.Initialize( item );
-          initialized = true;
-        }
-
-        table.FillDataItem( item );
-      }
-      return table;
-    }
-
 
 
 
@@ -91,8 +80,12 @@ namespace Ivony.Data.Common
       Initialize( reader );
 
 
+      var rows = new List<SimpleDataRow>();
+
       while ( reader.Read() )
-        FillDataItem( reader );
+        rows.Add( FillDataItem( reader ) );
+
+      Rows = new ReadOnlyCollection<SimpleDataRow>( rows );
     }
 
 
@@ -111,7 +104,7 @@ namespace Ivony.Data.Common
 
 
     /// <summary>
-    /// 获取数据表的所有列描述
+    /// 获取数据表的所有数据列
     /// </summary>
     public SimpleDataColumnCollection Columns
     {
@@ -122,7 +115,7 @@ namespace Ivony.Data.Common
     /// <summary>
     /// 获取数据表的所有数据行
     /// </summary>
-    public SimpleDataRow[] Rows
+    public IReadOnlyCollection<SimpleDataRow> Rows
     {
       get;
       private set;
@@ -133,12 +126,21 @@ namespace Ivony.Data.Common
 
     IEnumerator<SimpleDataRow> IEnumerable<SimpleDataRow>.GetEnumerator()
     {
-      return Rows.AsEnumerable().GetEnumerator();
+      return Rows.GetEnumerator();
     }
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    IEnumerator IEnumerable.GetEnumerator()
     {
       return Rows.GetEnumerator();
+    }
+
+
+
+
+
+    internal PropertyDescriptorCollection GetProperties()
+    {
+      throw new NotImplementedException();
     }
   }
 }

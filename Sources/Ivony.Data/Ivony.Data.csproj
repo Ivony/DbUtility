@@ -83,6 +83,7 @@
     <Compile Include="Common\SimpleDataColumn.cs" />
     <Compile Include="Common\SimpleDataColumnCollection.cs" />
     <Compile Include="Common\SimpleDataRow.cs" />
+    <Compile Include="Common\SimpleDataSet.cs" />
     <Compile Include="Common\SimpleDataTable.cs" />
     <Compile Include="DefaultConverter.cs" />
     <Compile Include="EntityConvertAttribute.cs" />

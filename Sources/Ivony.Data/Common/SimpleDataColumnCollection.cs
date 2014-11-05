@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,16 +8,21 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data.Common
 {
-  public sealed class SimpleDataColumnCollection : IReadOnlyCollection<SimpleDataColumn>, IReadOnlyDictionary<string, SimpleDataColumn>
-  {
 
+
+
+  /// <summary>
+  /// SimpleDataColumn 容器的实现，仅供 SimpleDataTable 使用
+  /// </summary>
+  public sealed class SimpleDataColumnCollection : IReadOnlyDictionary<string, SimpleDataColumn>
+  {
 
     private Dictionary<string, int> _columnMap;
 
     private SimpleDataColumn[] _columns;
 
 
-    public SimpleDataColumnCollection( SimpleDataColumn[] columns )
+    internal SimpleDataColumnCollection( SimpleDataColumn[] columns )
     {
 
       HashSet<string> ignoreCaseNames = new HashSet<string>( StringComparer.OrdinalIgnoreCase );
@@ -45,21 +51,40 @@ namespace Ivony.Data.Common
     }
 
 
+
+    /// <summary>
+    /// 获取列名是否为大小写敏感的
+    /// </summary>
     public bool CaseSensitive { get; private set; }
 
 
+    /// <summary>
+    /// 通过列序号来获取列
+    /// </summary>
+    /// <param name="index">列序号</param>
+    /// <returns></returns>
     public SimpleDataColumn this[int index]
     {
       get { return _columns[index]; }
     }
 
 
+    /// <summary>
+    /// 通过列名称来获取列
+    /// </summary>
+    /// <param name="name">数据列名称</param>
+    /// <returns></returns>
     public SimpleDataColumn this[string name]
     {
       get { return _columns[GetOrdinal( name )]; }
     }
 
 
+    /// <summary>
+    /// 通过列名称获取列的顺序
+    /// </summary>
+    /// <param name="columnName">数据列名称</param>
+    /// <returns></returns>
     public int GetOrdinal( string columnName )
     {
       return _columnMap[columnName];
@@ -68,16 +93,6 @@ namespace Ivony.Data.Common
     int IReadOnlyCollection<SimpleDataColumn>.Count
     {
       get { return _columns.Length; }
-    }
-
-    IEnumerator<SimpleDataColumn> IEnumerable<SimpleDataColumn>.GetEnumerator()
-    {
-      return _columns.AsEnumerable().GetEnumerator();
-    }
-
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-    {
-      return _columns.GetEnumerator();
     }
 
     bool IReadOnlyDictionary<string, SimpleDataColumn>.ContainsKey( string key )
@@ -123,9 +138,23 @@ namespace Ivony.Data.Common
       get { return _columns.Length; }
     }
 
+
+
+
+    private IEnumerable<KeyValuePair<string, SimpleDataColumn>> GetEnumerable()
+    {
+      return _columnMap.Select( item => new KeyValuePair<string, SimpleDataColumn>( item.Key, _columns[item.Value] ) );
+    }
+
+
     IEnumerator<KeyValuePair<string, SimpleDataColumn>> IEnumerable<KeyValuePair<string, SimpleDataColumn>>.GetEnumerator()
     {
-      return _columnMap.Select( item => new KeyValuePair<string, SimpleDataColumn>( item.Key, _columns[item.Value] ) ).GetEnumerator();
+      return GetEnumerable().GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return GetEnumerable().GetEnumerator();
     }
   }
 }
