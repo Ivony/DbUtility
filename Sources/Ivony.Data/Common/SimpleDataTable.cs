@@ -140,7 +140,7 @@ namespace Ivony.Data.Common
 
     internal PropertyDescriptorCollection GetProperties()
     {
-      throw new NotImplementedException();
+      return new PropertyDescriptorCollection( Columns.Select( item => item.Value.GetPropertyDescriptor() ).ToArray(), true );
     }
   }
 }

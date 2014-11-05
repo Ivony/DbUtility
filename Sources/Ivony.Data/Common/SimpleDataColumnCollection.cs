@@ -90,10 +90,17 @@ namespace Ivony.Data.Common
       return _columnMap[columnName];
     }
 
-    int IReadOnlyCollection<SimpleDataColumn>.Count
+
+    /// <summary>
+    /// 获取指定列的序号
+    /// </summary>
+    /// <param name="column">数据列</param>
+    /// <returns></returns>
+    public int GetOrdinal( SimpleDataColumn column )
     {
-      get { return _columns.Length; }
+      return _columnMap[column.Name];
     }
+
 
     bool IReadOnlyDictionary<string, SimpleDataColumn>.ContainsKey( string key )
     {
@@ -156,5 +163,6 @@ namespace Ivony.Data.Common
     {
       return GetEnumerable().GetEnumerator();
     }
+
   }
 }

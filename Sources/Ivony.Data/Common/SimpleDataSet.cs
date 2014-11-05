@@ -47,7 +47,10 @@ namespace Ivony.Data.Common
     /// </summary>
     public IReadOnlyCollection<SimpleDataTable> Tables { get; private set; }
 
-    public IEnumerator<SimpleDataTable> GetEnumerator()
+
+    
+    
+    IEnumerator<SimpleDataTable> IEnumerable<SimpleDataTable>.GetEnumerator()
     {
       return Tables.GetEnumerator();
     }

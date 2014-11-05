@@ -17,12 +17,12 @@ namespace Ivony.Data
   {
 
     /// <summary>
-    /// 根据模板表达式创建参数化查询实例
+    /// 根据模板表达式执行参数化查询
     /// </summary>
     /// <param name="executor">查询执行器</param>
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
-    /// <returns>参数化查询实例</returns>
+    /// <returns>参数化查询执行上下文</returns>
     public static TContext Template<TContext>( this IParameterizedQueryExecutor<TContext> executor, string template, params object[] parameters ) where TContext : IParameterizedQueryExecuteContext
     {
       return executor.Execute( Db.Template( template, parameters ) );
@@ -31,12 +31,12 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 根据模板表达式创建参数化查询实例
+    /// 根据模板表达式执行参数化查询
     /// </summary>
     /// <param name="executor">查询执行器</param>
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
-    /// <returns>参数化查询实例</returns>
+    /// <returns>参数化查询执行上下文</returns>
     public static TContext T<TContext>( this IParameterizedQueryExecutor<TContext> executor, string template, params object[] parameters ) where TContext : IParameterizedQueryExecuteContext
     {
       return executor.Execute( Db.Template( template, parameters ) );
@@ -44,13 +44,16 @@ namespace Ivony.Data
 
 
 
+
+
+
     /// <summary>
-    /// 根据模板表达式创建参数化查询实例
+    /// 根据模板表达式执行参数化查询
     /// </summary>
     /// <param name="provider">查询执行器提供程序</param>
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
-    /// <returns>参数化查询实例</returns>
+    /// <returns>参数化查询执行上下文</returns>
     public static TContext Template<TContext>( this IDbHandlerProvider<IParameterizedQueryExecutor<TContext>> provider, string template, params object[] parameters ) where TContext : IParameterizedQueryExecuteContext
     {
       return provider.GetDbHandler().Template( template, parameters );
@@ -60,12 +63,12 @@ namespace Ivony.Data
 
 
     /// <summary>
-    /// 根据模板表达式创建参数化查询实例
+    /// 根据模板表达式执行参数化查询
     /// </summary>
     /// <param name="provider">查询执行器提供程序</param>
     /// <param name="template">SQL 命令模版</param>
     /// <param name="parameters">模版参数列表</param>
-    /// <returns>参数化查询实例</returns>
+    /// <returns>参数化查询执行上下文</returns>
     public static TContext T<TContext>( this IDbHandlerProvider<IParameterizedQueryExecutor<TContext>> provider, string template, params object[] parameters ) where TContext : IParameterizedQueryExecuteContext
     {
       return provider.GetDbHandler().Template( template, parameters );

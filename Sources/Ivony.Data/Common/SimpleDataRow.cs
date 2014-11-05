@@ -84,6 +84,21 @@ namespace Ivony.Data.Common
       }
     }
 
+
+
+    /// <summary>
+    /// 获取指定列的值
+    /// </summary>
+    /// <param name="column">数据列</param>
+    /// <returns>值</returns>
+    public object this[SimpleDataColumn column]
+    {
+      get
+      {
+        return _values[DataTable.Columns.GetOrdinal( column )];
+      }
+    }
+
     AttributeCollection ICustomTypeDescriptor.GetAttributes()
     {
       return new AttributeCollection();

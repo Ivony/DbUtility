@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -45,5 +46,84 @@ namespace Ivony.Data.Common
     /// 供参考的原始数据类型名称
     /// </summary>
     public string DataTypeName { get; private set; }
+
+
+
+
+
+
+    private PropertyDescriptor propertyDescriptor;
+    private object sync = new object();
+
+
+
+    internal PropertyDescriptor GetPropertyDescriptor()
+    {
+      lock ( sync )
+      {
+        if ( propertyDescriptor == null )
+          propertyDescriptor = new SimpleDataColumnPropertyDescriptor( this );
+
+        return propertyDescriptor;
+      }
+    }
+
+
+    private class SimpleDataColumnPropertyDescriptor : PropertyDescriptor
+    {
+
+      public SimpleDataColumnPropertyDescriptor( SimpleDataColumn column )
+        : base( column.Name, null )
+      {
+        Column = column;
+      }
+
+
+      public SimpleDataColumn Column { get; private set; }
+
+      public override bool CanResetValue( object component )
+      {
+        return false;
+      }
+
+      public override Type ComponentType
+      {
+        get { return typeof( SimpleDataRow ); }
+      }
+
+      public override object GetValue( object component )
+      {
+        var row = (SimpleDataRow) component;
+        return row[Column];
+      }
+
+      public override bool IsReadOnly
+      {
+        get { return true; }
+      }
+
+      public override Type PropertyType
+      {
+        get { return Column.ColumnType; }
+      }
+
+      public override void ResetValue( object component )
+      {
+        throw new NotSupportedException();
+      }
+
+      public override void SetValue( object component, object value )
+      {
+        throw new NotSupportedException();
+      }
+
+      public override bool ShouldSerializeValue( object component )
+      {
+        return false;
+      }
+    }
+
+
+
   }
 }
