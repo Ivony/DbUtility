@@ -30,6 +30,18 @@ namespace Ivony.Data
 
 
     /// <summary>
+    /// 创建指定参数化查询的可执行实例
+    /// </summary>
+    /// <param name="executor">查询执行器</param>
+    /// <param name="query">参数化查询实例</param>
+    /// <returns>参数化查询实例</returns>
+    public static DbExecutableQuery<ParameterizedQuery> Template( this IDbExecutor<ParameterizedQuery> executor, ParameterizedQuery query )
+    {
+      return new DbExecutableQuery<ParameterizedQuery>( executor, query );
+    }
+
+
+    /// <summary>
     /// 根据模板表达式创建参数化查询实例
     /// </summary>
     /// <param name="executor">查询执行器</param>
@@ -40,6 +52,21 @@ namespace Ivony.Data
     {
       return new AsyncDbExecutableQuery<ParameterizedQuery>( executor, Db.Template( template, parameters ) );
     }
+
+
+    /// <summary>
+    /// 创建指定参数化查询的可执行实例
+    /// </summary>
+    /// <param name="executor">查询执行器</param>
+    /// <param name="query">参数化查询实例</param>
+    /// <returns>参数化查询实例</returns>
+    public static AsyncDbExecutableQuery<ParameterizedQuery> Template( this IAsyncDbExecutor<ParameterizedQuery> executor, ParameterizedQuery query )
+    {
+      return new AsyncDbExecutableQuery<ParameterizedQuery>( executor, query );
+    }
+
+
+
 
 
     /// <summary>
@@ -54,6 +81,19 @@ namespace Ivony.Data
       return Template( executor, template, parameters );
     }
 
+
+    /// <summary>
+    /// 创建指定参数化查询的可执行实例
+    /// </summary>
+    /// <param name="executor">查询执行器</param>
+    /// <param name="query">参数化查询实例</param>
+    /// <returns>参数化查询实例</returns>
+    public static DbExecutableQuery<ParameterizedQuery> T( this IDbExecutor<ParameterizedQuery> executor, ParameterizedQuery query )
+    {
+      return new DbExecutableQuery<ParameterizedQuery>( executor, query );
+    }
+
+
     /// <summary>
     /// 根据模板表达式创建参数化查询实例
     /// </summary>
@@ -65,6 +105,19 @@ namespace Ivony.Data
     {
       return Template( executor, template, parameters );
     }
+
+
+    /// <summary>
+    /// 创建指定参数化查询的可执行实例
+    /// </summary>
+    /// <param name="executor">查询执行器</param>
+    /// <param name="query">参数化查询实例</param>
+    /// <returns>参数化查询实例</returns>
+    public static AsyncDbExecutableQuery<ParameterizedQuery> T( this IAsyncDbExecutor<ParameterizedQuery> executor, ParameterizedQuery query )
+    {
+      return new AsyncDbExecutableQuery<ParameterizedQuery>( executor, query );
+    }
+
 
 
 
@@ -84,6 +137,18 @@ namespace Ivony.Data
 
 
     /// <summary>
+    /// 创建指定参数化查询的可执行实例
+    /// </summary>
+    /// <param name="transaction">数据库事务对象</param>
+    /// <param name="query">参数化查询实例</param>
+    /// <returns>参数化查询实例</returns>
+    public static DbExecutableQuery<ParameterizedQuery> Template( this  IDbTransactionContext<IDbExecutor<ParameterizedQuery>> transaction, ParameterizedQuery query )
+    {
+      return transaction.DbExecutor.Template( query );
+    }
+
+
+    /// <summary>
     /// 根据模板表达式创建参数化查询实例
     /// </summary>
     /// <param name="transaction">数据库事务对象</param>
@@ -93,6 +158,18 @@ namespace Ivony.Data
     public static AsyncDbExecutableQuery<ParameterizedQuery> Template( this IDbTransactionContext<IAsyncDbExecutor<ParameterizedQuery>> transaction, string template, params object[] parameters )
     {
       return transaction.DbExecutor.Template( template, parameters );
+    }
+
+
+    /// <summary>
+    /// 创建指定参数化查询的可执行实例
+    /// </summary>
+    /// <param name="transaction">数据库事务对象</param>
+    /// <param name="query">参数化查询实例</param>
+    /// <returns>参数化查询实例</returns>
+    public static AsyncDbExecutableQuery<ParameterizedQuery> Template( this IDbTransactionContext<IAsyncDbExecutor<ParameterizedQuery>> transaction, ParameterizedQuery query )
+    {
+      return transaction.DbExecutor.Template( query );
     }
 
 
@@ -110,6 +187,18 @@ namespace Ivony.Data
 
 
     /// <summary>
+    /// 创建指定参数化查询的可执行实例
+    /// </summary>
+    /// <param name="transaction">数据库事务对象</param>
+    /// <param name="query">参数化查询实例</param>
+    /// <returns>参数化查询实例</returns>
+    public static DbExecutableQuery<ParameterizedQuery> T( this IDbTransactionContext<IDbExecutor<ParameterizedQuery>> transaction, ParameterizedQuery query )
+    {
+      return transaction.DbExecutor.Template( query );
+    }
+
+
+    /// <summary>
     /// 根据模板表达式创建参数化查询实例
     /// </summary>
     /// <param name="transaction">数据库事务对象</param>
@@ -120,6 +209,19 @@ namespace Ivony.Data
     {
       return transaction.DbExecutor.Template( template, parameters );
     }
+
+
+    /// <summary>
+    /// 创建指定参数化查询的可执行实例
+    /// </summary>
+    /// <param name="transaction">数据库事务对象</param>
+    /// <param name="query">参数化查询实例</param>
+    /// <returns>参数化查询实例</returns>
+    public static AsyncDbExecutableQuery<ParameterizedQuery> T( this IDbTransactionContext<IAsyncDbExecutor<ParameterizedQuery>> transaction, ParameterizedQuery query )
+    {
+      return transaction.DbExecutor.Template( query );
+    }
+
 
 
 
