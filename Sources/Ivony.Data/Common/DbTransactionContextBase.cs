@@ -92,6 +92,10 @@ namespace Ivony.Data.Common
     {
       lock ( SyncRoot )
       {
+
+        if ( Transaction == null )
+          throw new InvalidOperationException();
+
         try
         {
           Transaction.Rollback();
@@ -125,6 +129,11 @@ namespace Ivony.Data.Common
 
       lock ( SyncRoot )
       {
+
+        if ( Transaction == null )
+          return;
+
+
         if ( _disposed )
           throw new ObjectDisposedException( GetType().Name );
 
