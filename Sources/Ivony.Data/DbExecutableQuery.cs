@@ -127,7 +127,7 @@ namespace Ivony.Data
     public IDbExecuteContext Execute()
     {
       return Executor.Execute( Query );
-	}
+    }
 
 #if !NET40
     /// <summary>

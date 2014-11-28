@@ -88,6 +88,17 @@ CREATE TABLE [dbo].[Test1]
 
 
     [TestMethod]
+    public void DynamicTest()
+    {
+      db.T( "INSERT INTO Test1 ( Name, Content, [Index] ) VALUES ( {...} )", "Ivony", "Test", 1 ).ExecuteNonQuery();
+
+      var data = db.T( "SELECT * FROM Test1" ).ExecuteDynamicObject();
+      Assert.IsTrue( data.Index == 1 );
+
+    }
+
+
+    [TestMethod]
     public void TransactionTest()
     {
 

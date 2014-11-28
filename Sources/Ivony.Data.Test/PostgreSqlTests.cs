@@ -71,15 +71,15 @@ namespace Ivony.Data.Test
         {
             //using (var tran = this._db.BeginTransaction())
             //{
-            //	var beforTranCount = this._db.T("SELECT \"count\"(\"Id\") FROM \"J_Log\"").ExecuteScalar<int>();
-            //	var affectedRows = this._db.T("INSERT INTO \"J_Log\" (\"LoginUser\",\"CreationDate\",\"Action\") VALUES ( {...} )", "oger", DateTime.Now, 1).ExecuteNonQuery();
+            //  var beforTranCount = this._db.T("SELECT \"count\"(\"Id\") FROM \"J_Log\"").ExecuteScalar<int>();
+            //  var affectedRows = this._db.T("INSERT INTO \"J_Log\" (\"LoginUser\",\"CreationDate\",\"Action\") VALUES ( {...} )", "oger", DateTime.Now, 1).ExecuteNonQuery();
 
-            //	tran.Commit();
+            //  tran.Commit();
 
-            //	var afterCommitCount = this._db.T("SELECT \"count\"(\"Id\") FROM \"J_Log\"").ExecuteScalar<int>();
+            //  var afterCommitCount = this._db.T("SELECT \"count\"(\"Id\") FROM \"J_Log\"").ExecuteScalar<int>();
 
-            //	Assert.IsTrue(affectedRows == 1, "插入数据失败");
-            //	Assert.IsTrue(afterCommitCount - beforTranCount == 1, "提交事务失败");
+            //  Assert.IsTrue(affectedRows == 1, "插入数据失败");
+            //  Assert.IsTrue(afterCommitCount - beforTranCount == 1, "提交事务失败");
             //}
 
 
