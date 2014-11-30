@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="DefaultConverter.cs" />
     <Compile Include="DynamicDataRow.cs" />
+    <Compile Include="DynamicDataValue.cs" />
     <Compile Include="EntityConvertAttribute.cs" />
     <Compile Include="IDbValueConverter.cs" />
     <Compile Include="Common\DbExecutorBase.cs" />
