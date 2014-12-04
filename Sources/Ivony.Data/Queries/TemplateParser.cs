@@ -170,23 +170,6 @@ namespace Ivony.Data
 
     private static void AddParameter( ParameterizedQueryBuilder builder, object value )
     {
-
-
-      var partial = value as IParameterizedQueryPartial;
-      if ( partial == null )
-      {
-        var container = value as IDbQueryContainer;
-        if ( container != null )
-          partial = container.Query as IParameterizedQueryPartial;
-      }
-
-      if ( partial != null )
-      {
-        partial.AppendTo( builder );
-        return;
-      }
-
-
       var array = value as Array;
       if ( array != null )
       {
