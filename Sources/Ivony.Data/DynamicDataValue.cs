@@ -25,9 +25,17 @@ namespace Ivony.Data
     }
 
 
+
+    public T GetValue<T>()
+    {
+      return (T) DataValue;
+    }
+
+
+
     DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject( Expression parameter )
     {
-      return new DynamicValueMetaObject( this, Expression.Convert( parameter, typeof( DynamicDataValue ) ) );
+      return new DynamicValueMetaObject( this, parameter );
     }
 
     private class DynamicValueMetaObject : DynamicMetaObject
@@ -46,10 +54,12 @@ namespace Ivony.Data
       {
 
         var expression = Expression;
-        expression = Expression.Property( expression, "DataValue" );
+        expression = Expression.Convert( expression, typeof( DynamicDataValue ) );
+        expression = Expression.Call( expression, typeof( DynamicDataValue ).GetMethod( "GetValue" ).MakeGenericMethod( arg.LimitType ) );
         expression = Expression.MakeBinary( binder.Operation, expression, arg.Expression );
+        expression = Expression.Convert( expression, typeof( object ) );
 
-        return new DynamicMetaObject( expression, BindingRestrictions.Empty );
+        return new DynamicMetaObject( expression, BindingRestrictions.GetTypeRestriction( expression, typeof( bool ) ) );
       }
     }
   }
