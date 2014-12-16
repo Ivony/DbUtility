@@ -171,25 +171,27 @@ namespace Ivony.Data
     private static void AddParameter( ParameterizedQueryBuilder builder, object value )
     {
       var array = value as Array;
-      if ( array != null )
-      {
+      if ( array != null && (Db.AllowNonObjectArrayAsArgs || value is object[]) )
+        AddParameterArray( builder, array );
 
-        if ( array.Length == 0 )
-          return;
+      else
+        builder.AppendParameter( value );
+    }
 
-
-        for ( int i = 0; i < array.Length - 1; i++ )
-        {
-          AddParameter( builder, array.GetValue( i ) );
-          builder.AppendText( "," );
-        }
-
-        AddParameter( builder, array.GetValue( array.Length - 1 ) );
+    private static void AddParameterArray( ParameterizedQueryBuilder builder, Array array )
+    {
+      if ( array.Length == 0 )
         return;
+
+
+      for ( int i = 0; i < array.Length - 1; i++ )
+      {
+        AddParameter( builder, array.GetValue( i ) );
+        builder.AppendText( "," );
       }
 
-
-      builder.AppendParameter( value );
+      AddParameter( builder, array.GetValue( array.Length - 1 ) );
+      return;
     }
   }
 }

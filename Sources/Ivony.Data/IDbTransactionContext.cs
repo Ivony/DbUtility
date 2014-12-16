@@ -7,13 +7,9 @@ using System.Threading.Tasks;
 namespace Ivony.Data
 {
 
-  /// <summary>
-  /// 定义数据库事务上下文
-  /// </summary>
-  /// <typeparam name="TDbExecutor">数据库查询执行程序类型</typeparam>
-  public interface IDbTransactionContext<out TDbExecutor> : IDisposable
-  {
 
+  public interface IDbTransactionContext : IDisposable
+  {
     /// <summary>
     /// 提交事务
     /// </summary>
@@ -24,6 +20,20 @@ namespace Ivony.Data
     /// </summary>
     void Rollback();
 
+
+    /// <summary>
+    /// 开启事务，若事务创建时已经开启，则调用该方法没有副作用
+    /// </summary>
+    void BeginTransaction();
+  }
+
+  /// <summary>
+  /// 定义数据库事务上下文
+  /// </summary>
+  /// <typeparam name="TDbExecutor">数据库查询执行程序类型</typeparam>
+  public interface IDbTransactionContext<out TDbExecutor> : IDbTransactionContext
+  {
+
     /// <summary>
     /// 数据库查询执行程序
     /// </summary>
@@ -33,11 +43,6 @@ namespace Ivony.Data
     /// 获取用于同步的对象
     /// </summary>
     object SyncRoot { get; }
-
-    /// <summary>
-    /// 开启事务，若事务创建时已经开启，则调用该方法没有副作用
-    /// </summary>
-    void BeginTransaction();
   }
 
 
