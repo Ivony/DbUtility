@@ -55,9 +55,10 @@ namespace Ivony.Data
 
       public override DynamicMetaObject BindConvert( ConvertBinder binder )
       {
-        var type = binder.Type;
+        var expression = Expression;
+        expression = Expression.Call( expression, typeof( DynamicDataValue ).GetMethod( "GetValue" ).MakeGenericMethod( binder.Type ) );
 
-        throw new NotImplementedException();
+        return new DynamicMetaObject( expression, BindingRestrictions.Empty );
       }
 
       public override DynamicMetaObject BindBinaryOperation( BinaryOperationBinder binder, DynamicMetaObject arg )
@@ -67,9 +68,9 @@ namespace Ivony.Data
         expression = Expression.Convert( expression, typeof( DynamicDataValue ) );
         expression = Expression.Call( expression, typeof( DynamicDataValue ).GetMethod( "GetValue" ).MakeGenericMethod( arg.LimitType ) );
         expression = Expression.MakeBinary( binder.Operation, expression, arg.Expression );
-        expression = Expression.Convert( expression, typeof( object ) );
+        expression = Expression.Convert( expression, binder.ReturnType );
 
-        return new DynamicMetaObject( expression, BindingRestrictions.GetTypeRestriction( expression, typeof( bool ) ) );
+        return new DynamicMetaObject( expression, BindingRestrictions.Empty );
       }
     }
   }
