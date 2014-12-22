@@ -10,19 +10,35 @@ using System.Threading.Tasks;
 
 namespace Ivony.Data
 {
+
+  /// <summary>
+  /// 动态数据行，为 DataRow 提供动态类型支持
+  /// </summary>
   public class DynamicDataRow : IDynamicMetaObjectProvider
   {
 
 
+    /// <summary>
+    /// 获取数据行对象
+    /// </summary>
     public DataRow DataRow { get; private set; }
 
+    /// <summary>
+    /// 创建 DynamicDataRow 对象
+    /// </summary>
+    /// <param name="dataRow"></param>
     public DynamicDataRow( DataRow dataRow )
     {
       DataRow = dataRow;
     }
 
 
-
+    /// <summary>
+    /// 获取指定列的值
+    /// </summary>
+    /// <param name="name">列名</param>
+    /// <param name="ignoreCase">是否忽略大小写</param>
+    /// <returns>动态数据值对象</returns>
     public DynamicDataValue GetValue( string name, bool ignoreCase )
     {
       var column = DataRow.Table.Columns[name];

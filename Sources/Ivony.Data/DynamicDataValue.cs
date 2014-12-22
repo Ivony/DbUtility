@@ -8,6 +8,11 @@ using System.Text;
 
 namespace Ivony.Data
 {
+
+
+  /// <summary>
+  /// 动态数据值，为数据值提供 Dynamic 支持
+  /// </summary>
   public class DynamicDataValue : IDynamicMetaObjectProvider
   {
     public DataRow DataRow { get; private set; }
@@ -25,10 +30,14 @@ namespace Ivony.Data
     }
 
 
-
+    /// <summary>
+    /// 获取强类型的数据值
+    /// </summary>
+    /// <typeparam name="T">类型</typeparam>
+    /// <returns></returns>
     public T GetValue<T>()
     {
-      return (T) DataValue;
+      return DbValueConverter.ConvertFrom<T>( DataValue );
     }
 
 
@@ -47,6 +56,7 @@ namespace Ivony.Data
       public override DynamicMetaObject BindConvert( ConvertBinder binder )
       {
         var type = binder.Type;
+
         throw new NotImplementedException();
       }
 
