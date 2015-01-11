@@ -459,6 +459,10 @@ namespace Ivony.Data
       foreach ( var p in properties )
       {
         var name = GetFieldname( p );
+        var setMethod = p.GetSetMethod();
+
+        if ( setMethod == null )
+          continue;
 
         /*
         IL_000c:  ldloc.0
@@ -483,7 +487,7 @@ namespace Ivony.Data
         il.Emit( OpCodes.Ldarg_0 );
         il.Emit( OpCodes.Ldstr, name );
         il.Emit( OpCodes.Call, typeof( EntityExtensions ).GetMethod( "FieldValue", new[] { typeof( DataRow ), typeof( string ) } ).MakeGenericMethod( p.PropertyType ) );
-        il.Emit( OpCodes.Callvirt, p.GetSetMethod() );
+        il.Emit( OpCodes.Callvirt, setMethod );
         il.MarkLabel( label );
       }
 
