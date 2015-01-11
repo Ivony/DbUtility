@@ -71,7 +71,7 @@ namespace Ivony.Data
 
 
 
-	/// <summary>
+    /// <summary>
     /// 执行查询并将第一个结果集的第一条记录填充动态对象
     /// </summary>
     /// <param name="query">要执行的查询</param>
@@ -99,7 +99,7 @@ namespace Ivony.Data
 
 
 
-	private class DynamicDataRow : DynamicObject
+    private class DynamicDataRow : DynamicObject
     {
 
       private DataRow _dataRow;

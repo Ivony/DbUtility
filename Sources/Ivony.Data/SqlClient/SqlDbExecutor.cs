@@ -158,7 +158,7 @@ namespace Ivony.Data.SqlClient
 #endif
 
 
-	IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
+    IDbExecuteContext IDbExecutor<ParameterizedQuery>.Execute( ParameterizedQuery query )
     {
       return Execute( CreateCommand( query ), TryCreateTracing( this, query ) );
     }
@@ -170,7 +170,7 @@ namespace Ivony.Data.SqlClient
     }
 #endif
 
-	/// <summary>
+    /// <summary>
     /// 从参数化查询创建查询命令对象
     /// </summary>
     /// <param name="query">参数化查询对象</param>

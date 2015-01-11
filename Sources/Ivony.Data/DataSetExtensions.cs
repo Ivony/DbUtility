@@ -143,7 +143,7 @@ namespace Ivony.Data
 #endif
 
 
-	/// <summary>
+    /// <summary>
     /// 执行查询并将数据转换为 DataRowView 集合返回
     /// </summary>
     /// <param name="query">要执行的查询</param>
@@ -167,7 +167,7 @@ namespace Ivony.Data
 #endif
 
 
-	/// <summary>
+    /// <summary>
     /// 执行查询并将第一行数据数据转换为 DataRowView 返回
     /// </summary>
     /// <param name="query">要执行的查询</param>

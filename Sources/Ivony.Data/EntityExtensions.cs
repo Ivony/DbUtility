@@ -48,7 +48,7 @@ namespace Ivony.Data
 #endif
 
 
-	/// <summary>
+    /// <summary>
     /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
@@ -91,7 +91,7 @@ namespace Ivony.Data
 #endif
 
 
-	/// <summary>
+    /// <summary>
     /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
@@ -158,7 +158,7 @@ namespace Ivony.Data
 #endif
 
 
-	/// <summary>
+    /// <summary>
     /// 查询数据库并将结果首行填充实体
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
@@ -188,7 +188,7 @@ namespace Ivony.Data
 #endif
 
 
-	/// <summary>
+    /// <summary>
     /// 查询数据库并将结果首行填充实体
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
@@ -233,7 +233,7 @@ namespace Ivony.Data
     }
 #endif
 
-	/// <summary>
+    /// <summary>
     /// 查询数据库并将结果首行填充实体
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
@@ -293,7 +293,7 @@ namespace Ivony.Data
 
 
 
-	/// <summary>
+    /// <summary>
     /// 将 DataRow 转换为实体
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
