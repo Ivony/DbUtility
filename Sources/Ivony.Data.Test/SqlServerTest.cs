@@ -60,8 +60,8 @@ CREATE TABLE [dbo].[Test1]
       Assert.IsNotNull( db.T( "SELECT ID FROM Test1" ).ExecuteFirstRow(), "插入数据后查询测试失败" );
 
       var dataItem = db.T( "SELECT * FROM Test1" ).ExecuteDynamicObject();
-      Assert.AreEqual( dataItem.Name, "Ivony", "插入数据后查询测试失败" );
-      Assert.AreEqual( dataItem["Content"], "Test", "插入数据后查询测试失败" );
+      Assert.IsTrue( dataItem.Name == "Ivony", "插入数据后查询测试失败" );
+      Assert.IsTrue( dataItem["Content"] == "Test", "插入数据后查询测试失败" );
     }
 
 
@@ -94,6 +94,17 @@ CREATE TABLE [dbo].[Test1]
 
       var data = db.T( "SELECT * FROM Test1" ).ExecuteDynamicObject();
       Assert.IsTrue( data.Index == 1 );
+      Assert.IsTrue( data.Index == 1m );
+      Assert.IsTrue( data.Index == 1f );
+      Assert.IsTrue( data.Index == 1.0 );
+
+      Assert.IsTrue( data.Index + 1 == 2 );
+      Assert.IsTrue( data.Index == "1" );
+
+
+      int o = data.Index;
+      Assert.AreEqual( o.GetType(), typeof( int ) );
+
 
     }
 

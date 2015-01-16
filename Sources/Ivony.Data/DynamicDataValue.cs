@@ -15,8 +15,20 @@ namespace Ivony.Data
   /// </summary>
   public class DynamicDataValue : IDynamicMetaObjectProvider
   {
+
+    /// <summary>
+    /// 数据行
+    /// </summary>
     public DataRow DataRow { get; private set; }
+
+    /// <summary>
+    /// 数据列
+    /// </summary>
     public DataColumn DataColumn { get; private set; }
+
+    /// <summary>
+    /// 数据值
+    /// </summary>
     public object DataValue { get; private set; }
 
 
@@ -50,28 +62,154 @@ namespace Ivony.Data
     private class DynamicValueMetaObject : DynamicMetaObject
     {
 
-      public DynamicValueMetaObject( DynamicDataValue value, Expression expression ) : base( expression, BindingRestrictions.Empty, value ) { }
+      public DynamicValueMetaObject( DynamicDataValue value, Expression expression ) : base( expression, BindingRestrictions.Empty, value ) { Value = value; }
+
+
+      protected new DynamicDataValue Value { get; private set; }
 
 
       public override DynamicMetaObject BindConvert( ConvertBinder binder )
       {
+
         var expression = Expression;
+        expression = Expression.Convert( expression, typeof( DynamicDataValue ) );
         expression = Expression.Call( expression, typeof( DynamicDataValue ).GetMethod( "GetValue" ).MakeGenericMethod( binder.Type ) );
 
-        return new DynamicMetaObject( expression, BindingRestrictions.Empty );
+        return new DynamicMetaObject( expression, BindingRestrictions.GetTypeRestriction( expression, binder.ReturnType ) );
       }
 
       public override DynamicMetaObject BindBinaryOperation( BinaryOperationBinder binder, DynamicMetaObject arg )
       {
 
+
+        Type targetType, resultType;
+
+
+        switch ( binder.Operation )
+        {
+          case ExpressionType.Add:
+          case ExpressionType.AddAssign:
+          case ExpressionType.AddAssignChecked:
+          case ExpressionType.AddChecked:
+
+          case ExpressionType.Subtract:
+          case ExpressionType.SubtractAssign:
+          case ExpressionType.SubtractAssignChecked:
+          case ExpressionType.SubtractChecked:
+
+          case ExpressionType.Divide:
+          case ExpressionType.DivideAssign:
+
+          case ExpressionType.Multiply:
+          case ExpressionType.MultiplyAssign:
+          case ExpressionType.MultiplyAssignChecked:
+          case ExpressionType.MultiplyChecked:
+
+          case ExpressionType.Negate:
+          case ExpressionType.NegateChecked:
+
+          case ExpressionType.Power:
+          case ExpressionType.PowerAssign:
+            targetType = resultType = arg.LimitType;
+
+            break;
+
+
+
+          case ExpressionType.And:
+          case ExpressionType.AndAssign:
+
+          case ExpressionType.Or:
+          case ExpressionType.OrAssign:
+
+          case ExpressionType.ExclusiveOr:
+          case ExpressionType.ExclusiveOrAssign:
+
+          case ExpressionType.LeftShift:
+          case ExpressionType.LeftShiftAssign:
+          case ExpressionType.RightShift:
+          case ExpressionType.RightShiftAssign:
+
+          case ExpressionType.Modulo:
+          case ExpressionType.ModuloAssign:
+            {
+              var dataType = this.Value.DataColumn.DataType;
+              if ( dataType == typeof( int ) || dataType == typeof( long ) || dataType == typeof( short ) || dataType == typeof( byte )
+                || dataType == typeof( uint ) || dataType == typeof( ulong ) || dataType == typeof( ushort ) || dataType == typeof( sbyte ) )
+
+                resultType = targetType = dataType;
+
+
+              else
+                resultType = targetType = null;
+            }
+
+            break;
+
+
+
+          case ExpressionType.Not:
+            {
+              var dataType = this.Value.DataColumn.DataType;
+              if ( dataType == typeof( int ) || dataType == typeof( long ) || dataType == typeof( short ) || dataType == typeof( byte )
+                || dataType == typeof( uint ) || dataType == typeof( ulong ) || dataType == typeof( ushort ) || dataType == typeof( sbyte )
+                || dataType == typeof( bool ) )
+
+                resultType = targetType = dataType;
+
+              else
+                resultType = targetType = null;
+            }
+
+            break;
+
+
+
+          case ExpressionType.AndAlso:
+          case ExpressionType.OrElse:
+            targetType = resultType = typeof( bool );
+
+            break;
+
+
+
+          case ExpressionType.GreaterThan:
+          case ExpressionType.GreaterThanOrEqual:
+          case ExpressionType.LessThan:
+          case ExpressionType.LessThanOrEqual:
+          case ExpressionType.Equal:
+          case ExpressionType.NotEqual:
+            targetType = arg.LimitType ?? typeof( object );
+            resultType = typeof( bool );
+
+            break;
+
+
+
+          default:
+            targetType = resultType = null;
+
+            break;
+
+        }
+
+
+        if ( targetType == null || resultType == null )
+        {
+          var message = string.Format( "{0} 类型的值无法进行该操作", Value.DataColumn.DataType.FullName );
+          Expression<Action> temp = () => new InvalidOperationException( message );
+          return new DynamicMetaObject( Expression.Throw( temp.Body ), BindingRestrictions.Empty );
+        }
+
         var expression = Expression;
         expression = Expression.Convert( expression, typeof( DynamicDataValue ) );
-        expression = Expression.Call( expression, typeof( DynamicDataValue ).GetMethod( "GetValue" ).MakeGenericMethod( arg.LimitType ) );
+        expression = Expression.Call( expression, typeof( DynamicDataValue ).GetMethod( "GetValue" ).MakeGenericMethod( targetType ) );
         expression = Expression.MakeBinary( binder.Operation, expression, arg.Expression );
         expression = Expression.Convert( expression, binder.ReturnType );
 
-        return new DynamicMetaObject( expression, BindingRestrictions.Empty );
+        return new DynamicMetaObject( expression, BindingRestrictions.GetTypeRestriction( expression, resultType ) );
       }
+
     }
   }
 }

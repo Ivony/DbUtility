@@ -434,7 +434,9 @@ namespace Ivony.Data
       var type = typeof( T );
 
       var properties = type.GetProperties()
-        .Where( p => !GetAttributes( p ).OfType<NonFieldAttribute>().Any() );
+        .Where( p => !GetAttributes( p ).OfType<NonFieldAttribute>().Any() )
+        .Where( p => p.CanRead && p.CanWrite )
+        .ToArray();
 
       var methodName = type.GUID.ToString( "N" ) + "_DataConverter";
       var dynamicMethod = new DynamicMethod( methodName, null, new[] { typeof( DataRow ), type }, typeof( EntityExtensions ) );

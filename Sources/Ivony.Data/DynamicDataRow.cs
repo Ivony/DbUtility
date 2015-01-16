@@ -82,7 +82,7 @@ namespace Ivony.Data
         expression = Expression.Convert( expression, typeof( DynamicDataRow ) );
         expression = Expression.Call( expression, GetValueMethod, Expression.Constant( binder.Name, typeof( string ) ), Expression.Constant( binder.IgnoreCase, typeof( bool ) ) );
 
-        return new DynamicMetaObject( expression, BindingRestrictions.GetTypeRestriction( Expression, typeof( DynamicDataRow ) ) );
+        return new DynamicMetaObject( expression, BindingRestrictions.GetTypeRestriction( expression, typeof( DynamicDataValue ) ) );
       }
 
       public override DynamicMetaObject BindGetIndex( GetIndexBinder binder, DynamicMetaObject[] indexes )
@@ -92,7 +92,12 @@ namespace Ivony.Data
           return null;
 
         var name = indexes[0];
-        return new DynamicMetaObject( Expression.Call( Expression, GetValueMethod, name.Expression ), BindingRestrictions.Empty );
+
+        var expression = Expression;
+        expression = Expression.Convert( expression, typeof( DynamicDataRow ) );
+        expression = Expression.Call( expression, GetValueMethod, name.Expression, Expression.Constant( false ) );
+
+        return new DynamicMetaObject( expression, BindingRestrictions.GetTypeRestriction( expression, typeof( DynamicDataValue ) ) );
       }
 
       public override DynamicMetaObject BindConvert( ConvertBinder binder )
