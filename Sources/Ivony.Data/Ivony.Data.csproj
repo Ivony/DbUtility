@@ -72,7 +72,7 @@
     <DefineConstants>TRACE;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-	<DocumentationFile>bin\$(Configuration)\DbWrench.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\DbWrench.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultConverter.cs" />
+    <Compile Include="EntityConvert.cs" />
     <Compile Include="EntityConvertAttribute.cs" />
     <Compile Include="IDbValueConverter.cs" />
     <Compile Include="Common\DbExecutorBase.cs" />
