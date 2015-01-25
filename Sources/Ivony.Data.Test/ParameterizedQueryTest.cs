@@ -29,14 +29,14 @@ namespace Ivony.Data.Test
       Assert.AreEqual( query.ParameterValues[0], 123, "单参数列表模板解析测试失败" );
 
       query = Db.T( "SELECT * FROM Users WHERE ID IN ( {0..2} )", 1, 2, 3 );
-      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#,#1#,#2# )", "参数列表模板解析测试失败" );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#, #1#, #2# )", "参数列表模板解析测试失败" );
       Assert.AreEqual( query.ParameterValues.Length, 3, "参数列表模板解析测试失败" );
       Assert.AreEqual( query.ParameterValues[0], 1, "参数列表模板解析测试失败" );
       Assert.AreEqual( query.ParameterValues[1], 2, "参数列表模板解析测试失败" );
       Assert.AreEqual( query.ParameterValues[2], 3, "参数列表模板解析测试失败" );
 
       query = Db.T( "SELECT * FROM Users WHERE ID IN ( {0..2}, {1} )", 1, 2, 3 );
-      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#,#1#,#2#, #3# )", "混合参数列表模板解析测试失败" );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#, #1#, #2#, #3# )", "混合参数列表模板解析测试失败" );
       Assert.AreEqual( query.ParameterValues.Length, 4, "混合参数列表模板解析测试失败" );
       Assert.AreEqual( query.ParameterValues[0], 1, "混合参数列表模板解析测试失败" );
       Assert.AreEqual( query.ParameterValues[1], 2, "混合参数列表模板解析测试失败" );
@@ -72,7 +72,7 @@ namespace Ivony.Data.Test
     public void TemplateParseListTest()
     {
       var query = Db.T( "SELECT * FROM Users WHERE ID IN ( {0} )", new[] { 1, 2, 3 } );
-      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#,#1#,#2# )", "以列表作为参数测试失败" );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#, #1#, #2# )", "以列表作为参数测试失败" );
       Assert.AreEqual( query.ParameterValues.Length, 3, "以列表作为参数测试失败" );
       Assert.AreEqual( query.ParameterValues[0], 1, "以列表作为参数测试失败" );
       Assert.AreEqual( query.ParameterValues[1], 2, "以列表作为参数测试失败" );
@@ -89,11 +89,12 @@ namespace Ivony.Data.Test
 
 
       query = Db.T( "SELECT * FROM Users WHERE ID IN ( {0} )", new[] { "1", "2", "3" } );
-      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#,#1#,#2# )", "以引用类型数组作为参数测试失败" );
+      Assert.AreEqual( query.TextTemplate, "SELECT * FROM Users WHERE ID IN ( #0#, #1#, #2# )", "以引用类型数组作为参数测试失败" );
       Assert.AreEqual( query.ParameterValues.Length, 3, "以引用类型数组作为参数测试失败" );
       Assert.AreEqual( query.ParameterValues[0], "1", "以引用类型数组作为参数测试失败" );
       Assert.AreEqual( query.ParameterValues[1], "2", "以引用类型数组作为参数测试失败" );
       Assert.AreEqual( query.ParameterValues[2], "3", "以引用类型数组作为参数测试失败" );
+
 
 
       query = Db.T( "SELECT * FROM Users WHERE ID IN ( {0}, {1}, {2} )", new object[] { 1, 2, 3 } );
