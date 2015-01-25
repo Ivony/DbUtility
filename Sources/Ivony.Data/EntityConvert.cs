@@ -245,12 +245,17 @@ namespace Ivony.Data
 
 
       {
-        var constructors = from i in type.GetConstructors( BindingFlags.Public )
-                           where CheckMethodSignature( i, typeof( DataRow ) ) || CheckMethodSignature( i )
-                           select i;
 
-        if ( constructors.Count() == 1 )
-          return CreateConverter( constructors.First() );
+
+
+        var constructor = type.GetConstructor( new[] { typeof( DataRow ) } );
+        if ( constructor != null )
+          return CreateConverter( constructor, true );
+
+        constructor = type.GetConstructor( new Type[0] );
+        if ( constructor != null )
+          return CreateConverter( constructor, false );
+
       }
 
       throw new NotImplementedException();
@@ -264,19 +269,20 @@ namespace Ivony.Data
 
 
 
-    private static IEntityConverter<T> CreateConverter( ConstructorInfo constructorInfo )
+    private static IEntityConverter<T> CreateConverter( ConstructorInfo constructorInfo, bool withDataRow )
     {
 
       Expression body;
+      var parameter = Expression.Parameter( typeof( DataRow ), "dataItem" );
 
-      if ( constructorInfo.GetParameters().Length == 1 )
-        body = Expression.New( constructorInfo, Expression.Variable( typeof( DataRow ), "dataItem" ) );
+      if ( withDataRow )
+        body = Expression.New( constructorInfo, parameter );
 
       else
-        body = Expression.Call( thisFillMethod, Expression.Variable( typeof( DataRow ), "dataItem" ), Expression.New( constructorInfo ) );
+        body = Expression.Call( thisFillMethod, parameter, Expression.New( constructorInfo ) );
 
 
-      var func = Expression.Lambda<Func<DataRow, T>>( body, Expression.Parameter( typeof( DataRow ), "dataItem" ) );
+      var func = Expression.Lambda<Func<DataRow, T>>( body, parameter );
       return new EntityConverter( func.Compile() );
     }
 
