@@ -60,21 +60,6 @@ namespace Ivony.Data
     }
 
 
-    /// <summary>
-    /// 通过指定的连接字符串设置创建 SQL Server 数据库访问器
-    /// </summary>
-    /// <param name="setting">连接字符串设置</param>
-    /// <param name="configuration">SQL Server 数据库配置</param>
-    /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbExecutor Connect( this ConnectionStringSettings setting, SqlDbConfiguration configuration = null )
-    {
-      if ( setting == null )
-        return null;
-
-      return Connect( setting.ConnectionString, configuration );
-    }
-
-
 
     /// <summary>
     /// 通过指定的用户名和密码登陆 SQL Server 数据库，以创建 SQL Server 数据库访问器
