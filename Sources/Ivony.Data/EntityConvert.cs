@@ -78,12 +78,12 @@ namespace Ivony.Data
 
       lock ( sync )
       {
-        return fillMethod ?? (fillMethod = CreateConvertMethod());
+        return fillMethod ?? (fillMethod = CreateFillMethod());
       }
 
     }
 
-    private static Action<DataRow, T> CreateConvertMethod()
+    private static Action<DataRow, T> CreateFillMethod()
     {
       var type = typeof( T );
 

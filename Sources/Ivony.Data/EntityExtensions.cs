@@ -25,7 +25,7 @@ namespace Ivony.Data
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="query">要执行的查询</param>
     /// <returns>实体集</returns>
-    public static T[] ExecuteEntities<T>( this IDbExecutableQuery query ) where T : new()
+    public static T[] ExecuteEntities<T>( this IDbExecutableQuery query )
     {
       var data = query.ExecuteDataTable();
       return data.GetRows().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
@@ -40,7 +40,7 @@ namespace Ivony.Data
     /// <param name="query">要执行的查询</param>
     /// <param name="token">取消指示</param>
     /// <returns>实体集</returns>
-    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token = default( CancellationToken ) ) where T : new()
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token = default( CancellationToken ) )
     {
       var data = await query.ExecuteDataTableAsync( token );
       return data.GetRows().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
@@ -55,7 +55,7 @@ namespace Ivony.Data
     /// <param name="query">要执行的查询</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体集</returns>
-    public static T[] ExecuteEntities<T>( this IDbExecutableQuery query, IEntityConverter<T> converter ) where T : new()
+    public static T[] ExecuteEntities<T>( this IDbExecutableQuery query, IEntityConverter<T> converter )
     {
       var data = query.ExecuteDataTable();
       return data.GetRows().Select( dataItem => dataItem.ToEntity( converter ) ).ToArray();
@@ -69,7 +69,7 @@ namespace Ivony.Data
     /// <param name="query">要执行的查询</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体集</returns>
-    public static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, IEntityConverter<T> converter ) where T : new()
+    public static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, IEntityConverter<T> converter )
     {
       return ExecuteEntitiesAsync( query, CancellationToken.None, converter );
     }
@@ -83,7 +83,7 @@ namespace Ivony.Data
     /// <param name="token">取消指示</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体集</returns>
-    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token, IEntityConverter<T> converter ) where T : new()
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token, IEntityConverter<T> converter )
     {
       var data = await query.ExecuteDataTableAsync( token );
       return data.GetRows().Select( dataItem => dataItem.ToEntity<T>( converter ) ).ToArray();
@@ -164,7 +164,7 @@ namespace Ivony.Data
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="query">要执行的查询</param>
     /// <returns>实体</returns>
-    public static T ExecuteEntity<T>( this IDbExecutableQuery query ) where T : new()
+    public static T ExecuteEntity<T>( this IDbExecutableQuery query )
     {
       var dataItem = query.ExecuteFirstRow();
       return dataItem.ToEntity<T>();
@@ -179,7 +179,7 @@ namespace Ivony.Data
     /// <param name="query">要执行的查询</param>
     /// <param name="token">取消指示</param>
     /// <returns>实体</returns>
-    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token = default( CancellationToken ) ) where T : new()
+    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token = default( CancellationToken ) )
     {
       var dataItem = await query.ExecuteFirstRowAsync( token );
       return dataItem.ToEntity<T>();
@@ -195,7 +195,7 @@ namespace Ivony.Data
     /// <param name="query">要执行的查询</param>
     /// <param name="converter">实体转换方法</param>
     /// <returns>实体</returns>
-    public static T ExecuteEntity<T>( this IDbExecutableQuery query, IEntityConverter<T> converter ) where T : new()
+    public static T ExecuteEntity<T>( this IDbExecutableQuery query, IEntityConverter<T> converter )
     {
       var dataItem = query.ExecuteFirstRow();
       return dataItem.ToEntity<T>( converter );
@@ -210,7 +210,7 @@ namespace Ivony.Data
     /// <param name="query">要执行的查询</param>
     /// <param name="converter">实体转换方法</param>
     /// <returns>实体</returns>
-    public static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecutableQuery query, IEntityConverter<T> converter ) where T : new()
+    public static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecutableQuery query, IEntityConverter<T> converter )
     {
       return ExecuteEntityAsync( query, CancellationToken.None, converter );
     }
@@ -225,7 +225,7 @@ namespace Ivony.Data
     /// <param name="token">取消指示</param>
     /// <param name="converter">实体转换方法</param>
     /// <returns>实体</returns>
-    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token, IEntityConverter<T> converter ) where T : new()
+    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token, IEntityConverter<T> converter )
     {
       var dataItem = await query.ExecuteFirstRowAsync( token );
       return dataItem.ToEntity<T>( converter );
@@ -299,7 +299,7 @@ namespace Ivony.Data
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="dataItem">包含数据的 DataRow</param>
     /// <returns>实体</returns>
-    public static T ToEntity<T>( this DataRow dataItem ) where T : new()
+    public static T ToEntity<T>( this DataRow dataItem )
     {
       return ToEntity<T>( dataItem, null );
     }
@@ -311,7 +311,7 @@ namespace Ivony.Data
     /// <param name="dataItem">包含数据的 DataRow</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体</returns>
-    public static T ToEntity<T>( this DataRow dataItem, IEntityConverter<T> converter ) where T : new()
+    public static T ToEntity<T>( this DataRow dataItem, IEntityConverter<T> converter )
     {
       if ( dataItem == null )
       {
