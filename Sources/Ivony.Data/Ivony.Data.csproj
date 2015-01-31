@@ -86,6 +86,7 @@
     <Compile Include="Common\SimpleDataSet.cs" />
     <Compile Include="Common\SimpleDataTable.cs" />
     <Compile Include="DefaultConverter.cs" />
+    <Compile Include="EntityConvert.cs" />
     <Compile Include="EntityConvertAttribute.cs" />
     <Compile Include="IDbExecuteContext.cs" />
     <Compile Include="IDbHandlerProvider.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Common\ParameterizedQueryLiteralValueParser.cs" />
     <Compile Include="Queries\IParameterizedQueryExecutor.cs" />
     <Compile Include="Queries\IParameterizedQueryExecuteContext.cs" />
+    <Compile Include="Queries\ParameterArray.cs" />
     <Compile Include="Queries\ParameterizedQuery.cs" />
     <Compile Include="Queries\ParameterizedQueryBuilder.cs" />
     <Compile Include="Queries\StoredProcedureQuery.cs" />

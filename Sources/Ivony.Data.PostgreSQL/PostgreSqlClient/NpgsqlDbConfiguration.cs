@@ -5,5 +5,5 @@ using System.Text;
 
 namespace Ivony.Data.PostgreSQL.PostgreSqlClient
 {
-	public class NpgsqlDbConfiguration : DbConfiguration {}
+  public class NpgsqlDbConfiguration : DbConfiguration { }
 }

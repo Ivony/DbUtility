@@ -16,7 +16,7 @@ namespace Ivony.Data.SqlClient
   /// <summary>
   /// SQL Server 数据库事务上下文对象
   /// </summary>
-  public sealed class SqlDbTransactionContext : DbTransactionContextBase<SqlDbHandler, SqlTransaction>
+  public class SqlDbTransactionContext : DbTransactionContextBase<SqlDbHandler, SqlTransaction>
   {
 
 
@@ -24,7 +24,7 @@ namespace Ivony.Data.SqlClient
     internal SqlDbTransactionContext( string connectionString, SqlDbConfiguration configuration )
     {
       Connection = new SqlConnection( connectionString );
-      _executor = new SqlServerHandlerWithTransaction( this, configuration );
+      _executor = new SqlDbExecutorWithTransaction( this, configuration );
     }
 
 
@@ -52,33 +52,21 @@ namespace Ivony.Data.SqlClient
     }
 
 
-    private SqlServerHandlerWithTransaction _executor;
+    private SqlDbExecutorWithTransaction _executor;
 
     /// <summary>
     /// 获取用于在事务中执行查询的 SQL Server 查询执行器
     /// </summary>
-    public override SqlDbHandler GetDbHandler()
+    public override SqlDbHandler GetDbHandler() { return _executor; }
+
+
+
+    private class SqlDbExecutorWithTransaction : SqlDbHandler
     {
-      return _executor;
-    }
-
-
-
-    private class SqlServerHandlerWithTransaction : SqlDbHandler
-    {
-      public SqlServerHandlerWithTransaction( SqlDbTransactionContext transaction, SqlDbConfiguration configuration )
-        : base( transaction.Connection.ConnectionString )
+      public SqlDbExecutorWithTransaction( SqlDbTransactionContext transaction, SqlDbConfiguration configuration )
+        : base( transaction.Connection.ConnectionString, configuration )
       {
         TransactionContext = transaction;
-      }
-
-
-
-      protected override SqlDbHandler WithConfiguration( Action<SqlDbConfiguration> configurationSetter )
-      {
-        var newConfiguration = new SqlDbConfiguration( Configuration );
-        configurationSetter( newConfiguration );
-        return new SqlServerHandlerWithTransaction( TransactionContext, newConfiguration );
       }
 
 
@@ -99,6 +87,8 @@ namespace Ivony.Data.SqlClient
 
         return command;
       }
+
     }
+
   }
 }

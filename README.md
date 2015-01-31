@@ -1,6 +1,8 @@
 DbUtility
 =========
 
+
+
 DbUtility is a light database access tool 
 
 
@@ -34,9 +36,9 @@ and ```ExecuteFirstRow()``` is called **result definition** <br />
 
 ---
 
-The following code creates a **database executor**
+The following code creates a **database executor**         
 ```CSharp
-var db = SqlServer.FromConfiguration( "connection-string-name" );
+var db = SqlServer.Create( "connection-string-name" );
 ```
 Or
 ```CSharp
@@ -65,11 +67,11 @@ the method name **T** means **Template**, so we can also write code like below:
 ```CSharp
 db.Template( "SELECT MemberID FROM Members WHERE Username = {0} AND Password = {1}", username, password )
 ```
-and the **T** is an **extension method**, you can customize another query definition method **as you like**.
+and the **T** is an **extension method**, you can declare another query definition method **as you like**.
 
 ---
 
-In the end, we talk about the **result definition**.
+In the last, we talk about the **result definition**.
 like same as the query definition, result definition are also en extension method. we have many result definition method, and all of they have asynchronous version.
 the popular result definition method under this:
 
@@ -77,5 +79,9 @@ the popular result definition method under this:
 **ExecuteScaler**, execute query and return the first column of the first row.<br />
 **ExecuteDataTable**, execute query and fill a DataTable and return.<br />
 **ExecuteFirstRow**, execute query and return ths first row.<br />
-**ExecuteEntity**, execute query and return the first row to fill the specified type of entity<br />
-and more, and **customize as you like**
+**ExecuteEntity**, execute query and return the first row to fill the specified type of entity
+
+## Get It
+
+you can download last stable release from nuget:
+[DbWrench](http://www.nuget.org/packages/DbWrench/)

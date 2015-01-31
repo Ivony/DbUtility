@@ -129,6 +129,7 @@ namespace Ivony.Data
       return context.ExecuteDataTable().Column<T>();
     }
 
+#if !NET40
     /// <summary>
     /// 异步执行查询并返回第一列数据
     /// </summary>
@@ -139,6 +140,7 @@ namespace Ivony.Data
     {
       return (await context.ExecuteDataTableAsync()).Column<T>();
     }
+#endif
 
 
     /// <summary>
@@ -152,6 +154,7 @@ namespace Ivony.Data
     }
 
 
+#if !NET40
     /// <summary>
     /// 异步执行查询并将数据转换为 DataRowView 集合返回
     /// </summary>
@@ -161,7 +164,7 @@ namespace Ivony.Data
     {
       return (await context.ExecuteDataTableAsync()).GetRowViews();
     }
-
+#endif
 
 
     /// <summary>
@@ -174,6 +177,7 @@ namespace Ivony.Data
       return context.ExecuteDataTable().GetRowViews().FirstOrDefault();
     }
 
+#if !NET40
     /// <summary>
     /// 异步执行查询并将第一行数据数据转换为 DataRowView 返回
     /// </summary>
@@ -183,7 +187,7 @@ namespace Ivony.Data
     {
       return (await context.ExecuteDataTableAsync()).GetRowViews().FirstOrDefault();
     }
-
+#endif
 
   }
 }

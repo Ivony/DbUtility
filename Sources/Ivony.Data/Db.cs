@@ -29,11 +29,24 @@ namespace Ivony.Data
       if ( args == null )
         args = new object[] { null };
 
-      if ( !AllowNonObjectArrayAsArgs )
+      if ( AllowNonObjectArrayAsArgs )
+      {
+        if ( args.Length == 1 )
+        {
+          var array = args[0] as Array;
+          if ( array != null )
+          {
+            args = new object[array.Length];
+            array.CopyTo( args, 0 );
+          }
+        }
+      }
+      else
       {
         if ( args.GetType() != typeof( object[] ) )
           args = new object[] { args };
       }
+
 
       return TemplateParser.ParseTemplate( templateText, args );
     }
@@ -48,29 +61,6 @@ namespace Ivony.Data
     /// <returns>参数化查询</returns>
     public static ParameterizedQuery T( string templateText, params object[] args )
     {
-      if ( args == null )
-        args = new object[] { null };
-
-      if ( !AllowNonObjectArrayAsArgs )
-      {
-        if ( args.GetType() != typeof( object[] ) )
-          args = new object[] { args };
-      }
-      else
-      {
-        if ( args.Length == 1 )
-        {
-          var array = args[0] as Array;
-
-          if ( array != null )
-          {
-
-            args = new object[array.Length];
-            array.CopyTo( args, 0 );
-          }
-        }
-      }
-
       return Template( templateText, args );
     }
 

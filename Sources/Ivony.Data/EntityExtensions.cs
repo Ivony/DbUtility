@@ -23,15 +23,16 @@ namespace Ivony.Data
     /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
-    /// <param name="context">要执行的查询</param>
+    /// <param name="query">要执行的查询</param>
     /// <returns>实体集</returns>
-    public static T[] ExecuteEntities<T>( this IDbExecuteContext context ) where T : new()
+    public static T[] ExecuteEntities<T>( this IDbExecuteContext context )
     {
       var data = context.ExecuteDataTable();
       return data.GetRows().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
     }
 
 
+#if !NET40
     /// <summary>
     /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
@@ -39,12 +40,12 @@ namespace Ivony.Data
     /// <param name="context">要执行的查询</param>
     /// <param name="token">取消指示</param>
     /// <returns>实体集</returns>
-    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecuteContext context, CancellationToken token = default( CancellationToken ) ) where T : new()
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecuteContext context, CancellationToken token = default( CancellationToken ) )
     {
       var data = await context.ExecuteDataTableAsync( token );
       return data.GetRows().Select( dataItem => dataItem.ToEntity<T>() ).ToArray();
     }
-
+#endif
 
 
     /// <summary>
@@ -54,13 +55,13 @@ namespace Ivony.Data
     /// <param name="context">要执行的查询</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体集</returns>
-    public static T[] ExecuteEntities<T>( this IDbExecuteContext context, IEntityConverter<T> converter ) where T : new()
+    public static T[] ExecuteEntities<T>( this IDbExecuteContext context, IEntityConverter<T> converter )
     {
       var data = context.ExecuteDataTable();
       return data.GetRows().Select( dataItem => dataItem.ToEntity( converter ) ).ToArray();
     }
 
-
+#if !NET40
     /// <summary>
     /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
@@ -68,10 +69,11 @@ namespace Ivony.Data
     /// <param name="context">要执行的查询</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体集</returns>
-    public static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecuteContext context, IEntityConverter<T> converter ) where T : new()
+    public static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecuteContext context, IEntityConverter<T> converter )
     {
       return ExecuteEntitiesAsync( context, CancellationToken.None, converter );
     }
+
 
     /// <summary>
     /// 查询数据库并将第一个结果集填充实体类型
@@ -81,12 +83,12 @@ namespace Ivony.Data
     /// <param name="token">取消指示</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体集</returns>
-    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecuteContext context, CancellationToken token, IEntityConverter<T> converter ) where T : new()
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecuteContext context, CancellationToken token, IEntityConverter<T> converter )
     {
       var data = await context.ExecuteDataTableAsync( token );
       return data.GetRows().Select( dataItem => dataItem.ToEntity<T>( converter ) ).ToArray();
     }
-
+#endif
 
 
     /// <summary>
@@ -102,7 +104,7 @@ namespace Ivony.Data
       return data.GetRows().Select( dataItem => converter( dataItem ) ).ToArray();
     }
 
-
+#if !NET40
     /// <summary>
     /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
@@ -153,7 +155,7 @@ namespace Ivony.Data
       return result.ToArray();
 
     }
-
+#endif
 
 
     /// <summary>
@@ -162,13 +164,14 @@ namespace Ivony.Data
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="context">要执行的查询</param>
     /// <returns>实体</returns>
-    public static T ExecuteEntity<T>( this IDbExecuteContext context ) where T : new()
+    public static T ExecuteEntity<T>( this IDbExecuteContext context )
     {
       var dataItem = context.ExecuteFirstRow();
       return dataItem.ToEntity<T>();
 
     }
 
+#if !NET40
     /// <summary>
     /// 查询数据库并将结果首行填充实体
     /// </summary>
@@ -176,13 +179,13 @@ namespace Ivony.Data
     /// <param name="context">要执行的查询</param>
     /// <param name="token">取消指示</param>
     /// <returns>实体</returns>
-    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecuteContext context, CancellationToken token = default( CancellationToken ) ) where T : new()
+    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecuteContext context, CancellationToken token = default( CancellationToken ) )
     {
       var dataItem = await context.ExecuteFirstRowAsync( token );
       return dataItem.ToEntity<T>();
 
     }
-
+#endif
 
 
     /// <summary>
@@ -192,13 +195,14 @@ namespace Ivony.Data
     /// <param name="context">要执行的查询</param>
     /// <param name="converter">实体转换方法</param>
     /// <returns>实体</returns>
-    public static T ExecuteEntity<T>( this IDbExecuteContext context, IEntityConverter<T> converter ) where T : new()
+    public static T ExecuteEntity<T>( this IDbExecuteContext context, IEntityConverter<T> converter )
     {
       var dataItem = context.ExecuteFirstRow();
       return dataItem.ToEntity<T>( converter );
 
     }
 
+#if !NET40
     /// <summary>
     /// 查询数据库并将结果首行填充实体
     /// </summary>
@@ -206,12 +210,13 @@ namespace Ivony.Data
     /// <param name="context">要执行的查询</param>
     /// <param name="converter">实体转换方法</param>
     /// <returns>实体</returns>
-    public static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecuteContext context, IEntityConverter<T> converter ) where T : new()
+    public static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecuteContext context, IEntityConverter<T> converter )
     {
       return ExecuteEntityAsync( context, CancellationToken.None, converter );
     }
 
 
+
     /// <summary>
     /// 查询数据库并将结果首行填充实体
     /// </summary>
@@ -220,13 +225,13 @@ namespace Ivony.Data
     /// <param name="token">取消指示</param>
     /// <param name="converter">实体转换方法</param>
     /// <returns>实体</returns>
-    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecuteContext context, CancellationToken token, IEntityConverter<T> converter ) where T : new()
+    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecuteContext context, CancellationToken token, IEntityConverter<T> converter )
     {
       var dataItem = await context.ExecuteFirstRowAsync( token );
       return dataItem.ToEntity<T>( converter );
 
     }
-
+#endif
 
     /// <summary>
     /// 查询数据库并将结果首行填充实体
@@ -241,7 +246,7 @@ namespace Ivony.Data
       return converter( dataItem );
     }
 
-
+#if !NET40
     /// <summary>
     /// 异步查询数据库并将结果首行填充实体
     /// </summary>
@@ -283,7 +288,7 @@ namespace Ivony.Data
       var dataItem = await context.ExecuteFirstRowAsync( token );
       return await converter( dataItem, token );
     }
-
+#endif
 
 
 
@@ -294,7 +299,7 @@ namespace Ivony.Data
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="dataItem">包含数据的 DataRow</param>
     /// <returns>实体</returns>
-    public static T ToEntity<T>( this DataRow dataItem ) where T : new()
+    public static T ToEntity<T>( this DataRow dataItem )
     {
       return ToEntity<T>( dataItem, null );
     }
@@ -306,7 +311,7 @@ namespace Ivony.Data
     /// <param name="dataItem">包含数据的 DataRow</param>
     /// <param name="converter">实体转换器</param>
     /// <returns>实体</returns>
-    public static T ToEntity<T>( this DataRow dataItem, IEntityConverter<T> converter ) where T : new()
+    public static T ToEntity<T>( this DataRow dataItem, IEntityConverter<T> converter )
     {
       if ( dataItem == null )
       {
@@ -327,23 +332,13 @@ namespace Ivony.Data
       }
 
 
-      var entityConverter = converter ?? EntityConverterCache<T>.GetConverter();
-
-
-      var entity = new T();
-
-      if ( entityConverter.NeedPreconversion )
-      {
-        var method = CreateEntityConvertMethod<T>();
-        method( dataItem, entity );
-      }
-
-      entityConverter.Convert( dataItem, entity );
-      return entity;
+      var entityConverter = converter ?? EntityConvert<T>.GetConverter();
+      return entityConverter.Convert( dataItem );
     }
 
 
 
+    private static object sync = new object();
     private static Dictionary<Type, Func<DataRow, object>> entityConverterDictionary = new Dictionary<Type, Func<DataRow, object>>();
 
 
@@ -401,98 +396,6 @@ namespace Ivony.Data
 
 
 
-    /// <summary>
-    /// 提供默认的 EntityConverter 对象，这个对象什么都不做，并且被设置为可重用和需要预转换。
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    private class DefaultEntityConverter<T> : IEntityConverter<T>
-    {
-      public void Convert( DataRow dataItem, T entity ) { return; }
-
-      public bool IsReusable { get { return true; } }
-
-      public bool NeedPreconversion { get { return true; } }
-    }
-
-
-    /// <summary>
-    /// 创建转换方法
-    /// </summary>
-    /// <typeparam name="T">实体类型</typeparam>
-    /// <returns>针对指定实体的转换方法</returns>
-    private static Action<DataRow, T> CreateEntityConvertMethod<T>()
-    {
-      var method = ConverterCache<T>.Converter;
-      if ( method != null )
-        return method;
-
-      var type = typeof( T );
-
-      var properties = type.GetProperties()
-        .Where( p => !GetAttributes( p ).OfType<NonFieldAttribute>().Any() );
-
-      var methodName = type.GUID.ToString( "N" ) + "_DataConverter";
-      var dynamicMethod = new DynamicMethod( methodName, null, new[] { typeof( DataRow ), type }, typeof( EntityExtensions ) );
-      var il = dynamicMethod.GetILGenerator();
-
-      /*
-      .maxstack  3
-      .locals init ([0] class [System.Data]System.Data.DataColumnCollection columns)
-      IL_0000:  ldarg.0
-      IL_0001:  callvirt   instance class [System.Data]System.Data.DataTable [System.Data]System.Data.DataRow::get_Table()
-      IL_0006:  callvirt   instance class [System.Data]System.Data.DataColumnCollection [System.Data]System.Data.DataTable::get_Columns()
-      IL_000b:  stloc.0
-      */
-
-      il.DeclareLocal( typeof( DataColumnCollection ) );
-      il.Emit( OpCodes.Ldarg_0 );
-      il.Emit( OpCodes.Callvirt, typeof( DataRow ).GetProperty( "Table" ).GetGetMethod() );
-      il.Emit( OpCodes.Callvirt, typeof( DataTable ).GetProperty( "Columns" ).GetGetMethod() );
-      il.Emit( OpCodes.Stloc_0 );
-
-
-      foreach ( var p in properties )
-      {
-        var name = GetFieldname( p );
-
-        /*
-        IL_000c:  ldloc.0
-        IL_000d:  ldstr      "Name"
-        IL_0012:  callvirt   instance bool [System.Data]System.Data.DataColumnCollection::Contains(string)
-        IL_0017:  brfalse.s  IL_002a
-        IL_0019:  ldarg.1
-        IL_001a:  ldarg.0
-        IL_001b:  ldstr      "Name"
-        IL_0020:  call       !!0 [System.Data.DataSetExtensions]System.Data.DataRowExtensions::Field<string>(class [System.Data]System.Data.DataRow, string)
-        IL_0025:  callvirt   instance void Ivony.Data.EntityExtensions/TestEntity::set_Name(string)
-        IL_002a:  ret
-        */
-
-        var label = il.DefineLabel();
-
-        il.Emit( OpCodes.Ldloc_0 );
-        il.Emit( OpCodes.Ldstr, name );
-        il.Emit( OpCodes.Callvirt, typeof( DataColumnCollection ).GetMethod( "Contains" ) );
-        il.Emit( OpCodes.Brfalse_S, label );
-        il.Emit( OpCodes.Ldarg_1 );
-        il.Emit( OpCodes.Ldarg_0 );
-        il.Emit( OpCodes.Ldstr, name );
-        il.Emit( OpCodes.Call, typeof( EntityExtensions ).GetMethod( "FieldValue", new[] { typeof( DataRow ), typeof( string ) } ).MakeGenericMethod( p.PropertyType ) );
-        il.Emit( OpCodes.Callvirt, p.GetSetMethod() );
-        il.MarkLabel( label );
-      }
-
-      il.Emit( OpCodes.Ret );
-
-      method = (Action<DataRow, T>) dynamicMethod.CreateDelegate( typeof( Action<DataRow, T> ) );
-
-
-
-      ConverterCache<T>.Converter = method;
-      return method;
-    }
-
-
 
     /// <summary>
     /// 获取指定字段的值
@@ -541,90 +444,5 @@ namespace Ivony.Data
       }
     }
 
-
-    /// <summary>
-    /// 获取属性所对应的字段名
-    /// </summary>
-    /// <param name="property">要获取字段名的属性</param>
-    /// <returns></returns>
-    private static string GetFieldname( PropertyInfo property )
-    {
-      var attribute = GetAttributes( property ).OfType<FieldNameAttribute>().FirstOrDefault();
-
-      if ( attribute != null )
-        return attribute.FieldName;
-
-      return property.Name;
-    }
-
-
-    private static object sync = new object();
-    private static Dictionary<PropertyInfo, object[]> _propertyAttributesCache = new Dictionary<PropertyInfo, object[]>();
-
-    /// <summary>
-    /// 获取指定属性上的特性
-    /// </summary>
-    /// <param name="property">要获取特性的属性</param>
-    /// <returns>属性上所设置的特性</returns>
-    private static object[] GetAttributes( PropertyInfo property )
-    {
-      lock ( sync )
-      {
-        object[] attributes;
-
-        if ( _propertyAttributesCache.TryGetValue( property, out attributes ) )
-          return attributes;
-
-        attributes = property.GetCustomAttributes( false );
-
-        _propertyAttributesCache[property] = attributes;
-
-        return attributes;
-      }
-    }
-
-    private static class ConverterCache<T>
-    {
-      public static Action<DataRow, T> Converter { get; set; }
-    }
-
-
-
-
-    private static class EntityConverterCache<T>
-    {
-      private static IEntityConverter<T> converterInstacne;
-
-      private static Func<IEntityConverter<T>> createConverter;
-
-
-      static EntityConverterCache()
-      {
-        var type = typeof( T );
-        var attribute = type.GetCustomAttributes( typeof( EntityConvertAttribute ), false ).OfType<EntityConvertAttribute>().FirstOrDefault();
-
-        if ( attribute != null )
-          createConverter = () => attribute.CreateConverter<T>();   //缓存创建实例的方法
-        else
-          createConverter = () => new DefaultEntityConverter<T>();
-
-
-        var instance = createConverter();
-
-        if ( instance.IsReusable )
-          converterInstacne = instance;                             //缓存可复用的实例
-      }
-
-
-      public static IEntityConverter<T> GetConverter()
-      {
-
-        if ( converterInstacne != null && converterInstacne.IsReusable )//如果有缓存的可复用的实例，则返回
-          return converterInstacne;
-
-
-        return createConverter();
-      }
-    }
   }
 }

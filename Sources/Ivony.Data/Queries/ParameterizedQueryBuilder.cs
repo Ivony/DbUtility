@@ -59,6 +59,7 @@ namespace Ivony.Data.Queries
       }
     }
 
+
     /// <summary>
     /// 添加一个查询参数
     /// </summary>
@@ -66,8 +67,13 @@ namespace Ivony.Data.Queries
     public void AppendParameter( object value )
     {
       var partial = value as IParameterizedQueryPartial;
+
       if ( partial != null )
+      {
         AppendPartial( partial );
+        return;
+      }
+
 
       lock ( _sync )
       {

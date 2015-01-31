@@ -54,7 +54,7 @@ namespace Ivony.Data
     /// <param name="builder">连接字符串构建器</param>
     /// <param name="configuration">SQL Server 数据库配置</param>
     /// <returns>SQL Server 数据库访问器</returns>
-    public static SqlDbHandler Connect( SqlConnectionStringBuilder builder, SqlDbConfiguration configuration = null )
+    public static SqlDbHandler Connect( this SqlConnectionStringBuilder builder, SqlDbConfiguration configuration = null )
     {
       return Connect( builder.ConnectionString, configuration );
     }
@@ -124,5 +124,15 @@ namespace Ivony.Data
     }
 
 
+    static SqlServer()
+    {
+      LocalDBInstanceName = "v11.0";
+      ExpressInstanceName = "SQLEXPRESS";
+    }
+
+
+    internal static string LocalDBInstanceName { get; set; }
+
+    internal static string ExpressInstanceName { get; set; }
   }
 }

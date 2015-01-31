@@ -159,45 +159,19 @@ namespace Ivony.Data
 
     private static void AddParameters( ParameterizedQueryBuilder builder, object[] parameters, int begin, int end )
     {
-      for ( int parameterIndex = begin; parameterIndex < end; parameterIndex++ )
-      {
-        AddParameter( builder, parameters[parameterIndex] );
-        builder.AppendText( "," );
-      }
+      var length = end - begin + 1;
+      var array = new object[length];
+      parameters.CopyTo( array, begin );
 
-      AddParameter( builder, parameters[end] );
+      AddParameter( builder, new ParameterArray( array ) );
     }
 
     private static void AddParameter( ParameterizedQueryBuilder builder, object value )
     {
 
-
-      var partial = value as IParameterizedQueryPartial;
-      if ( partial != null )
-      {
-        partial.AppendTo( builder );
-        return;
-      }
-
-
       var array = value as Array;
-      if ( array != null )
-      {
-
-        if ( array.Length == 0 )
-          return;
-
-
-        for ( int i = 0; i < array.Length - 1; i++ )
-        {
-          AddParameter( builder, array.GetValue( i ) );
-          builder.AppendText( "," );
-        }
-
-        AddParameter( builder, array.GetValue( array.Length - 1 ) );
-        return;
-      }
-
+      if ( array != null && !(array is byte[]) )
+        value = new ParameterArray( array );
 
       builder.AppendParameter( value );
     }

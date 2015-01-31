@@ -43,7 +43,7 @@ namespace Ivony.Data.Common
     }
 
 
-
+#if !NET40
     /// <summary>
     /// 使用指定范围内的行异步填充 DataTable 并返回。
     /// </summary>
@@ -68,6 +68,7 @@ namespace Ivony.Data.Common
 
       return dataTable;
     }
+#endif
 
   }
 }
