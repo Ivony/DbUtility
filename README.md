@@ -1,9 +1,9 @@
-DbUtility
+DataPithy
 =========
 
 
 
-DbUtility is a light database access tool 
+DataPithy is a light database access tool 
 
 
 ## How to use
@@ -84,4 +84,4 @@ the popular result definition method under this:
 ## Get It
 
 you can download last stable release from nuget:
-[DbWrench](http://www.nuget.org/packages/DbWrench/)
+[DataPithy](http://www.nuget.org/packages/DbWrench/)
