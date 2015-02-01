@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="DataPithy : a light database access tool ">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>DataPithy</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Ivony/DbUtility">View on GitHub</a>
+
+          <h1 id="project_title">DataPithy</h1>
+          <h2 id="project_tagline">a light database access tool </h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Ivony/DbUtility/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Ivony/DbUtility/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="datapithy" class="anchor" href="#datapithy" aria-hidden="true"><span class="octicon octicon-link"></span></a>DataPithy</h1>
+
+<p>DataPithy is a light database access tool </p>
+
+<h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use</h2>
+
+<p>execute a query</p>
+
+<div class="highlight highlight-CSharp"><pre>db.T( <span class="pl-s1"><span class="pl-pds">"</span>SELECT * FROM Members<span class="pl-pds">"</span></span> ).ExecuteDataTable();</pre></div>
+
+<p>execute a query with parameter and return first row</p>
+
+<div class="highlight highlight-CSharp"><pre>db.T( <span class="pl-s1"><span class="pl-pds">"</span>SELECT FirstName, LastName FROM Members WHERE Username = {0}<span class="pl-pds">"</span></span>, username ).ExecuteFirstRow();</pre></div>
+
+<p>execute a query as async.</p>
+
+<div class="highlight highlight-CSharp"><pre>await db.T( <span class="pl-s1"><span class="pl-pds">"</span>SELECT FirstName, LastName FROM Members WHERE Username = {0}<span class="pl-pds">"</span></span>, username ).ExecuteFirstRowAsync();</pre></div>
+
+<h2>
+<a id="basic-concept" class="anchor" href="#basic-concept" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic concept</h2>
+
+<div class="highlight highlight-CSharp"><pre>db.T( <span class="pl-s1"><span class="pl-pds">"</span>SELECT FirstName, LastName FROM Members WHERE Username = {0}<span class="pl-pds">"</span></span>, username ).ExecuteFirstRow();</pre></div>
+
+<p>In the code above, 
+<code>db</code> is called <strong>database executor</strong>,<br>
+<code>T( "SELECT FirstName, LastName FROM Members WHERE Username = {0}", username )</code> is called <strong>query definition</strong>,<br>
+and <code>ExecuteFirstRow()</code> is called <strong>result definition</strong> <br></p>
+
+<hr>
+
+<p>The following code creates a <strong>database executor</strong>         </p>
+
+<div class="highlight highlight-CSharp"><pre><span class="pl-k">var</span> db = SqlServer.Create( <span class="pl-s1"><span class="pl-pds">"</span>connection-string-name<span class="pl-pds">"</span></span> );</pre></div>
+
+<p>Or</p>
+
+<div class="highlight highlight-CSharp"><pre><span class="pl-k">var</span> db = SqlServer.Connect( <span class="pl-s1"><span class="pl-pds">"</span>connection-string<span class="pl-pds">"</span></span> );</pre></div>
+
+<p><strong>database executor</strong> is responsible for createing connection and executing queries.</p>
+
+<hr>
+
+<p>A typical <strong>query definition</strong> like this below</p>
+
+<div class="highlight highlight-CSharp"><pre>db.T( <span class="pl-s1"><span class="pl-pds">"</span>query-text-template<span class="pl-pds">"</span></span>, params parameters );</pre></div>
+
+<p>The query text is SQL command to be executed. and you can use parameter placehold inside like <code>string.Format</code> syntax. like this below:</p>
+
+<div class="highlight highlight-CSharp"><pre>db.T( <span class="pl-s1"><span class="pl-pds">"</span>SELECT MemberID FROM Members WHERE Username = {0} AND Password = {1}<span class="pl-pds">"</span></span>, username, password )</pre></div>
+
+<p>it will create a SQL query like this below:</p>
+
+<div class="highlight highlight-SQL"><pre>DECLARE @Param0 <span class="pl-k">AS</span> nvarchar <span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">'</span>text of username<span class="pl-pds">'</span></span>;
+DECLARE @Param1 <span class="pl-k">AS</span> nvarchar <span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">'</span>text of password<span class="pl-pds">'</span></span>;
+<span class="pl-k">SELECT</span> MemberID <span class="pl-k">FROM</span> Members <span class="pl-k">WHERE</span> Username <span class="pl-k">=</span> @Param0 <span class="pl-k">AND</span> Password <span class="pl-k">=</span> @Param1;</pre></div>
+
+<p>the method name <strong>T</strong> means <strong>Template</strong>, so we can also write code like below:</p>
+
+<div class="highlight highlight-CSharp"><pre>db.Template( <span class="pl-s1"><span class="pl-pds">"</span>SELECT MemberID FROM Members WHERE Username = {0} AND Password = {1}<span class="pl-pds">"</span></span>, username, password )</pre></div>
+
+<p>and the <strong>T</strong> is an <strong>extension method</strong>, you can declare another query definition method <strong>as you like</strong>.</p>
+
+<hr>
+
+<p>In the last, we talk about the <strong>result definition</strong>.
+like same as the query definition, result definition are also en extension method. we have many result definition method, and all of they have asynchronous version.
+the popular result definition method under this:</p>
+
+<p><strong>ExecuteNonQuery</strong>, execute query, and return the number of rows affected.<br>
+<strong>ExecuteScaler</strong>, execute query and return the first column of the first row.<br>
+<strong>ExecuteDataTable</strong>, execute query and fill a DataTable and return.<br>
+<strong>ExecuteFirstRow</strong>, execute query and return ths first row.<br>
+<strong>ExecuteEntity</strong>, execute query and return the first row to fill the specified type of entity</p>
+
+<h2>
+<a id="get-it" class="anchor" href="#get-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get It</h2>
+
+<p>you can download last stable release from nuget:
+<a href="http://www.nuget.org/packages/DbWrench/">DataPithy</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">DataPithy maintained by <a href="https://github.com/Ivony">Ivony</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
