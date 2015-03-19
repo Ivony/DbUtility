@@ -8,6 +8,7 @@ using System.Data;
 using Ivony.Data.SqlClient;
 using System.Xml.Linq;
 using Ivony.Data.Common;
+using System.Data.SqlClient;
 
 namespace Ivony.Data.Test
 {
@@ -143,6 +144,25 @@ CREATE TABLE [dbo].[Test1]
         Assert.IsNotNull( exception, "事务中出现异常测试失败" );
         Assert.AreEqual( transaction.Connection.State, ConnectionState.Closed );
       }
+    }
+
+
+    [TestMethod]
+    public void ParameterSpecificationTest()
+    {
+
+      SqlParameterizedQueryParser.RegisterParameterSpecification( typeof( int ), SqlDbType.Decimal );
+
+      db.T( "SELECT * FROM Test1 WHERE [Index] = {0}", 0 ).ExecuteNonQuery();
+      var command = (SqlCommand) traceService.Last().CommandObject;
+      Assert.AreEqual( command.Parameters[0].SqlDbType, SqlDbType.Decimal, "注册参数规范测试失败" );
+
+      SqlParameterizedQueryParser.UnregisterParameterSpecification( typeof( int ) );
+
+      db.T( "SELECT * FROM Test1 WHERE [Index] = {0}", 0 ).ExecuteNonQuery();
+      command = (SqlCommand) traceService.Last().CommandObject;
+      Assert.AreNotEqual( command.Parameters[0].SqlDbType, SqlDbType.Decimal, "解除注册参数规范测试失败" );
+
     }
 
 

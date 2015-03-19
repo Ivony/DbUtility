@@ -119,6 +119,7 @@ namespace Ivony.Data
     {
 
       events.Add( new TraceEventDescriptor( "OnExecuting", DateTime.UtcNow ) );
+      CommandObject = commandObject;
       executionStopwatch.Restart();
       queryStopwatch.Restart();
     }

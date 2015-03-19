@@ -21,6 +21,49 @@ namespace Ivony.Data.SqlClient
 
 
 
+    private class ParameterSpecification
+    {
+      public SqlDbType Type { get; set; }
+
+      public int Size { get; set; }
+
+    }
+
+
+    private static Dictionary<Type, ParameterSpecification> _parameterRules = new Dictionary<Type, ParameterSpecification>();
+
+    private static object _sync = new object();
+
+    /// <summary>
+    /// 注册一个参数规范
+    /// </summary>
+    /// <param name="valueType">所适用的值类型</param>
+    /// <param name="type">数据库参数类型</param>
+    /// <param name="size">参数精度</param>
+    public static void RegisterParameterSpecification( Type valueType, SqlDbType type, int size = 0 )
+    {
+      lock ( _sync )
+      {
+        _parameterRules[valueType] = new ParameterSpecification { Type = type, Size = size };
+      }
+
+    }
+
+
+    /// <summary>
+    /// 解除注册一个参数规范
+    /// </summary>
+    /// <param name="valueType">所适用的值类型</param>
+    public static void UnregisterParameterSpecification( Type valueType )
+    {
+      lock ( _sync )
+      {
+        _parameterRules.Remove( valueType );
+      }
+    }
+
+
+
     /// <summary>
     /// 创建参数并获取参数占位符
     /// </summary>
@@ -31,9 +74,39 @@ namespace Ivony.Data.SqlClient
     protected override string GetParameterPlaceholder( object value, int index, out SqlParameter parameter )
     {
       var name = "@Param" + index;
-      parameter = new SqlParameter( name, value );
+      parameter = CreateParameter( name, value );
 
       return name;
+    }
+
+
+    /// <summary>
+    /// 创建参数对象
+    /// </summary>
+    /// <param name="name">参数名</param>
+    /// <param name="value">参数值</param>
+    /// <returns>参数对象</returns>
+    protected SqlParameter CreateParameter( string name, object value )
+    {
+      if ( value != null )
+      {
+        var valueType = value.GetType();
+
+        lock ( _sync )
+        {
+          foreach ( var type in _parameterRules.Keys )
+          {
+            if ( type.IsAssignableFrom( valueType ) )
+            {
+              var rule = _parameterRules[type];
+
+              return new SqlParameter( name, rule.Type, rule.Size ) { Value = value };
+            }
+          }
+        }
+      }
+
+      return new SqlParameter( name, value );
     }
 
 
