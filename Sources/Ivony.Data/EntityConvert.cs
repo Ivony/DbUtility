@@ -258,7 +258,7 @@ namespace Ivony.Data
 
       }
 
-      throw new NotImplementedException();
+      throw new NotSupportedException( string.Format( "不支持 {0} 类型的实体转换，因为该类型没有公开的无参或 DataRow 类型的构造函数，也没有指定了自定义实体类型转换器。", typeof( T ).AssemblyQualifiedName ) );
     }
 
     private static IEntityConverter<T> CreateConverter( MethodInfo method )
@@ -291,7 +291,7 @@ namespace Ivony.Data
     private class EntityConverter : IEntityConverter<T>
     {
 
-      private  Func<DataRow, T> _method;
+      private Func<DataRow, T> _method;
 
       public EntityConverter( Func<DataRow, T> method )
       {
