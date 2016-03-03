@@ -133,6 +133,10 @@ namespace Ivony.Data
 
     void IDbTracing.OnComplete()
     {
+      if ( Exception != null )//如果已经因为异常而退出，则不再执行 Complete 逻辑
+        return;
+
+
       events.Add( new TraceEventDescriptor( "OnComplete", DateTime.UtcNow ) );
       queryStopwatch.Stop();
       QueryTime = queryStopwatch.Elapsed;

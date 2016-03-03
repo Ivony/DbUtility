@@ -42,7 +42,7 @@ namespace Ivony.Data.Common
       DataTableAdapter = new DataTableAdapter();
 
 
-      
+
       if ( SyncRoot != null )
         Monitor.Enter( SyncRoot );
     }
@@ -105,7 +105,15 @@ namespace Ivony.Data.Common
     /// <returns>填充好的 DataTable</returns>
     public virtual DataTable LoadDataTable( int startRecord, int maxRecords )
     {
-      return DataTableAdapter.FillDataTable( DataReader, startRecord, maxRecords );
+      try
+      {
+        return DataTableAdapter.FillDataTable( DataReader, startRecord, maxRecords );
+      }
+      catch ( Exception exception )
+      {
+        OnException( exception );
+        throw;
+      }
     }
 
 
@@ -115,7 +123,15 @@ namespace Ivony.Data.Common
     /// <returns>若存在下一个结果集，则返回 true ，否则返回 false</returns>
     public virtual bool NextResult()
     {
-      return DataReader.NextResult();
+      try
+      {
+        return DataReader.NextResult();
+      }
+      catch ( Exception exception )
+      {
+        OnException( exception );
+        throw;
+      }
     }
 
 
@@ -135,11 +151,33 @@ namespace Ivony.Data.Common
     /// <returns>若当前位置存在记录，则返回该记录，否则返回 null</returns>
     public IDataRecord ReadRecord()
     {
-      if ( DataReader.Read() )
-        return DataReader;
+      try
+      {
+        if ( DataReader.Read() )
+          return DataReader;
 
-      else
-        return null;
+        else
+          return null;
+      }
+      catch ( Exception exception )
+      {
+        OnException( exception );
+        throw;
+      }
+    }
+
+
+
+
+    private Exception _exception;
+
+    /// <summary>
+    /// 当结果集执行过程中产生了异常，则调用此方法来记录。
+    /// </summary>
+    /// <param name="exception">要记录的异常信息</param>
+    protected void OnException( Exception exception )
+    {
+      _exception = exception;
     }
 
 
@@ -160,7 +198,13 @@ namespace Ivony.Data.Common
       try
       {
         if ( Tracing != null )
-          Tracing.OnComplete();
+        {
+          if ( _exception != null )
+            Tracing.OnException( _exception );
+
+          else
+            Tracing.OnComplete();
+        }
       }
       catch { }
     }
@@ -201,7 +245,7 @@ namespace Ivony.Data.Common
     }
 
 
-    
+
     /// <summary>
     /// 异步加载数据到 DataTable
     /// </summary>
@@ -230,6 +274,8 @@ namespace Ivony.Data.Common
       }
       catch ( Exception exception )
       {
+        OnException( exception );
+
 
         builder.SetException( exception );
         return builder.Task;
@@ -237,14 +283,22 @@ namespace Ivony.Data.Common
     }
 
 #if !NET40
-    
+
     /// <summary>
     /// 尝试异步读取下一个结果集
     /// </summary>
     /// <returns>若存在下一个结果集，则返回 true ，否则返回 false</returns>
     public Task<bool> NextResultAsync()
     {
-      return DataReader.NextResultAsync();
+      try
+      {
+        return DataReader.NextResultAsync();
+      }
+      catch ( Exception exception )
+      {
+        OnException( exception );
+        throw;
+      }
     }
 
 
@@ -259,8 +313,11 @@ namespace Ivony.Data.Common
         {
 
           if ( task.Exception != null )
-            throw task.Exception;
+          {
+            OnException( task.Exception );
 
+            throw new AggregateException( task.Exception );
+          }
           if ( task.Result )
             return (IDataRecord) DataReader;
 
