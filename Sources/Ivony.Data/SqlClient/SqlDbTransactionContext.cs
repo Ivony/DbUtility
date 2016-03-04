@@ -21,10 +21,15 @@ namespace Ivony.Data.SqlClient
 
 
 
-    internal SqlDbTransactionContext( string connectionString, SqlDbConfiguration configuration )
+
+
+    private IsolationLevel _isolationLevel;
+
+    internal SqlDbTransactionContext( string connectionString, SqlDbConfiguration configuration, IsolationLevel isolationLevel )
     {
       Connection = new SqlConnection( connectionString );
       _executor = new SqlDbExecutorWithTransaction( this, configuration );
+      _isolationLevel = isolationLevel;
     }
 
 
@@ -47,8 +52,8 @@ namespace Ivony.Data.SqlClient
     {
       if ( Connection.State == ConnectionState.Closed )
         Connection.Open();
-      
-      return Connection.BeginTransaction();
+
+      return Connection.BeginTransaction( _isolationLevel );
     }
 
 

@@ -70,9 +70,9 @@ namespace Ivony.Data.SqlClient
     /// 创建数据库事务上下文
     /// </summary>
     /// <returns>数据库事务上下文</returns>
-    public SqlDbTransactionContext CreateTransaction()
+    public SqlDbTransactionContext CreateTransaction( IsolationLevel isolationLevel = IsolationLevel.Unspecified)
     {
-      return new SqlDbTransactionContext( ConnectionString, Configuration );
+      return new SqlDbTransactionContext( ConnectionString, Configuration, isolationLevel );
     }
 
 
