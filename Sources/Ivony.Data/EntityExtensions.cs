@@ -105,28 +105,17 @@ namespace Ivony.Data
     }
 
 #if !NET40
+
+
     /// <summary>
     /// 查询数据库并将第一个结果集填充实体类型
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="query">要执行的查询</param>
     /// <param name="converter">实体转换器</param>
-    /// <returns>实体集</returns>
-    public static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, Func<DataRow, T> converter )
-    {
-      return ExecuteEntitiesAsync( query, CancellationToken.None, converter );
-    }
-
-
-    /// <summary>
-    /// 查询数据库并将第一个结果集填充实体类型
-    /// </summary>
-    /// <typeparam name="T">实体类型</typeparam>
-    /// <param name="query">要执行的查询</param>
     /// <param name="token">取消指示</param>
-    /// <param name="converter">实体转换器</param>
     /// <returns>实体集</returns>
-    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token, Func<DataRow, T> converter )
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, Func<DataRow, T> converter, CancellationToken token = default( CancellationToken ) )
     {
       var data = await query.ExecuteDataTableAsync( token );
       return data.GetRows().Select( dataItem => converter( dataItem ) ).ToArray();
@@ -138,10 +127,10 @@ namespace Ivony.Data
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="query">要执行的查询</param>
-    /// <param name="token">取消指示</param>
     /// <param name="converter">实体转换器</param>
+    /// <param name="token">取消指示</param>
     /// <returns>实体集</returns>
-    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token, Func<DataRow, CancellationToken, Task<T>> converter )
+    public async static Task<T[]> ExecuteEntitiesAsync<T>( this IAsyncDbExecutableQuery query, Func<DataRow, CancellationToken, Task<T>> converter, CancellationToken token = default( CancellationToken ) )
     {
       var data = await query.ExecuteDataTableAsync( token );
       List<T> result = new List<T>();
@@ -203,29 +192,17 @@ namespace Ivony.Data
     }
 
 #if !NET40
+
+
     /// <summary>
     /// 查询数据库并将结果首行填充实体
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="query">要执行的查询</param>
     /// <param name="converter">实体转换方法</param>
-    /// <returns>实体</returns>
-    public static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecutableQuery query, IEntityConverter<T> converter ) where T : new()
-    {
-      return ExecuteEntityAsync( query, CancellationToken.None, converter );
-    }
-
-
-
-    /// <summary>
-    /// 查询数据库并将结果首行填充实体
-    /// </summary>
-    /// <typeparam name="T">实体类型</typeparam>
-    /// <param name="query">要执行的查询</param>
     /// <param name="token">取消指示</param>
-    /// <param name="converter">实体转换方法</param>
     /// <returns>实体</returns>
-    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecutableQuery query, CancellationToken token, IEntityConverter<T> converter ) where T : new()
+    public async static Task<T> ExecuteEntityAsync<T>( this IAsyncDbExecutableQuery query, IEntityConverter<T> converter, CancellationToken token = default( CancellationToken ) ) where T : new()
     {
       var dataItem = await query.ExecuteFirstRowAsync( token );
       return dataItem.ToEntity<T>( converter );
@@ -384,11 +361,11 @@ namespace Ivony.Data
 
     internal static object FieldValue( this DataRow dataItem, DataColumn column, Type valueType )
     {
-      return GetFieldValueMethod( valueType )( dataItem, column );
+      return GetValueMethod( valueType )( dataItem, column );
     }
 
 
-    private static Func<DataRow, DataColumn, object> GetFieldValueMethod( Type valueType )
+    private static Func<DataRow, DataColumn, object> GetValueMethod( Type valueType )
     {
       lock ( sync )
       {
@@ -397,7 +374,7 @@ namespace Ivony.Data
 
 
         var method = typeof( EntityExtensions )
-          .GetMethod( "FieldValue", new[] { typeof( DataRow ), typeof( DataColumn ) } )
+          .GetMethod( "Value", new[] { typeof( DataRow ), typeof( DataColumn ) } )
           .MakeGenericMethod( valueType );
 
         return dbValueConverterDictionary[valueType] = (Func<DataRow, DataColumn, object>) Delegate.CreateDelegate( typeof( Func<DataRow, DataColumn, object> ), method );
@@ -484,7 +461,7 @@ namespace Ivony.Data
         il.Emit( OpCodes.Ldarg_1 );
         il.Emit( OpCodes.Ldarg_0 );
         il.Emit( OpCodes.Ldstr, name );
-        il.Emit( OpCodes.Call, typeof( EntityExtensions ).GetMethod( "FieldValue", new[] { typeof( DataRow ), typeof( string ) } ).MakeGenericMethod( p.PropertyType ) );
+        il.Emit( OpCodes.Call, typeof( EntityExtensions ).GetMethod( "Value", new[] { typeof( DataRow ), typeof( string ) } ).MakeGenericMethod( p.PropertyType ) );
         il.Emit( OpCodes.Callvirt, p.GetSetMethod() );
         il.MarkLabel( label );
       }
@@ -501,6 +478,7 @@ namespace Ivony.Data
 
 
 
+
     /// <summary>
     /// 获取指定字段的值
     /// </summary>
@@ -508,11 +486,28 @@ namespace Ivony.Data
     /// <param name="dataRow">数据行</param>
     /// <param name="columnIndex">要返回的列的序号</param>
     /// <returns>强类型的值</returns>
+    [Obsolete( "Use the Value method instead of the FieldValue methods" )]
     public static T FieldValue<T>( this DataRow dataRow, int columnIndex )
     {
-
-      return FieldValue<T>( dataRow, dataRow.Table.Columns[columnIndex] );
+      return Value<T>( dataRow, columnIndex );
     }
+
+
+    /// <summary>
+    /// 获取指定字段的值
+    /// </summary>
+    /// <typeparam name="T">值类型</typeparam>
+    /// <param name="dataRow">数据行</param>
+    /// <param name="columnIndex">要返回的列的序号</param>
+    /// <returns>强类型的值</returns>
+    public static T Value<T>( this DataRow dataRow, int columnIndex )
+    {
+
+      return Value<T>( dataRow, dataRow.Table.Columns[columnIndex] );
+    }
+
+
+
 
     /// <summary>
     /// 获取指定字段的值
@@ -521,14 +516,29 @@ namespace Ivony.Data
     /// <param name="dataRow">数据行</param>
     /// <param name="columnName">要返回其值的列名称</param>
     /// <returns>强类型的值</returns>
+    [Obsolete( "Use the Value method instead of the FieldValue methods" )]
     public static T FieldValue<T>( this DataRow dataRow, string columnName )
     {
-      return FieldValue<T>( dataRow, dataRow.Table.Columns[columnName] );
+      return Value<T>( dataRow, columnName );
+    }
+    /// <summary>
+    /// 获取指定字段的值
+    /// </summary>
+    /// <typeparam name="T">值类型</typeparam>
+    /// <param name="dataRow">数据行</param>
+    /// <param name="columnName">要返回其值的列名称</param>
+    /// <returns>强类型的值</returns>
+    public static T Value<T>( this DataRow dataRow, string columnName )
+    {
+      if ( dataRow.Table.Columns.Contains( columnName ) == false )
+        throw new ArgumentException( string.Format( "column \"{0}\" is not exist in result.", columnName ), "columnName" );
+
+      return Value<T>( dataRow, dataRow.Table.Columns[columnName] );
     }
 
 
 
-    private static T FieldValue<T>( this DataRow dataRow, DataColumn column )
+    private static T Value<T>( this DataRow dataRow, DataColumn column )
     {
       if ( dataRow == null )
         throw new ArgumentNullException( "dataRow" );
