@@ -66,6 +66,19 @@ namespace Ivony.Data.Queries
 
 
     /// <summary>
+    /// 构建参数化查询对象
+    /// </summary>
+    /// <param name="formatTemplate">查询文本模板</param>
+    public ParameterizedQuery( FormattableString formatTemplate )
+    {
+      TextTemplate = formatTemplate.Format;
+      var values = formatTemplate.GetArguments();
+      ParameterValues = new object[values.Length];
+      values.CopyTo( ParameterValues, 0 );
+    }
+
+
+    /// <summary>
     /// 将参数化查询解析为另一个参数化查询的一部分。
     /// </summary>
     /// <param name="builder">参数化查询构建器</param>
@@ -132,9 +145,6 @@ namespace Ivony.Data.Queries
     /// <returns>参数化查询对象</returns>
     public static implicit operator ParameterizedQuery( string text )
     {
-      if ( text == null )
-        return null;
-      
       return TemplateParser.ParseTemplate( text, new object[0] );
     }
 

@@ -21,6 +21,17 @@ namespace Ivony.Data
     /// <summary>
     /// 解析模板表达式，创建参数化查询对象
     /// </summary>
+    /// <param name="formatTemplate">参数化模板</param>
+    /// <returns>参数化查询</returns>
+    public static ParameterizedQuery Template( FormattableString formatTemplate )
+    {
+      return new ParameterizedQuery( formatTemplate );
+    }
+
+
+    /// <summary>
+    /// 解析模板表达式，创建参数化查询对象
+    /// </summary>
     /// <param name="templateText">模板文本</param>
     /// <param name="args">模板参数</param>
     /// <returns>参数化查询</returns>
