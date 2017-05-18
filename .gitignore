@@ -9,6 +9,7 @@
 *.suo
 *.user
 *.sln.docstates
+.vs
 
 # Build results
 [Dd]ebug/
@@ -96,3 +97,5 @@ Thumbs.db
 Desktop.ini
 
 .localhistory
+/.vs
+/.vs

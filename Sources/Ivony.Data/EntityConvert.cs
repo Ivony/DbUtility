@@ -34,9 +34,8 @@ namespace Ivony.Data
     {
       lock ( sync )
       {
-        object[] attributes;
 
-        if ( _propertyAttributesCache.TryGetValue( property, out attributes ) )
+        if ( _propertyAttributesCache.TryGetValue( property, out object[] attributes ) )
           return attributes;
 
         attributes = property.GetCustomAttributes( false );
@@ -311,34 +310,6 @@ namespace Ivony.Data
     }
 
 
-
-
-    private static class EntityConverterCache
-    {
-      private static IEntityConverter<T> converterInstacne;
-
-      private static Func<IEntityConverter<T>> createConverter;
-
-
-      static EntityConverterCache()
-      {
-      }
-
-
-      /// <summary>
-      /// 获取指定类型的实体转换器
-      /// </summary>
-      /// <returns></returns>
-      public static IEntityConverter<T> GetConverter()
-      {
-
-        if ( converterInstacne != null && converterInstacne.IsReusable )//如果有缓存的可复用的实例，则返回
-          return converterInstacne;
-
-
-        return createConverter();
-      }
-    }
 
 
     /// <summary>
